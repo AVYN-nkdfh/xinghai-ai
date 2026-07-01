@@ -1,0 +1,80 @@
+export const abilityNodes = [
+  {
+    id: "business",
+    name: "商业实验室",
+    short: "Business",
+    description: "从真实问题出发，完成用户观察、产品定位和商业表达。",
+    x: 50,
+    y: 14,
+  },
+  {
+    id: "code",
+    name: "代码工坊",
+    short: "Code",
+    description: "用 AI 协作搭建页面、交互、原型和可演示作品。",
+    x: 82,
+    y: 36,
+  },
+  {
+    id: "creative",
+    name: "创造力工作室",
+    short: "Create",
+    description: "把想象转化为视觉、故事、角色和完整作品集。",
+    x: 70,
+    y: 77,
+  },
+  {
+    id: "expression",
+    name: "表达剧场",
+    short: "Pitch",
+    description: "训练结构化表达、镜头呈现和现场项目路演。",
+    x: 30,
+    y: 77,
+  },
+  {
+    id: "ip",
+    name: "个人IP工厂",
+    short: "IP",
+    description: "完成作品包装、创作者介绍和长期成长档案。",
+    x: 18,
+    y: 36,
+  },
+];
+
+export const taskNodes = [
+  {
+    id: "pre",
+    label: "课前 1V1 项目孵化",
+    detail: "锁定孩子的兴趣、能力基础和可完成的项目方向。",
+    x: 10,
+    y: 58,
+  },
+  {
+    id: "day1",
+    label: "Day 1 定题与原型",
+    detail: "完成问题定义、作品结构和第一版可视化原型。",
+    x: 30,
+    y: 42,
+  },
+  {
+    id: "day2",
+    label: "Day 2 AI 制作与迭代",
+    detail: "用 AI 完成内容、代码、视觉与功能迭代。",
+    x: 52,
+    y: 54,
+  },
+  {
+    id: "day3",
+    label: "Day 3 路演发布",
+    detail: "完成表达训练、现场展示和作品发布。",
+    x: 74,
+    y: 36,
+  },
+  {
+    id: "showcase",
+    label: "Showcase 作品交付",
+    detail: "交付可展示的主页、视频、路演稿和成长档案。",
+    x: 90,
+    y: 52,
+  },
+];
