@@ -97,6 +97,10 @@
     .workspace { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
     .picker-section { padding: 22px 24px; border-bottom: 1px solid var(--line); }
     .picker-label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 13px; font-weight: 750; }
+    .picker-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .picker-head .picker-label { margin-bottom: 0; }
+    .picker-action { border: 0; padding: 0; background: transparent; color: var(--orange); font-size: 13px; font-weight: 800; cursor: pointer; }
+    .picker-action:hover { text-decoration: underline; text-underline-offset: 3px; }
     .date-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
     .date-button {
       min-height: 68px;
@@ -130,6 +134,7 @@
       transition: border-color var(--ease), background var(--ease);
     }
     .time-button:hover { border-color: var(--line-strong); }
+    .time-button:disabled { cursor: not-allowed; }
     .time-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange-soft); }
     .time-button.is-closed { color: var(--muted); background: #f4f1eb; }
     .time-name { display: block; font-size: 15px; font-weight: 800; }
@@ -170,6 +175,11 @@
       color: #777168;
       background: repeating-linear-gradient(135deg, #eeeae4 0 8px, #e1ddd6 8px 16px);
     }
+    .machine.is-long-maintenance {
+      border-color: rgba(211, 169, 85, .32);
+      color: #777168;
+      background: repeating-linear-gradient(45deg, #e7e1d7 0 5px, #d5cbbb 5px 10px);
+    }
     .machine.is-closed { border-color: transparent; background: #efebe5; color: #a19b91; }
     .machine-visual { position: relative; width: 72px; height: 42px; display: block; margin-bottom: 7px; }
     .screen { position: absolute; left: 16px; width: 40px; height: 25px; border: 2px solid currentColor; border-radius: 4px; }
@@ -186,6 +196,7 @@
     .machine.is-selected .machine-state { color: rgba(255, 255, 255, .76); }
     .machine.is-booked .machine-state,
     .machine.is-maintenance .machine-state,
+    .machine.is-long-maintenance .machine-state,
     .machine.is-closed .machine-state { color: currentColor; }
     .machine-person { max-width: 100%; margin-top: 3px; overflow: hidden; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
 
@@ -275,6 +286,7 @@
       .demo-label,
       .instruction,
       .picker-label,
+      .picker-action,
       .date-week,
       .time-value,
       .time-count,
@@ -360,6 +372,7 @@
     .machine.is-selected .machine-state { color: rgba(26, 20, 8, .68); }
     .machine.is-booked { background: #25221c; color: #756f62; }
     .machine.is-maintenance { color: #827b6d; background: repeating-linear-gradient(135deg, #201d18 0 8px, #2b271f 8px 16px); }
+    .machine.is-long-maintenance { border-color: rgba(211, 169, 85, .25); color: #9b8d70; background: repeating-linear-gradient(45deg, #1b1813 0 5px, #30281a 5px 10px); }
     .machine.is-closed { background: #1c1914; color: #625d53; }
     .facing-axis::before { background: #12110e; }
     .facing-axis span, .side-panel, .status-bar { background: #12110e; }
@@ -391,12 +404,12 @@
   <main class="page" id="parentView">
     <div class="container">
       <div class="page-heading">
-        <div><h1>预约机位</h1><p class="instruction">先选日期和时段，再选机器。灰色已占用，斜线维护中。</p></div>
+        <div><h1>预约机位</h1><p class="instruction">时段可多选，再选择一台机器。</p></div>
       </div>
 
       <section class="workspace" aria-label="机位预约">
         <div class="picker-section"><span class="picker-label">日期</span><div class="date-strip" id="parentDates" data-testid="parent-dates"></div></div>
-        <div class="picker-section"><span class="picker-label">时间</span><div class="time-strip" id="parentTimes" data-testid="parent-times"></div></div>
+        <div class="picker-section"><div class="picker-head"><span class="picker-label">时间（可多选）</span><button class="picker-action" id="selectAllParentSlots" type="button">全选当天</button></div><div class="time-strip" id="parentTimes" data-testid="parent-times"></div></div>
         <div class="workspace-grid">
           <div class="map-panel">
             <div class="map-head"><h2>选择机器</h2><div class="map-legend"><span class="legend-item"><i class="legend-dot"></i>可选</span><span class="legend-item"><i class="legend-dot booked"></i>已预约</span><span class="legend-item"><i class="legend-dot maintenance"></i>维护</span></div></div>

@@ -7,10 +7,10 @@ const MACHINES = [1, 2, 3, 4, 5, 6];
 const WEEK = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 const el = (id) => document.getElementById(id);
 const LOCAL_PREVIEW = ["127.0.0.1", "localhost"].includes(location.hostname) && location.port === "8877";
-const previewState = { authenticated: false, bookings: [], maintenance: [], closed: [] };
+const previewState = { authenticated: false, bookings: [], maintenance: [], longMaintenance: [], closed: [] };
 
 let parentDateIndex = 0;
-let parentSlotId = "morning";
+let parentSlotIds = ["morning"];
 let selectedMachine = null;
 let adminDateIndex = 0;
 let adminSlotId = "morning";
@@ -33,6 +33,7 @@ function emptyDay(date) {
     error: "",
     slots: Object.fromEntries(SLOTS.map((slot) => [slot.id, { open: true, maintenance: [] }])),
     bookings: [],
+    longTermMaintenance: [],
   };
 }
 
@@ -53,26 +54,54 @@ async function previewApi(path, options) {
     maintenance: previewState.maintenance.filter((key) => key.startsWith(`${date}:${slot.id}:`)).map((key) => Number(key.split(":")[2])),
     booked: previewState.bookings.filter((booking) => booking.date === date && booking.slotId === slot.id).map((booking) => booking.machineId),
   }]));
-  if (url.pathname.endsWith("/availability")) return { date: url.searchParams.get("date"), slots: slotsFor(url.searchParams.get("date")) };
+  if (url.pathname.endsWith("/availability")) return { date: url.searchParams.get("date"), slots: slotsFor(url.searchParams.get("date")), longTermMaintenance: previewState.longMaintenance };
   if (url.pathname.endsWith("/create")) {
-    const conflict = previewState.bookings.some((booking) => booking.date === body.date && booking.slotId === body.slotId && booking.machineId === body.machineId);
-    if (conflict) { const error = new Error("这台机器刚刚被预约，请重新选择"); error.status = 409; throw error; }
-    const booking = { ...body, id: crypto.randomUUID(), bookingCode: `XH-PREVIEW-${body.machineId}` };
-    previewState.bookings.push(booking);
-    return { bookingCode: booking.bookingCode };
+    const slotIds = body.slotIds || [body.slotId];
+    const conflict = previewState.longMaintenance.includes(body.machineId) || slotIds.some((slotId) => (
+      previewState.closed.includes(`${body.date}:${slotId}`)
+      || previewState.maintenance.includes(`${body.date}:${slotId}:${body.machineId}`)
+      || previewState.bookings.some((booking) => booking.date === body.date && booking.slotId === slotId && booking.machineId === body.machineId)
+    ));
+    if (conflict) { const error = new Error("所选时段中有机位刚被预约或暂不可用，请重新选择"); error.status = 409; throw error; }
+    const groupId = crypto.randomUUID();
+    const bookingCode = `XH-PREVIEW-${body.machineId}`;
+    previewState.bookings.push(...slotIds.map((slotId) => ({ ...body, id: crypto.randomUUID(), groupId, bookingCode, slotId })));
+    return { bookingCode, slotIds };
   }
   if (url.pathname.endsWith("/login")) { previewState.authenticated = true; return { ok: true }; }
   if (url.pathname.endsWith("/logout")) { previewState.authenticated = false; return { ok: true }; }
   if (url.pathname.endsWith("/state")) {
     if (!previewState.authenticated) { const error = new Error("请先登录管理后台"); error.status = 401; throw error; }
     const date = url.searchParams.get("date");
-    return { date, slots: slotsFor(date), bookings: previewState.bookings.filter((booking) => booking.date === date).map((booking) => ({ id: booking.id, slotId: booking.slotId, machineId: booking.machineId, student: booking.student, grade: booking.grade, phone: booking.phone })) };
+    return {
+      date,
+      slots: slotsFor(date),
+      longTermMaintenance: previewState.longMaintenance,
+      bookings: previewState.bookings.filter((booking) => booking.date === date).map((booking) => ({
+        id: booking.id,
+        groupId: booking.groupId || booking.id,
+        code: booking.bookingCode,
+        slotId: booking.slotId,
+        machineId: booking.machineId,
+        student: booking.student,
+        grade: booking.grade,
+        phone: booking.phone,
+      })),
+    };
   }
   if (url.pathname.endsWith("/action")) {
-    if (body.action === "cancelBooking") previewState.bookings = previewState.bookings.filter((booking) => booking.id !== body.bookingId);
+    if (body.action === "cancelBooking") previewState.bookings = previewState.bookings.filter((booking) => (booking.groupId || booking.id) !== (body.bookingGroupId || body.bookingId));
     if (body.action === "setMaintenance") {
-      const key = `${body.date}:${body.slotId}:${body.machineId}`;
-      previewState.maintenance = body.enabled ? [...new Set([...previewState.maintenance, key])] : previewState.maintenance.filter((item) => item !== key);
+      const slotIds = body.slotIds || [body.slotId];
+      const keys = slotIds.map((slotId) => `${body.date}:${slotId}:${body.machineId}`);
+      previewState.maintenance = body.enabled
+        ? [...new Set([...previewState.maintenance, ...keys])]
+        : previewState.maintenance.filter((item) => !keys.includes(item));
+    }
+    if (body.action === "setLongTermMaintenance") {
+      previewState.longMaintenance = body.enabled
+        ? [...new Set([...previewState.longMaintenance, body.machineId])]
+        : previewState.longMaintenance.filter((machineId) => machineId !== body.machineId);
     }
     if (body.action === "setSlotOpen") {
       const key = `${body.date}:${body.slotId}`;
@@ -110,20 +139,25 @@ function normalizeDay(day, payload) {
   day.bookings = payload.bookings || SLOTS.flatMap((slot) =>
     (payload.slots?.[slot.id]?.booked || []).map((machineId) => ({ slotId: slot.id, machineId })),
   );
+  day.longTermMaintenance = payload.longTermMaintenance || [];
   day.loaded = true;
+  day.loadedAt = Date.now();
   day.error = "";
 }
 
-async function loadParentDate(index, force = false) {
+async function loadParentDate(index, force = false, silent = false) {
   const day = appState.dates[index];
   if ((day.loaded && !force) || day.loading) return;
   day.loading = true;
-  day.error = "";
-  renderParent();
+  if (!silent || !day.loaded) {
+    day.error = "";
+    renderParent();
+  }
   try {
     normalizeDay(day, await api(`/api/booking/availability?date=${encodeURIComponent(day.date)}`));
   } catch (error) {
-    day.error = error.message;
+    if (day.loaded && silent) showToast("刷新失败，当前仍显示上次数据");
+    else day.error = error.message;
   } finally {
     day.loading = false;
     renderParent();
@@ -158,13 +192,25 @@ function getDay(index) { return appState.dates[index]; }
 function getSlot(slotId) { return SLOTS.find((slot) => slot.id === slotId); }
 function getBooking(day, slotId, machineId) { return day.bookings.find((booking) => booking.slotId === slotId && booking.machineId === machineId); }
 function isMaintenance(day, slotId, machineId) { return day.slots[slotId].maintenance.includes(machineId); }
+function isLongMaintenance(day, machineId) { return day.longTermMaintenance.includes(machineId); }
 function machineState(day, slotId, machineId) {
   if (!day.slots[slotId].open) return "closed";
   if (getBooking(day, slotId, machineId)) return "booked";
+  if (isLongMaintenance(day, machineId)) return "long-maintenance";
   if (isMaintenance(day, slotId, machineId)) return "maintenance";
   return "available";
 }
 function availableCount(day, slotId) { return MACHINES.filter((machineId) => machineState(day, slotId, machineId) === "available").length; }
+function selectedSlots() { return SLOTS.filter((slot) => parentSlotIds.includes(slot.id)); }
+function selectedSlotsText() { return selectedSlots().map((slot) => `${slot.name} ${slot.time}`).join("、"); }
+function parentMachineState(day, machineId) {
+  const states = parentSlotIds.map((slotId) => machineState(day, slotId, machineId));
+  if (states.length && states.every((state) => state === "available")) return "available";
+  if (states.includes("long-maintenance")) return "long-maintenance";
+  if (states.includes("booked")) return "booked";
+  if (states.includes("maintenance")) return "maintenance";
+  return "closed";
+}
 function formatDate(dateKey, withYear = false) {
   return new Intl.DateTimeFormat("zh-CN", withYear
     ? { year: "numeric", month: "long", day: "numeric", weekday: "short" }
@@ -183,20 +229,21 @@ function renderDateStrip(targetId, activeIndex, onSelect) {
   el(targetId).querySelectorAll("[data-date-index]").forEach((button) => button.addEventListener("click", () => onSelect(Number(button.dataset.dateIndex))));
 }
 
-function renderTimeStrip(targetId, day, activeSlotId, onSelect) {
+function renderTimeStrip(targetId, day, activeSlotIds, onSelect, multiple = false) {
+  const selected = Array.isArray(activeSlotIds) ? activeSlotIds : [activeSlotIds];
   el(targetId).innerHTML = SLOTS.map((slot) => {
     const count = availableCount(day, slot.id);
     const open = day.slots[slot.id].open;
     const countText = day.loading || !day.loaded ? "加载中" : !open ? "已关闭" : count ? `${count} 台可选` : "已满";
-    return `<button class="time-button ${!open ? "is-closed" : ""}" type="button" data-slot-id="${slot.id}" aria-pressed="${slot.id === activeSlotId}"><span><span class="time-name">${slot.name}</span><span class="time-value">${slot.time}</span></span><span class="time-count ${!open ? "is-closed" : count ? "" : "is-full"}">${countText}</span></button>`;
+    return `<button class="time-button ${!open ? "is-closed" : ""}" type="button" data-slot-id="${slot.id}" aria-pressed="${selected.includes(slot.id)}" ${multiple && !open ? "disabled" : ""}><span><span class="time-name">${slot.name}</span><span class="time-value">${slot.time}</span></span><span class="time-count ${!open ? "is-closed" : count ? "" : "is-full"}">${countText}</span></button>`;
   }).join("");
   el(targetId).querySelectorAll("[data-slot-id]").forEach((button) => button.addEventListener("click", () => onSelect(button.dataset.slotId)));
 }
 
-function machineMarkup(day, slotId, machineId, selected, admin = false) {
-  const state = machineState(day, slotId, machineId);
+function machineMarkup(day, slotId, machineId, selected, admin = false, stateOverride = "") {
+  const state = stateOverride || machineState(day, slotId, machineId);
   const booking = getBooking(day, slotId, machineId);
-  const stateText = state === "available" ? "可选" : state === "booked" ? "已预约" : state === "maintenance" ? "维护中" : "已关闭";
+  const stateText = state === "available" ? "可选" : state === "booked" ? "已预约" : state === "maintenance" ? "维护中" : state === "long-maintenance" ? "长期维护" : "已关闭";
   const rowClass = machineId <= 3 ? "top" : "bottom";
   const disabled = !admin && state !== "available";
   const person = admin && booking ? `<span class="machine-person">${escapeHtml(booking.student)}</span>` : `<span class="machine-state">${stateText}</span>`;
@@ -204,26 +251,48 @@ function machineMarkup(day, slotId, machineId, selected, admin = false) {
   return `<button class="machine is-${state} ${selected ? "is-selected" : ""}" type="button" data-machine-id="${machineId}" aria-label="${machineId}号机 ${stateText}${escapeHtml(detail)}" ${disabled ? "disabled" : ""}><span class="machine-visual ${rowClass}"><i class="screen"></i><i class="chair"></i></span><span class="machine-number">${machineId} 号机</span>${person}</button>`;
 }
 
-function renderSeatMap(targetId, day, slotId, selected, onSelect, admin = false) {
-  const row = (ids, rowClass) => `<div class="machine-row row-${rowClass}">${ids.map((machineId) => machineMarkup(day, slotId, machineId, selected === machineId, admin)).join("")}</div>`;
+function renderSeatMap(targetId, day, slotId, selected, onSelect, admin = false, stateResolver = null) {
+  const row = (ids, rowClass) => `<div class="machine-row row-${rowClass}">${ids.map((machineId) => machineMarkup(day, slotId, machineId, selected === machineId, admin, stateResolver?.(machineId))).join("")}</div>`;
   el(targetId).innerHTML = `${row([1, 2, 3], "top")}<div class="facing-axis"><span>两排面对面</span></div>${row([4, 5, 6], "bottom")}`;
   el(targetId).querySelectorAll("[data-machine-id]").forEach((button) => button.addEventListener("click", () => onSelect(Number(button.dataset.machineId))));
 }
 
 function renderParent() {
   const day = getDay(parentDateIndex);
+  if (day.loaded) {
+    const openSelectedSlots = parentSlotIds.filter((slotId) => day.slots[slotId].open);
+    if (openSelectedSlots.length !== parentSlotIds.length) parentSlotIds = openSelectedSlots;
+    if (!parentSlotIds.length) {
+      const firstOpen = SLOTS.find((slot) => day.slots[slot.id].open);
+      if (firstOpen) parentSlotIds = [firstOpen.id];
+    }
+  }
   renderDateStrip("parentDates", parentDateIndex, (index) => {
     parentDateIndex = index;
     selectedMachine = null;
     renderParent();
-    loadParentDate(index, true);
+    loadParentDate(index);
   });
-  renderTimeStrip("parentTimes", day, parentSlotId, (slotId) => {
-    parentSlotId = slotId;
-    selectedMachine = null;
+  renderTimeStrip("parentTimes", day, parentSlotIds, (slotId) => {
+    if (parentSlotIds.includes(slotId)) {
+      if (parentSlotIds.length === 1) {
+        showToast("至少保留一个时段");
+        return;
+      }
+      parentSlotIds = parentSlotIds.filter((id) => id !== slotId);
+    } else {
+      parentSlotIds = SLOTS.map((slot) => slot.id).filter((id) => [...parentSlotIds, slotId].includes(id));
+    }
+    if (selectedMachine && parentMachineState(day, selectedMachine) !== "available") selectedMachine = null;
     renderParent();
-    loadParentDate(parentDateIndex, true);
-  });
+  }, true);
+  el("selectAllParentSlots").onclick = () => {
+    const openSlots = SLOTS.filter((slot) => day.slots[slot.id].open).map((slot) => slot.id);
+    if (!openSlots.length) return;
+    parentSlotIds = openSlots;
+    if (selectedMachine && parentMachineState(day, selectedMachine) !== "available") selectedMachine = null;
+    renderParent();
+  };
   if (day.loading || !day.loaded) {
     el("parentSeatMap").innerHTML = '<div class="loading-note">正在读取机位…</div>';
     el("parentSide").innerHTML = '<div class="side-empty"><strong>请稍候</strong><p>正在同步最新预约数据</p></div>';
@@ -236,27 +305,28 @@ function renderParent() {
     el("retryParent")?.addEventListener("click", () => loadParentDate(parentDateIndex, true));
     return;
   }
-  const slotOpen = day.slots[parentSlotId].open;
-  if (selectedMachine && machineState(day, parentSlotId, selectedMachine) !== "available") selectedMachine = null;
-  renderSeatMap("parentSeatMap", day, parentSlotId, selectedMachine, (machineId) => {
+  const hasOpenSlot = parentSlotIds.length > 0;
+  const primarySlotId = parentSlotIds[0] || "morning";
+  if (selectedMachine && parentMachineState(day, selectedMachine) !== "available") selectedMachine = null;
+  renderSeatMap("parentSeatMap", day, primarySlotId, selectedMachine, (machineId) => {
     selectedMachine = machineId;
     renderParent();
     if (window.innerWidth <= 760) el("parentSide").scrollIntoView({ behavior: "smooth", block: "start" });
-  });
-  el("parentSeatMap").closest(".map-panel").hidden = !slotOpen;
-  el("parentSide").hidden = !slotOpen;
-  el("parentClosed").hidden = slotOpen;
+  }, false, (machineId) => parentMachineState(day, machineId));
+  el("parentSeatMap").closest(".map-panel").hidden = !hasOpenSlot;
+  el("parentSide").hidden = !hasOpenSlot;
+  el("parentClosed").hidden = hasOpenSlot;
   renderParentSide(day);
 }
 
 function renderParentSide(day) {
   const side = el("parentSide");
-  const slot = getSlot(parentSlotId);
+  const timeText = selectedSlotsText();
   if (!selectedMachine) {
-    side.innerHTML = `<div class="side-empty"><strong>请选择机器</strong><p>${formatDate(day.date)} · ${slot.name} ${slot.time}</p></div>`;
+    side.innerHTML = `<div class="side-empty"><strong>请选择机器</strong><p>${formatDate(day.date)} · ${timeText}</p></div>`;
     return;
   }
-  side.innerHTML = `<div class="selection-title">已选择</div><div class="selection-machine">${selectedMachine} 号机</div><div class="selection-meta">${formatDate(day.date)} · ${slot.name} ${slot.time}</div><form class="form" id="bookingForm" novalidate><div class="field" data-field="student"><label for="studentName">学生姓名</label><input id="studentName" name="student" autocomplete="name" maxlength="30" /><div class="field-error"></div></div><div class="field" data-field="grade"><label for="studentGrade">年级</label><select id="studentGrade" name="grade"><option value="">请选择</option><option>小学 3 年级</option><option>小学 4 年级</option><option>小学 5 年级</option><option>小学 6 年级</option><option>初中 1 年级</option><option>初中 2 年级</option><option>初中 3 年级</option><option>高中</option><option>其他</option></select><div class="field-error"></div></div><div class="field" data-field="phone"><label for="parentPhone">家长手机号</label><input id="parentPhone" name="phone" inputmode="numeric" autocomplete="tel" maxlength="11" /><div class="field-error"></div></div><button class="button button-primary" id="submitBooking" type="submit">确认预约 ${selectedMachine} 号机</button><div class="privacy">仅用于本次预约联系</div></form>`;
+  side.innerHTML = `<div class="selection-title">已选择 ${parentSlotIds.length} 个时段</div><div class="selection-machine">${selectedMachine} 号机</div><div class="selection-meta">${formatDate(day.date)} · ${timeText}</div><form class="form" id="bookingForm" novalidate><div class="field" data-field="student"><label for="studentName">学生姓名</label><input id="studentName" name="student" autocomplete="name" maxlength="30" /><div class="field-error"></div></div><div class="field" data-field="grade"><label for="studentGrade">年级</label><select id="studentGrade" name="grade"><option value="">请选择</option><option>小学 3 年级</option><option>小学 4 年级</option><option>小学 5 年级</option><option>小学 6 年级</option><option>初中 1 年级</option><option>初中 2 年级</option><option>初中 3 年级</option><option>高中</option><option>其他</option></select><div class="field-error"></div></div><div class="field" data-field="phone"><label for="parentPhone">家长手机号</label><input id="parentPhone" name="phone" inputmode="numeric" autocomplete="tel" maxlength="11" /><div class="field-error"></div></div><button class="button button-primary" id="submitBooking" type="submit">确认预约 ${selectedMachine} 号机</button><div class="privacy">仅用于本次预约联系</div></form>`;
   el("bookingForm").addEventListener("submit", submitBooking);
 }
 
@@ -279,26 +349,27 @@ async function submitBooking(event) {
   if (!valid) return;
   const day = getDay(parentDateIndex);
   const machineId = selectedMachine;
-  const slot = getSlot(parentSlotId);
+  const slotIds = [...parentSlotIds];
+  const timeText = selectedSlotsText();
   const submit = el("submitBooking");
   submit.disabled = true;
   submit.textContent = "正在预约…";
   try {
     const result = await api("/api/booking/create", {
       method: "POST",
-      body: JSON.stringify({ date: day.date, slotId: parentSlotId, machineId, student: data.student.trim(), grade: data.grade, phone: data.phone.trim() }),
+      body: JSON.stringify({ date: day.date, slotIds, machineId, student: data.student.trim(), grade: data.grade, phone: data.phone.trim() }),
     });
     el("successCode").textContent = result.bookingCode;
-    el("successSummary").innerHTML = `<div class="success-item"><span>日期</span><strong>${formatDate(day.date, true)}</strong></div><div class="success-item"><span>时间</span><strong>${slot.name} ${slot.time}</strong></div><div class="success-item"><span>机器</span><strong>${machineId} 号机</strong></div><div class="success-item"><span>学生</span><strong>${escapeHtml(data.student.trim())}</strong></div>`;
+    el("successSummary").innerHTML = `<div class="success-item"><span>日期</span><strong>${formatDate(day.date, true)}</strong></div><div class="success-item"><span>时间</span><strong>${timeText}</strong></div><div class="success-item"><span>机器</span><strong>${machineId} 号机</strong></div><div class="success-item"><span>学生</span><strong>${escapeHtml(data.student.trim())}</strong></div>`;
     el("successLayer").hidden = false;
     el("successDone").focus();
     selectedMachine = null;
-    await loadParentDate(parentDateIndex, true);
+    await loadParentDate(parentDateIndex, true, true);
   } catch (error) {
     showToast(error.message);
     if (error.status === 409) {
       selectedMachine = null;
-      await loadParentDate(parentDateIndex, true);
+      await loadParentDate(parentDateIndex, true, true);
     } else {
       submit.disabled = false;
       submit.textContent = `确认预约 ${machineId} 号机`;
@@ -338,7 +409,7 @@ function renderAdmin() {
   renderSeatMap("adminSeatMap", day, adminSlotId, adminMachine, (machineId) => { adminMachine = machineId; renderAdmin(); }, true);
   el("adminCurrentSlot").textContent = `${formatDate(day.date)} · ${slot.name} ${slot.time}`;
   const booked = MACHINES.filter((id) => machineState(day, adminSlotId, id) === "booked").length;
-  const maintenance = MACHINES.filter((id) => machineState(day, adminSlotId, id) === "maintenance").length;
+  const maintenance = MACHINES.filter((id) => ["maintenance", "long-maintenance"].includes(machineState(day, adminSlotId, id))).length;
   el("adminCounts").innerHTML = `<span class="status-count">可用<strong>${availableCount(day, adminSlotId)}</strong></span><span class="status-count">预约<strong>${booked}</strong></span><span class="status-count">维护<strong>${maintenance}</strong></span>`;
   el("slotSwitch").setAttribute("aria-pressed", String(day.slots[adminSlotId].open));
   renderAdminSide(day);
@@ -347,35 +418,51 @@ function renderAdmin() {
 
 function renderAdminSide(day) {
   const side = el("adminSide");
-  if (!adminMachine) { side.innerHTML = '<div class="side-empty"><strong>点击机器管理</strong><p>可设置维护、恢复使用或取消预约</p></div>'; return; }
+  if (!adminMachine) { side.innerHTML = '<div class="side-empty"><strong>点击机器管理</strong><p>可维护当前时段、全天或长期停用</p></div>'; return; }
   const state = machineState(day, adminSlotId, adminMachine);
   const booking = getBooking(day, adminSlotId, adminMachine);
-  const stateText = state === "available" ? "可用" : state === "booked" ? "已预约" : state === "maintenance" ? "维护中" : "时段已关闭";
+  const stateText = state === "available" ? "可用" : state === "booked" ? "已预约" : state === "maintenance" ? "当前时段维护" : state === "long-maintenance" ? "长期维护" : "时段已关闭";
   let detail = `<div class="admin-machine-copy"><span>当前状态</span><strong>${stateText}</strong></div>`;
   let action = "";
   if (booking) {
-    detail += `<div class="admin-machine-copy"><span>学生</span><strong>${escapeHtml(booking.student)} · ${escapeHtml(booking.grade)}</strong><span>${escapeHtml(booking.phone)}</span></div>`;
-    action = `<button class="button button-danger" type="button" id="cancelBooking">取消预约并释放机器</button>`;
-  } else if (state === "maintenance") {
-    action = `<button class="button button-primary" type="button" id="restoreMachine">恢复使用</button>`;
-  } else if (state === "available") {
-    action = `<button class="button button-secondary" type="button" id="maintainMachine">设为维护</button>`;
+    const groupSlots = day.bookings.filter((row) => (row.groupId || row.id) === (booking.groupId || booking.id)).map((row) => getSlot(row.slotId)).filter(Boolean);
+    detail += `<div class="admin-machine-copy"><span>学生</span><strong>${escapeHtml(booking.student)} · ${escapeHtml(booking.grade)}</strong><span>${escapeHtml(booking.phone)}</span><span>${groupSlots.map((slot) => `${slot.name} ${slot.time}`).join("、")}</span></div>`;
+    action = `<button class="button button-danger" type="button" id="cancelBooking">取消整组预约并释放机器</button>`;
+  } else if (state === "long-maintenance") {
+    action = `<button class="button button-primary" type="button" id="restoreLongTerm">结束长期维护</button>`;
+  } else {
+    const currentMaintenance = isMaintenance(day, adminSlotId, adminMachine);
+    const allDayMaintenance = SLOTS.every((slot) => isMaintenance(day, slot.id, adminMachine));
+    action = `
+      <button class="button ${currentMaintenance ? "button-primary" : "button-secondary"}" type="button" id="toggleCurrentMaintenance">${currentMaintenance ? "恢复当前时段" : "维护当前时段"}</button>
+      <button class="button ${allDayMaintenance ? "button-primary" : "button-secondary"}" type="button" id="toggleDayMaintenance">${allDayMaintenance ? "恢复今天全部时段" : "维护今天全部时段"}</button>
+      <button class="button button-secondary" type="button" id="setLongTermMaintenance">设为长期维护</button>`;
   }
   side.innerHTML = `<div class="selection-title">管理机器</div><div class="selection-machine">${adminMachine} 号机</div><div class="selection-meta">${formatDate(day.date)} · ${getSlot(adminSlotId).name}</div>${detail}<div class="admin-actions">${action}</div>`;
-  el("cancelBooking")?.addEventListener("click", () => adminAction({ action: "cancelBooking", bookingId: booking.id }, "预约已取消，机器已释放"));
-  el("restoreMachine")?.addEventListener("click", () => adminAction({ action: "setMaintenance", date: day.date, slotId: adminSlotId, machineId: adminMachine, enabled: false }, "机器已恢复使用"));
-  el("maintainMachine")?.addEventListener("click", () => adminAction({ action: "setMaintenance", date: day.date, slotId: adminSlotId, machineId: adminMachine, enabled: true }, "机器已设为维护"));
+  el("cancelBooking")?.addEventListener("click", () => adminAction({ action: "cancelBooking", bookingGroupId: booking.groupId || booking.id }, "整组预约已取消，机器已释放"));
+  el("restoreLongTerm")?.addEventListener("click", () => adminAction({ action: "setLongTermMaintenance", machineId: adminMachine, enabled: false }, "长期维护已结束"));
+  el("toggleCurrentMaintenance")?.addEventListener("click", () => {
+    const enabled = !isMaintenance(day, adminSlotId, adminMachine);
+    adminAction({ action: "setMaintenance", date: day.date, slotIds: [adminSlotId], machineId: adminMachine, enabled }, enabled ? "当前时段已设为维护" : "当前时段已恢复");
+  });
+  el("toggleDayMaintenance")?.addEventListener("click", () => {
+    const enabled = !SLOTS.every((slot) => isMaintenance(day, slot.id, adminMachine));
+    adminAction({ action: "setMaintenance", date: day.date, slotIds: SLOTS.map((slot) => slot.id), machineId: adminMachine, enabled }, enabled ? "今天全部时段已设为维护" : "今天全部时段已恢复");
+  });
+  el("setLongTermMaintenance")?.addEventListener("click", () => adminAction({ action: "setLongTermMaintenance", machineId: adminMachine, enabled: true }, "机器已设为长期维护"));
 }
 
 function renderRoster(day) {
   const rows = day.bookings.filter((booking) => booking.slotId === adminSlotId).sort((a, b) => a.machineId - b.machineId);
-  el("rosterList").innerHTML = rows.length ? `<div class="roster-list">${rows.map((booking) => `<div class="roster-row"><strong>${booking.machineId} 号机</strong><span>${escapeHtml(booking.student)} · ${escapeHtml(booking.grade)}</span><span>${escapeHtml(booking.phone)}</span></div>`).join("")}</div>` : '<div class="roster-empty">当前时段暂无预约</div>';
+  el("rosterList").innerHTML = rows.length ? `<div class="roster-list">${rows.map((booking) => {
+    const groupCount = day.bookings.filter((row) => (row.groupId || row.id) === (booking.groupId || booking.id)).length;
+    return `<div class="roster-row"><strong>${booking.machineId} 号机</strong><span>${escapeHtml(booking.student)} · ${escapeHtml(booking.grade)}${groupCount > 1 ? ` · 连约 ${groupCount} 段` : ""}</span><span>${escapeHtml(booking.phone)}</span></div>`;
+  }).join("")}</div>` : '<div class="roster-empty">当前时段暂无预约</div>';
 }
 
 async function adminAction(payload, successMessage) {
   try {
     await api("/api/admin/action", { method: "POST", body: JSON.stringify(payload) });
-    adminMachine = null;
     await loadAdminDate(adminDateIndex);
     showToast(successMessage);
   } catch (error) {
@@ -393,7 +480,7 @@ async function switchView() {
   if (isAdmin) await loadAdminDate(adminDateIndex);
   else {
     renderParent();
-    await loadParentDate(parentDateIndex, true);
+    await loadParentDate(parentDateIndex, !getDay(parentDateIndex).loaded, getDay(parentDateIndex).loaded);
   }
 }
 
@@ -437,10 +524,10 @@ el("successDone").addEventListener("click", () => { el("successLayer").hidden = 
 el("successLayer").addEventListener("click", (event) => { if (event.target === el("successLayer")) el("successLayer").hidden = true; });
 document.addEventListener("visibilitychange", () => {
   if (document.visibilityState !== "visible" || location.hash === "#admin" || selectedMachine) return;
-  loadParentDate(parentDateIndex, true);
+  loadParentDate(parentDateIndex, true, true);
 });
 window.setInterval(() => {
-  if (document.visibilityState === "visible" && location.hash !== "#admin" && !selectedMachine) loadParentDate(parentDateIndex, true);
+  if (document.visibilityState === "visible" && location.hash !== "#admin" && !selectedMachine) loadParentDate(parentDateIndex, true, true);
 }, 30000);
 
 switchView();

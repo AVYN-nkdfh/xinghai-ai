@@ -1,4 +1,4 @@
-# 星海工作室机位预约｜生产验收 v1.1
+# 星海工作室机位预约｜生产验收 v1.2
 
 更新时间：2026-07-22
 
@@ -28,8 +28,27 @@
 - [x] 家长端截图：`prototype/screenshots/production-parent.png`。
 - [x] 后台登录截图：`prototype/screenshots/production-admin-login-20260722.png`。
 
-## 发布结果
+## v1.1 发布结果
 
 - 正式地址：`https://xinghai-ai.com/booking`
 - Vercel deployment：`dpl_9sBAim6LApZfgBYRBTvCzAQRdVWu`
 - 生产数据：测试预约已取消，2026-07-23 三个时段均无测试占位残留。
+
+## v1.2 本地与接口验收
+
+- [x] 家长可选择任意 1–3 个当天时段，并有“全选当天”。
+- [x] 座位图只允许选择在全部所选时段均空闲的机器。
+- [x] 多时段预约全部成功或全部失败，后台可整组取消。
+- [x] 管理员可维护当前时段、今天全部时段和长期维护。
+- [x] 长期维护中的机器在所有日期和时段均不可预约，恢复后重新可用。
+- [x] 上午、下午、晚间之间切换只改变本地选择状态，无加载遮挡。
+- [x] 冷启动建表迁移合并为一次数据库事务。
+- [x] 生产同结构数据库回归通过，测试预约和维护状态已清理。
+- [x] 本地浏览器截图：`prototype/screenshots/booking-multi-slot.png`。
+- [x] 本地后台截图：`prototype/screenshots/admin-long-term-maintenance.png`。
+
+## v1.2 生产待验收
+
+- [ ] 正式页面多时段选择与长期维护界面已更新。
+- [ ] 正式接口回归通过且测试数据已清理。
+- [ ] 保存正式家长端与管理端截图。

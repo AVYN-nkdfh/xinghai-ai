@@ -30,6 +30,13 @@ export function validateSlot(value) {
   return value;
 }
 
+export function validateSlots(value) {
+  const source = Array.isArray(value) ? value : [value];
+  const slots = [...new Set(source.map((slotId) => validateSlot(slotId)))];
+  if (!slots.length || slots.length > SLOT_IDS.length) throw badRequest("请选择 1 至 3 个时段");
+  return SLOT_IDS.filter((slotId) => slots.includes(slotId));
+}
+
 export function validateMachine(value) {
   const machineId = Number(value);
   if (!Number.isInteger(machineId) || machineId < 1 || machineId > 6) throw badRequest("机器编号不正确");

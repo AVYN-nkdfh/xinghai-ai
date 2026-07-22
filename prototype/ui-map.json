@@ -1,24 +1,24 @@
 {
   "project": "星海工作室机位预约",
-  "version": "1.1",
+  "version": "1.2",
   "referenceMode": true,
   "pages": [
     {
       "id": "parent-booking",
       "path": "/booking",
       "role": "parent",
-      "components": ["date-strip", "time-strip", "facing-seat-map", "booking-form", "success-dialog"],
-      "states": ["loading", "default", "machine-selected", "booked", "maintenance", "slot-closed", "error", "success"],
-      "actions": ["select-date", "select-slot", "select-machine", "submit-booking", "open-admin"],
+      "components": ["date-strip", "multi-time-strip", "select-all-slots", "aggregated-facing-seat-map", "booking-form", "success-dialog"],
+      "states": ["loading", "default", "multi-slot-selected", "machine-selected", "partially-unavailable", "booked", "maintenance", "long-term-maintenance", "slot-closed", "error", "success"],
+      "actions": ["select-date", "toggle-slot", "select-all-slots", "select-machine", "submit-booking-group", "open-admin"],
       "dependencies": ["dist/booking.html", "/booking/booking.js", "/api/booking/availability", "/api/booking/create"]
     },
     {
       "id": "admin-dashboard",
       "path": "/booking#admin",
       "role": "admin",
-      "components": ["password-login", "date-strip", "time-strip", "slot-toggle", "facing-seat-map", "machine-actions", "roster"],
-      "states": ["logged-out", "login-error", "default", "empty", "booked", "maintenance", "slot-closed"],
-      "actions": ["login", "set-maintenance", "set-slot-open", "cancel-booking", "logout"],
+      "components": ["password-login", "date-strip", "time-strip", "slot-toggle", "facing-seat-map", "maintenance-scope-actions", "roster"],
+      "states": ["logged-out", "login-error", "default", "empty", "booked", "maintenance", "all-day-maintenance", "long-term-maintenance", "slot-closed"],
+      "actions": ["login", "set-current-slot-maintenance", "set-all-day-maintenance", "set-long-term-maintenance", "set-slot-open", "cancel-booking-group", "logout"],
       "dependencies": ["dist/booking.html", "/booking/booking.js", "/api/admin/login", "/api/admin/state", "/api/admin/action"]
     }
   ],
