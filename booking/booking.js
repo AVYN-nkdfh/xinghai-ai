@@ -7,10 +7,27 @@ const MACHINES = [1, 2, 3, 4, 5, 6];
 const WEEK = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 const el = (id) => document.getElementById(id);
 const LOCAL_PREVIEW = ["127.0.0.1", "localhost"].includes(location.hostname) && location.port === "8877";
-const previewState = { authenticated: false, bookings: [], maintenance: [], longMaintenance: [], closed: [] };
+const PREVIEW_MIXED_STATE = LOCAL_PREVIEW && new URLSearchParams(location.search).get("scenario") === "mixed";
+const previewState = {
+  authenticated: false,
+  bookings: PREVIEW_MIXED_STATE ? [{
+    id: crypto.randomUUID(),
+    groupId: crypto.randomUUID(),
+    bookingCode: "XH-PREVIEW-MIXED",
+    date: isoDate(new Date()),
+    slotId: "afternoon",
+    machineId: 1,
+    student: "示例学生",
+    grade: "其他",
+    phone: "19900000000",
+  }] : [],
+  maintenance: [],
+  longMaintenance: [],
+  closed: [],
+};
 
 let parentDateIndex = 0;
-let parentSlotIds = ["morning"];
+let parentSlotIds = PREVIEW_MIXED_STATE ? ["morning", "afternoon"] : ["morning"];
 let selectedMachine = null;
 let adminDateIndex = 0;
 let adminSlotId = "morning";
@@ -211,6 +228,20 @@ function parentMachineState(day, machineId) {
   if (states.includes("maintenance")) return "maintenance";
   return "closed";
 }
+function machineStateText(state, short = false) {
+  if (state === "available") return "可选";
+  if (state === "booked") return short ? "已约" : "已预约";
+  if (state === "maintenance") return short ? "维护" : "维护中";
+  if (state === "long-maintenance") return "长期维护";
+  return short ? "关闭" : "已关闭";
+}
+function parentMachineSlotDetails(day, machineId) {
+  if (parentSlotIds.length <= 1) return [];
+  return selectedSlots().map((slot) => ({
+    name: slot.name,
+    state: machineState(day, slot.id, machineId),
+  }));
+}
 function formatDate(dateKey, withYear = false) {
   return new Intl.DateTimeFormat("zh-CN", withYear
     ? { year: "numeric", month: "long", day: "numeric", weekday: "short" }
@@ -240,19 +271,23 @@ function renderTimeStrip(targetId, day, activeSlotIds, onSelect, multiple = fals
   el(targetId).querySelectorAll("[data-slot-id]").forEach((button) => button.addEventListener("click", () => onSelect(button.dataset.slotId)));
 }
 
-function machineMarkup(day, slotId, machineId, selected, admin = false, stateOverride = "") {
+function machineMarkup(day, slotId, machineId, selected, admin = false, stateOverride = "", slotDetails = []) {
   const state = stateOverride || machineState(day, slotId, machineId);
   const booking = getBooking(day, slotId, machineId);
-  const stateText = state === "available" ? "可选" : state === "booked" ? "已预约" : state === "maintenance" ? "维护中" : state === "long-maintenance" ? "长期维护" : "已关闭";
+  const stateText = machineStateText(state);
   const rowClass = machineId <= 3 ? "top" : "bottom";
   const disabled = !admin && state !== "available";
-  const person = admin && booking ? `<span class="machine-person">${escapeHtml(booking.student)}</span>` : `<span class="machine-state">${stateText}</span>`;
+  const detailMarkup = slotDetails.length > 1
+    ? `<span class="machine-slot-states">${slotDetails.map((detail) => `<span class="machine-slot-state"><span class="machine-slot-label">${detail.name}</span><span class="machine-slot-value is-${detail.state}">${machineStateText(detail.state, true)}</span></span>`).join("")}</span>`
+    : `<span class="machine-state">${stateText}</span>`;
+  const person = admin && booking ? `<span class="machine-person">${escapeHtml(booking.student)}</span>` : detailMarkup;
   const detail = admin && booking ? ` ${booking.student}` : "";
-  return `<button class="machine is-${state} ${selected ? "is-selected" : ""}" type="button" data-machine-id="${machineId}" aria-label="${machineId}号机 ${stateText}${escapeHtml(detail)}" ${disabled ? "disabled" : ""}><span class="machine-visual ${rowClass}"><i class="screen"></i><i class="chair"></i></span><span class="machine-number">${machineId} 号机</span>${person}</button>`;
+  const slotDetailLabel = slotDetails.map((item) => `${item.name}${machineStateText(item.state, true)}`).join("，");
+  return `<button class="machine is-${state} ${selected ? "is-selected" : ""} ${slotDetails.length > 1 ? "has-slot-details" : ""}" type="button" data-machine-id="${machineId}" aria-label="${machineId}号机 ${slotDetailLabel || stateText}${escapeHtml(detail)}" ${disabled ? "disabled" : ""}><span class="machine-visual ${rowClass}"><i class="screen"></i><i class="chair"></i></span><span class="machine-number">${machineId} 号机</span>${person}</button>`;
 }
 
-function renderSeatMap(targetId, day, slotId, selected, onSelect, admin = false, stateResolver = null) {
-  const row = (ids, rowClass) => `<div class="machine-row row-${rowClass}">${ids.map((machineId) => machineMarkup(day, slotId, machineId, selected === machineId, admin, stateResolver?.(machineId))).join("")}</div>`;
+function renderSeatMap(targetId, day, slotId, selected, onSelect, admin = false, stateResolver = null, detailResolver = null) {
+  const row = (ids, rowClass) => `<div class="machine-row row-${rowClass}">${ids.map((machineId) => machineMarkup(day, slotId, machineId, selected === machineId, admin, stateResolver?.(machineId), detailResolver?.(machineId))).join("")}</div>`;
   el(targetId).innerHTML = `${row([1, 2, 3], "top")}<div class="facing-axis"><span>两排面对面</span></div>${row([4, 5, 6], "bottom")}`;
   el(targetId).querySelectorAll("[data-machine-id]").forEach((button) => button.addEventListener("click", () => onSelect(Number(button.dataset.machineId))));
 }
@@ -312,7 +347,7 @@ function renderParent() {
     selectedMachine = machineId;
     renderParent();
     if (window.innerWidth <= 760) el("parentSide").scrollIntoView({ behavior: "smooth", block: "start" });
-  }, false, (machineId) => parentMachineState(day, machineId));
+  }, false, (machineId) => parentMachineState(day, machineId), (machineId) => parentMachineSlotDetails(day, machineId));
   el("parentSeatMap").closest(".map-panel").hidden = !hasOpenSlot;
   el("parentSide").hidden = !hasOpenSlot;
   el("parentClosed").hidden = hasOpenSlot;
