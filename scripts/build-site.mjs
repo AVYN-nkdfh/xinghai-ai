@@ -25,6 +25,7 @@ function copy(source, destination) {
 copy("index.html", "index.html");
 copy("assets", "assets");
 copy("booking", "booking");
+copy("booking/index.html", "booking.html");
 copy("projects", "projects");
 
 console.log("Built Xinghai website with production booking route.");
