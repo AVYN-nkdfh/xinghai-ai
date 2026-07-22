@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
+<meta name="x-preview-version" content="2026-07-22-0253" />
+<title>一只塑料瓶的 450 年 · 一镜到底</title>
+<meta name="description" content="一秒松手,四百五十年漂流。一镜到底,跟随一只塑料瓶从海面沉入马里亚纳海沟。" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=Archivo:wght@400;600;800;900&display=swap" rel="stylesheet" />
+<style>
+/* ============================================================
+   一只塑料瓶的 450 年 · 六幕电影
+   真实水下摄影场景 × 溶解转场 × 双维度 HUD
+   ============================================================ */
+:root{
+  --bg:#01050c;
+  --ink:#eef6fb;
+  --dim:#8fb0c6;
+  --faint:rgba(143,176,198,.36);
+  --cyan:#45e8d0;
+  --amber:#f2b15c;
+  --coral:#f0644a;
+  --serif:'Noto Serif SC', 'Songti SC', serif;
+  --sans:'Noto Sans SC', 'PingFang SC', system-ui, sans-serif;
+  --en:'Archivo', 'Noto Sans SC', sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+html.lenis, html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:300;
+  overflow-x:hidden;-webkit-font-smoothing:antialiased;cursor:none;
+}
+::selection{background:var(--cyan);color:#02131a}
+a,button{cursor:none}
+
+/* ---------- 载入帷幕 ---------- */
+.veil{
+  position:fixed;inset:0;z-index:5000;background:#01050c;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;
+  animation:veil-failsafe .01s linear 4s forwards;
+}
+@keyframes veil-failsafe{to{opacity:0;visibility:hidden;pointer-events:none}}
+.veil .v-logo{font-family:var(--en);font-weight:900;letter-spacing:.4em;font-size:13px;color:var(--ink)}
+.veil .v-bar{width:180px;height:1px;background:rgba(143,176,198,.2);position:relative;overflow:hidden}
+.veil .v-bar i{position:absolute;left:0;top:0;bottom:0;width:0;background:var(--cyan)}
+.veil .v-pct{font-family:var(--en);font-size:10px;letter-spacing:.4em;color:var(--faint)}
+
+/* ---------- 颗粒 & 暗角 ---------- */
+.grain{
+  position:fixed;inset:-50%;z-index:2000;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity:.06;animation:grain 8s steps(10) infinite;
+}
+@keyframes grain{
+  0%,100%{transform:translate(0,0)} 10%{transform:translate(-5%,-8%)}
+  20%{transform:translate(-12%,4%)} 30%{transform:translate(6%,-14%)}
+  40%{transform:translate(-4%,12%)} 50%{transform:translate(-10%,6%)}
+  60%{transform:translate(12%,0)} 70%{transform:translate(0,10%)}
+  80%{transform:translate(3%,12%)} 90%{transform:translate(-8%,3%)}
+}
+.vignette{
+  position:fixed;inset:0;z-index:1500;pointer-events:none;
+  background:radial-gradient(ellipse at center,transparent 50%,rgba(0,2,6,.62) 100%);
+}
+
+/* ---------- 自定义光标 ---------- */
+.cursor-dot,.cursor-ring{
+  position:fixed;top:0;left:0;z-index:3000;pointer-events:none;
+  border-radius:50%;transform:translate(-50%,-50%);mix-blend-mode:difference;
+}
+.cursor-dot{width:7px;height:7px;background:#fff}
+.cursor-ring{width:36px;height:36px;border:1px solid rgba(255,255,255,.8);
+  transition:width .3s ease,height .3s ease,opacity .3s ease}
+body.cursor-grow .cursor-ring{width:68px;height:68px;opacity:.6}
+@media (hover:none),(pointer:coarse){
+  body,a,button{cursor:auto}
+  .cursor-dot,.cursor-ring{display:none}
+}
+
+/* ---------- 顶部进度 ---------- */
+.progress{
+  position:fixed;top:0;left:0;height:2px;width:100%;z-index:1600;
+  transform-origin:0 50%;transform:scaleX(0);
+  background:linear-gradient(90deg,var(--cyan),var(--amber),var(--coral));
+}
+
+/* ---------- 导航 ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:1400;
+  display:flex;justify-content:space-between;align-items:center;
+  padding:24px clamp(20px,4vw,56px);mix-blend-mode:difference;
+}
+.nav .logo{
+  font-family:var(--en);font-weight:900;letter-spacing:.28em;font-size:13px;
+  color:#fff;text-decoration:none;display:flex;align-items:center;gap:12px;
+}
+.nav .logo .dot{width:8px;height:8px;border-radius:50%;background:#fff;
+  animation:pulse-dot 2.4s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.7);opacity:.4}}
+.nav ul{display:flex;gap:clamp(16px,3vw,38px);list-style:none}
+.nav ul a{
+  color:#fff;text-decoration:none;font-size:12px;letter-spacing:.22em;
+  font-weight:500;position:relative;padding:4px 0;
+}
+.nav ul a::after{
+  content:"";position:absolute;left:0;bottom:0;width:100%;height:1px;
+  background:#fff;transform:scaleX(0);transform-origin:100% 50%;
+  transition:transform .45s cubic-bezier(.76,0,.24,1);
+}
+.nav ul a:hover::after{transform:scaleX(1);transform-origin:0 50%}
+@media (max-width:640px){.nav ul{display:none}}
+
+/* ============================================================
+   舞台 & 场景
+   ============================================================ */
+.odyssey{position:relative;background:#000}
+.stage{position:relative;height:100vh;height:100svh;overflow:hidden;background:#000}
+.scene{
+  position:absolute;inset:-4%;z-index:1;
+  background-size:cover;background-position:center;
+  opacity:0;will-change:transform,opacity;
+}
+.scene[data-scene="0"]{opacity:1;visibility:visible}
+.scene-shade{
+  position:absolute;inset:0;z-index:2;pointer-events:none;
+  background:
+    linear-gradient(to top,rgba(0,3,8,.72) 0%,transparent 38%),
+    linear-gradient(to bottom,rgba(0,3,8,.42) 0%,transparent 26%);
+}
+#fxCanvas{position:absolute;inset:0;width:100%;height:100%;z-index:3}
+
+/* ---------- 双 HUD ---------- */
+.hud{position:absolute;top:clamp(80px,12vh,112px);z-index:6;font-family:var(--en)}
+.hud-depth{left:clamp(20px,4.6vw,72px)}
+.hud-time{right:clamp(20px,4.6vw,72px);text-align:right}
+.hud .h-label{font-size:10px;letter-spacing:.5em;color:rgba(220,238,248,.55);margin-bottom:10px}
+.hud .h-num{
+  font-weight:900;font-size:clamp(36px,4.4vw,62px);line-height:1;color:#fff;
+  font-variant-numeric:tabular-nums;
+}
+.hud-depth .h-num{text-shadow:0 0 30px rgba(69,232,208,.4)}
+.hud-time .h-num{text-shadow:0 0 30px rgba(240,100,74,.4)}
+.hud .h-num small{font-size:.34em;font-weight:600;margin-left:6px}
+.hud-depth .h-num small{color:var(--cyan)}
+.hud-time .h-num small{color:var(--coral)}
+.hud .h-rule{width:52px;height:1px;margin:12px 0;background:linear-gradient(90deg,var(--cyan),transparent)}
+.hud-time .h-rule{margin-left:auto;background:linear-gradient(90deg,transparent,var(--coral))}
+.hud .h-zone{font-size:11.5px;letter-spacing:.3em;color:rgba(220,238,248,.75)}
+.hud-depth .h-zone{color:var(--cyan)}
+.hud-time .h-zone{color:var(--coral)}
+@media (max-width:640px){
+  .hud .h-num{font-size:32px}
+  .hud-depth{left:16px}.hud-time{right:16px}
+}
+
+/* ---------- 章节字幕 ---------- */
+.step{
+  position:absolute;z-index:6;
+  left:clamp(22px,5.5vw,86px);bottom:clamp(64px,12vh,124px);
+  width:min(620px,86vw);opacity:0;pointer-events:none;
+}
+.step[data-step="0"]{opacity:1}
+.step .m{
+  display:flex;align-items:center;gap:12px;
+  font-family:var(--en);font-weight:800;font-size:11.5px;letter-spacing:.45em;
+  color:var(--amber);margin-bottom:18px;text-transform:uppercase;
+}
+.step .m::before{content:"";width:8px;height:8px;background:var(--amber);flex:none}
+.step h4{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(27px,3.9vw,54px);line-height:1.32;letter-spacing:.03em;
+  text-shadow:0 4px 44px rgba(0,0,0,.9);
+}
+.step p{
+  margin-top:16px;color:#b9d2e2;font-size:clamp(13px,1.1vw,15px);
+  line-height:2;letter-spacing:.04em;max-width:54ch;
+  text-shadow:0 2px 18px rgba(0,0,0,.9);
+}
+
+/* 序章:居中满幅 */
+.step.center{
+  left:50%;right:auto;bottom:auto;top:50%;
+  transform:translate(-50%,-50%);
+  width:min(1020px,94vw);text-align:center;
+}
+.intro-title{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(46px,9.4vw,132px);line-height:1.1;letter-spacing:.02em;
+  text-shadow:0 6px 60px rgba(0,0,0,.75);
+}
+.intro-title .l{display:block;overflow:hidden;padding-bottom:.08em}
+.intro-title .l>span{display:inline-block;will-change:transform}
+.intro-title .yr{
+  background:linear-gradient(112deg,#ffe9c4 5%,var(--amber) 45%,var(--coral) 95%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 36px rgba(240,100,74,.28));
+}
+.intro-sub{
+  margin:30px auto 0;max-width:560px;color:#c3d9e8;
+  font-size:clamp(13.5px,1.25vw,16.5px);line-height:2.1;letter-spacing:.06em;
+  text-shadow:0 2px 20px rgba(0,0,0,.9);
+}
+.intro-sub strong{color:#fff;font-weight:500}
+.intro-hint{
+  margin-top:46px;display:inline-flex;flex-direction:column;align-items:center;gap:14px;
+  font-size:10.5px;letter-spacing:.42em;color:rgba(220,238,248,.6);text-indent:.42em;
+}
+.intro-hint .wheel{width:22px;height:36px;border:1px solid rgba(220,238,248,.4);border-radius:12px;position:relative}
+.intro-hint .wheel::before{
+  content:"";position:absolute;top:6px;left:50%;width:3px;height:7px;margin-left:-1.5px;
+  border-radius:3px;background:var(--cyan);animation:wheel 1.8s ease-in-out infinite;
+}
+@keyframes wheel{0%{transform:translateY(0);opacity:1}70%{transform:translateY(12px);opacity:0}100%{opacity:0}}
+
+/* ---------- 旅程刻度尺 ---------- */
+.ruler{
+  position:absolute;left:50%;transform:translateX(-50%);
+  bottom:22px;z-index:6;width:min(680px,80vw);
+}
+.ruler .r-track{position:relative;height:1px;background:rgba(220,238,248,.25)}
+.ruler .r-fill{
+  position:absolute;left:0;top:-0.5px;height:2px;width:0;
+  background:linear-gradient(90deg,var(--cyan),var(--amber),var(--coral));
+}
+.ruler .r-tick{position:absolute;top:-3px;width:1px;height:7px;background:rgba(220,238,248,.5)}
+.ruler .r-tick span{
+  position:absolute;top:10px;left:50%;transform:translateX(-50%);
+  font-family:var(--en);font-size:9px;letter-spacing:.08em;color:rgba(220,238,248,.5);white-space:nowrap;
+}
+@media (max-width:640px){.ruler .r-tick span{display:none}}
+
+.reveal{opacity:0}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+  .reveal{opacity:1}
+}
+
+</style>
+</head>
+<body>
+
+<!-- 载入帷幕 -->
+<div class="veil" id="veil">
+  <div class="v-logo">450 YEARS</div>
+  <div class="v-bar"><i id="vBar"></i></div>
+  <div class="v-pct" id="vPct">潜入中 · 0%</div>
+</div>
+
+<div class="grain"></div>
+<div class="vignette"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="progress" id="progress"></div>
+
+<header class="nav">
+  <a class="logo" href="#" data-hover data-goto="0"><span class="dot"></span>450 YEARS</a>
+  <ul>
+    <li><a href="#" data-hover data-goto="0">序章</a></li>
+    <li><a href="#" data-hover data-goto="0.15">旅程</a></li>
+    <li><a href="#" data-hover data-goto="0.92">深渊</a></li>
+  </ul>
+</header>
+
+<!-- ================= 一镜到底 ================= -->
+<section class="odyssey" id="odyssey">
+  <div class="stage" id="stage">
+    <!-- 六幕场景 -->
+    <div class="scene" data-scene="0" style="background-image:url('assets/scene-1-surface.jpg')"></div>
+    <div class="scene" data-scene="1" style="background-image:url('assets/scene-2-drift.jpg')"></div>
+    <div class="scene" data-scene="2" style="background-image:url('assets/scene-3-twilight.jpg')"></div>
+    <div class="scene" data-scene="3" style="background-image:url('assets/scene-4-midnight.jpg')"></div>
+    <div class="scene" data-scene="4" style="background-image:url('assets/scene-5-abyss.jpg')"></div>
+    <div class="scene" data-scene="5" style="background-image:url('assets/scene-6-trench.jpg')"></div>
+    <div class="scene-shade"></div>
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- 左:深度计 -->
+    <div class="hud hud-depth">
+      <div class="h-label">DEPTH · 下潜深度</div>
+      <div class="h-num"><span id="depthNum">0</span><small>m</small></div>
+      <div class="h-rule"></div>
+      <div class="h-zone" id="depthZone">海面 · 落水点</div>
+    </div>
+    <!-- 右:时间计 -->
+    <div class="hud hud-time">
+      <div class="h-label">TIME · 入海时间</div>
+      <div class="h-num">第 <span id="yearNum">0</span><small>年</small></div>
+      <div class="h-rule"></div>
+      <div class="h-zone" id="yearZone">刚刚开始</div>
+    </div>
+
+    <!-- 章节字幕 -->
+    <div class="step center" data-step="0">
+      <div class="intro-title">
+        <span class="l"><span id="introL1">一只塑料瓶的</span></span>
+        <span class="l"><span class="yr" id="introL2">450 年</span></span>
+      </div>
+      <p class="intro-sub" id="introSub">
+        把它丢进海里,只需要<strong>一秒</strong>。海洋"消化"它,需要<strong>四个半世纪</strong>。<br/>
+        现在,跟着它一起沉下去。
+      </p>
+      <div class="intro-hint" id="introHint"><div class="wheel"></div>滚动 · 送它入海</div>
+    </div>
+
+    <div class="step" data-step="1">
+        <p class="m">第 1 年 · 200 m · 光透层</p>
+        <h4>洋流是它的船票</h4>
+        <p>它随暖流漂过千里。鱼群好奇地凑近又散开,海龟隔着水流打量它——和水母长得真像,而水母,是海龟最爱的食物。</p>
+    </div>
+
+    <div class="step" data-step="2">
+        <p class="m">第 30 年 · 800 m · 暮光区</p>
+        <h4>阳光消失了,裂痕出现了</h4>
+        <p>三十年的紫外线与海浪,让它变脆、发白、开裂。第一批微塑料从它身上脱落,开始了各自的流浪。</p>
+    </div>
+
+    <div class="step" data-step="3">
+        <p class="m">第 100 年 · 2,500 m · 午夜区</p>
+        <h4>碎成几块,继续下坠</h4>
+        <p>一个世纪过去,它不再是一只瓶子,而是一把碎片。这里的居民自带灯火,从未见过阳光。</p>
+    </div>
+
+    <div class="step" data-step="4">
+        <p class="m">第 250 年 · 6,000 m · 深渊带</p>
+        <h4>它成了"塑料雪花"</h4>
+        <p>碎片磨成微粒,混进海洋雪缓缓沉降。滤食者把它们和食物一起吞下——它,进入了食物链。</p>
+    </div>
+
+    <div class="step" data-step="5">
+        <p class="m">第 450 年 · 10,994 m · 海沟带</p>
+        <h4>它终于"消失"了</h4>
+        <p>四个半世纪,瓶子的形状彻底解散,化作上亿个微粒,藏进沉积物、端足类的身体,和地球最深的海沟。</p>
+    </div>
+
+    <!-- 刻度尺 -->
+    <div class="ruler">
+      <div class="r-track">
+        <div class="r-fill" id="rulerFill"></div>
+        <div class="r-tick" style="left:8%"><span>0 m</span></div>
+        <div class="r-tick" style="left:22%"><span>200 m</span></div>
+        <div class="r-tick" style="left:38%"><span>800 m</span></div>
+        <div class="r-tick" style="left:56%"><span>2,500 m</span></div>
+        <div class="r-tick" style="left:74%"><span>6,000 m</span></div>
+        <div class="r-tick" style="left:99%"><span>10,994 m</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+window.addEventListener("error",function(){
+  var veil=document.getElementById("veil");
+  if(veil) veil.style.display="none";
+},true);
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://unpkg.com/lenis@1.1.14/dist/lenis.min.js"></script>
+
+<script>
+(function(){
+  "use strict";
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  /* 调试参数:?static=1 定格全部动效,&p=0~1 指定进度,仅用于静态预览/截图 */
+  var qs = new URLSearchParams(location.search);
+  var staticMode = qs.has("static");
+  if (staticMode) reduced = true;
+  var hasGsap = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
+  if (hasGsap) gsap.registerPlugin(ScrollTrigger);
+
+  var clamp = function(v, a, b){ return Math.min(b, Math.max(a, v)); };
+  var lerp = function(a, b, t){ return a + (b - a) * t; };
+
+  /* 章节边界 */
+  var BOUNDS = [0.08, 0.22, 0.38, 0.56, 0.74];
+  var PS = [0, 0.08, 0.22, 0.38, 0.56, 0.74, 1];
+  var DEPTHS = [0, 0, 200, 800, 2500, 6000, 10994];
+  var YEARS  = [0, 0, 1, 30, 100, 250, 450];
+  function piecewise(p, table){
+    for (var i = 1; i < PS.length; i++){
+      if (p <= PS[i]) {
+        var t = (p - PS[i-1]) / (PS[i] - PS[i-1]);
+        return lerp(table[i-1], table[i], t);
+      }
+    }
+    return table[table.length - 1];
+  }
+
+  /* ================= 图片预载 ================= */
+  var veil = document.getElementById("veil");
+  var vBar = document.getElementById("vBar");
+  var vPct = document.getElementById("vPct");
+  var SCENES = [
+    "assets/scene-1-surface.jpg",
+    "assets/scene-2-drift.jpg",
+    "assets/scene-3-twilight.jpg",
+    "assets/scene-4-midnight.jpg",
+    "assets/scene-5-abyss.jpg",
+    "assets/scene-6-trench.jpg"
+  ];
+  var loaded = 0, ready = false;
+  function onReady(cb){
+    if (staticMode) { cb(); return; }
+    var t0 = performance.now();
+    var iv = setInterval(function(){
+      if ((ready && performance.now() - t0 > 400) || performance.now() - t0 > 9000) {
+        clearInterval(iv); cb();
+      }
+    }, 60);
+  }
+  SCENES.forEach(function(src){
+    var im = new Image();
+    im.onload = im.onerror = function(){
+      loaded++;
+      var pct = Math.round(loaded / SCENES.length * 100);
+      if (vBar) vBar.style.width = pct + "%";
+      if (vPct) vPct.textContent = "潜入中 · " + pct + "%";
+      if (loaded >= SCENES.length) ready = true;
+    };
+    im.src = src;
+  });
+
+  /* ================= 平滑滚动 ================= */
+  var lenis = null;
+  if (!reduced && typeof Lenis !== "undefined") {
+    lenis = new Lenis({ lerp: 0.085, wheelMultiplier: 1.05 });
+    lenis.on("scroll", function(){ if (hasGsap) ScrollTrigger.update(); });
+    if (hasGsap) {
+      gsap.ticker.add(function(t){ lenis.raf(t * 1000); });
+      gsap.ticker.lagSmoothing(0);
+    } else {
+      (function raf(t){ lenis.raf(t); requestAnimationFrame(raf); })(0);
+    }
+  }
+
+  /* ================= 自定义光标 ================= */
+  var dot = document.getElementById("cursorDot"),
+      ring = document.getElementById("cursorRing"),
+      mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
+  if (window.matchMedia("(hover:hover) and (pointer:fine)").matches) {
+    addEventListener("mousemove", function(e){ mx = e.clientX; my = e.clientY; });
+    (function loop(){
+      rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
+      if (dot) dot.style.transform = "translate(" + (mx-3.5) + "px," + (my-3.5) + "px)";
+      if (ring) ring.style.transform = "translate(" + (rx-18) + "px," + (ry-18) + "px)";
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll("[data-hover]").forEach(function(el){
+      el.addEventListener("mouseenter", function(){ document.body.classList.add("cursor-grow"); });
+      el.addEventListener("mouseleave", function(){ document.body.classList.remove("cursor-grow"); });
+    });
+  } else {
+    document.body.style.cursor = "auto";
+    if (dot) dot.style.display = "none";
+    if (ring) ring.style.display = "none";
+  }
+
+  /* ================= 顶部进度 ================= */
+  var progress = document.getElementById("progress");
+  function updateProgress(){
+    var h = document.documentElement;
+    var max = h.scrollHeight - h.clientHeight;
+    var p = max > 0 ? (h.scrollTop || window.scrollY) / max : 0;
+    if (progress) progress.style.transform = "scaleX(" + p + ")";
+  }
+  addEventListener("scroll", updateProgress, { passive: true });
+  updateProgress();
+
+  /* ================= 场景引擎 ================= */
+  var sceneEls = Array.prototype.slice.call(document.querySelectorAll(".scene"));
+  var FADE = 0.035;
+  function sceneWindows(i){
+    var starts = [0].concat(BOUNDS);
+    var ends = BOUNDS.concat([1.01]);
+    return [starts[i], ends[i]];
+  }
+  function renderScenes(p){
+    sceneEls.forEach(function(el, i){
+      var w = sceneWindows(i), s = w[0], e = w[1];
+      var a = 1, o = 1;
+      if (i > 0) a = clamp((p - (s - FADE)) / FADE, 0, 1);
+      if (i < sceneEls.length - 1) o = 1 - clamp((p - (e - FADE)) / FADE, 0, 1);
+      var op = Math.min(a, o);
+      var local = clamp((p - s) / (e - s), 0, 1);
+      var scale = 1.02 + 0.07 * local;
+      var ty = -1.4 * local;
+      el.style.opacity = op;
+      el.style.transform = "translate3d(0," + ty + "%," + "0) scale(" + scale + ")";
+      el.style.visibility = op <= 0.001 ? "hidden" : "visible";
+    });
+  }
+
+  /* ================= 粒子特效层:海洋雪 + 微塑料 ================= */
+  var wc = document.getElementById("fxCanvas");
+  var wctx = wc ? wc.getContext("2d") : null;
+  var JP = 0;
+  function makeSprite(r, g, b){
+    var c = document.createElement("canvas");
+    c.width = c.height = 64;
+    var x = c.getContext("2d");
+    var grad = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, "rgba(" + r + "," + g + "," + b + ",1)");
+    grad.addColorStop(0.35, "rgba(" + r + "," + g + "," + b + ",0.45)");
+    grad.addColorStop(1, "rgba(" + r + "," + g + "," + b + ",0)");
+    x.fillStyle = grad;
+    x.fillRect(0, 0, 64, 64);
+    return c;
+  }
+  var SP_WHITE = makeSprite(214, 234, 246);
+  var SP_CORAL = makeSprite(240, 110, 84);
+  var SP_CYAN = makeSprite(96, 240, 220);
+  var snow1 = [], snow2 = [], flecks = [], drift = [];
+  if (wc) {
+    var wResize = function(){
+      wc.width = wc.offsetWidth * devicePixelRatio;
+      wc.height = wc.offsetHeight * devicePixelRatio;
+      wctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    };
+    wResize(); addEventListener("resize", wResize);
+    var i;
+    function seed(arr, n, rMin, rMax, sMin, sMax){
+      for (var j = 0; j < n; j++) arr.push({
+        x: Math.random(), y: Math.random(),
+        r: rMin + Math.random()*(rMax-rMin),
+        s: sMin + Math.random()*(sMax-sMin),
+        w: Math.random()*Math.PI*2
+      });
+    }
+    seed(snow1, 46, 0.8, 1.8, 0.00012, 0.0003);
+    seed(snow2, 26, 2.0, 4.2, 0.0003, 0.0006);
+    for (i = 0; i < 46; i++) flecks.push({
+      x: Math.random(), y: Math.random(),
+      size: 1.5 + Math.random()*3, appear: 0.30 + Math.random()*0.5,
+      w: Math.random()*Math.PI*2
+    });
+    for (i = 0; i < 8; i++) drift.push({
+      x: Math.random(), y: Math.random(),
+      r: 50 + Math.random()*90, s: 0.00006 + Math.random()*0.00018,
+      ph: Math.random()*Math.PI*2
+    });
+  }
+  function drawFx(){
+    var W = wc.offsetWidth, H = wc.offsetHeight;
+    var p = JP, t = performance.now();
+    wctx.clearRect(0, 0, W, H);
+    // 前景虚焦尘埃
+    drift.forEach(function(n){
+      n.x += n.s;
+      if (n.x > 1.15) n.x = -0.15;
+      wctx.globalAlpha = 0.024 + 0.018 * Math.sin(t*0.0003 + n.ph);
+      wctx.drawImage(SP_CYAN, n.x * W - n.r/2, (n.y + Math.sin(t*0.0002+n.ph)*0.03) * H - n.r/2, n.r, n.r);
+    });
+    // 海洋雪两层
+    [snow1, snow2].forEach(function(layer, li){
+      layer.forEach(function(s){
+        s.y += s.s; s.w += 0.004;
+        if (s.y > 1.03) { s.y = -0.03; s.x = Math.random(); }
+        var px = (s.x + Math.sin(s.w)*0.012) * W, py = s.y * H;
+        var sz = s.r * 4;
+        wctx.globalAlpha = (li === 0 ? 0.10 : 0.09) + p * (li === 0 ? 0.16 : 0.2);
+        wctx.drawImage(SP_WHITE, px - sz/2, py - sz/2, sz, sz);
+      });
+    });
+    // 微塑料杂质(随时间增多)
+    flecks.forEach(function(fl){
+      var a = clamp((p - fl.appear) / 0.10, 0, 1);
+      if (a <= 0) return;
+      fl.w += 0.003;
+      var sz = fl.size * 3;
+      wctx.globalAlpha = 0.42 * a;
+      wctx.drawImage(SP_CORAL, fl.x * W + Math.sin(fl.w)*8 - sz/2, fl.y * H - sz/2, sz, sz);
+    });
+    wctx.globalAlpha = 1;
+    requestAnimationFrame(drawFx);
+  }
+  if (wc && (!reduced || staticMode)) requestAnimationFrame(drawFx);
+
+  /* ================= HUD & 章节 ================= */
+  var stage = document.getElementById("stage");
+  var depthNum = document.getElementById("depthNum");
+  var depthZone = document.getElementById("depthZone");
+  var yearNum = document.getElementById("yearNum");
+  var yearZone = document.getElementById("yearZone");
+  var rulerFill = document.getElementById("rulerFill");
+  var steps = Array.prototype.slice.call(document.querySelectorAll(".step"));
+
+  var DZONES = [
+    [10,   "海面 · 落水点"],
+    [200,  "光透层 · 阳光所到之处"],
+    [1000, "暮光区 · 阳光尽头"],
+    [4000, "午夜区 · 永恒黑暗"],
+    [9000, "深渊带 · 生命的边界"],
+    [Infinity, "海沟带 · 地球最深处"]
+  ];
+  var YZONES = [
+    [1,   "刚刚开始"],
+    [30,  "随波逐流"],
+    [100, "风化碎裂"],
+    [250, "崩解成雪"],
+    [450, "化为微粒"],
+    [Infinity, "永恒留存"]
+  ];
+  function setStep(idx){
+    steps.forEach(function(s, i2){
+      var on = i2 === idx;
+      var isCenter = s.classList.contains("center");
+      if (hasGsap && !reduced) {
+        gsap.to(s, {
+          opacity: on ? 1 : 0,
+          y: isCenter ? 0 : (on ? 0 : 24),
+          duration: 0.7, ease: "power2.out", overwrite: "auto"
+        });
+      } else {
+        s.style.opacity = on ? 1 : 0;
+      }
+    });
+  }
+  var curStep = -1;
+  function onJourney(p){
+    JP = p;
+    renderScenes(p);
+    var depth = Math.round(piecewise(p, DEPTHS));
+    var year = Math.round(piecewise(p, YEARS));
+    if (depthNum) depthNum.textContent = depth.toLocaleString("en-US");
+    if (yearNum) yearNum.textContent = year.toLocaleString("en-US");
+    var dz = DZONES.find(function(z){ return depth < z[0]; });
+    if (depthZone && dz) depthZone.textContent = dz[1];
+    var yz = YZONES.find(function(z){ return year < z[0]; });
+    if (yearZone && yz) yearZone.textContent = yz[1];
+    if (rulerFill) rulerFill.style.width = (p * 100) + "%";
+    var idx = 0;
+    for (var b = 0; b < BOUNDS.length; b++) {
+      if (p >= BOUNDS[b]) idx = b + 1;
+    }
+    idx = Math.min(steps.length - 1, idx);
+    if (idx !== curStep) { curStep = idx; setStep(idx); }
+  }
+
+  var pinLen = 6000;
+  if (stage && hasGsap && !reduced) {
+    setStep(0); curStep = 0;
+    ScrollTrigger.create({
+      trigger: ".odyssey",
+      start: "top top",
+      end: "+=" + pinLen,
+      pin: true,
+      scrub: 0.6,
+      onUpdate: function(self){ onJourney(self.progress); }
+    });
+  } else if (stage) {
+    onJourney(parseFloat(qs.get("p") || "0"));
+  }
+
+  /* ================= 导航跳转 ================= */
+  document.querySelectorAll("[data-goto]").forEach(function(a){
+    a.addEventListener("click", function(e){
+      e.preventDefault();
+      var frac = parseFloat(a.getAttribute("data-goto")) || 0;
+      var y = 0;
+      if (hasGsap && !reduced) {
+        var st = ScrollTrigger.getAll().find(function(x){ return x.pin; });
+        y = (st ? st.start : 0) + pinLen * frac;
+      }
+      if (lenis) lenis.scrollTo(y, { duration: 2.0 });
+      else window.scrollTo({ top: y, behavior: "smooth" });
+    });
+  });
+
+  /* ================= 帷幕拉起 & 序章入场 ================= */
+  onReady(function(){
+    if (veil) {
+      if (hasGsap && !reduced) {
+        gsap.to(veil, { opacity: 0, duration: 1.0, ease: "power2.inOut",
+          onComplete: function(){ veil.style.display = "none"; } });
+      } else {
+        veil.style.display = "none";
+      }
+    }
+    if (hasGsap && !reduced) {
+      gsap.from("#introL1", { yPercent: 115, duration: 1.3, ease: "power4.out", delay: 0.55 });
+      gsap.from("#introL2", { yPercent: 115, duration: 1.3, ease: "power4.out", delay: 0.72 });
+      gsap.from("#introSub", { opacity: 0, y: 24, duration: 1.1, ease: "power3.out", delay: 1.15 });
+      gsap.from("#introHint", { opacity: 0, duration: 1.2, delay: 1.7 });
+    }
+  });
+})();
+</script>
+</body>
+</html>

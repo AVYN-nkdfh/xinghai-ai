@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="星海计划工作室机位预约" />
+  <title>预约机位｜星海计划</title>
+  <link rel="icon" href="../assets/brand-mark-xinghai-v21.jpg" type="image/jpeg" />
+  <style>
+    :root {
+      --bg: #fbf8f2;
+      --paper: #ffffff;
+      --ink: #0e0e11;
+      --muted: #746e64;
+      --line: rgba(14, 14, 17, .11);
+      --line-strong: rgba(14, 14, 17, .22);
+      --orange: #f26a1b;
+      --orange-soft: rgba(242, 106, 27, .10);
+      --green: #2d8a57;
+      --green-soft: rgba(45, 138, 87, .10);
+      --disabled: #e7e3dc;
+      --shadow: 0 1px 3px rgba(14, 14, 17, .08);
+      --radius: 12px;
+      --ease: 220ms ease-out;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+    }
+    button, input, select { font: inherit; }
+    button { color: inherit; }
+    h1, h2, h3, p { margin: 0; }
+    a { color: inherit; text-decoration: none; }
+    [hidden] { display: none !important; }
+
+    .container { width: min(1040px, 100%); margin: 0 auto; padding: 0 24px; }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      height: 64px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(251, 248, 242, .94);
+      backdrop-filter: saturate(160%) blur(18px);
+    }
+    .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .brand { min-height: 38px; display: inline-flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
+    .brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+
+    .button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 0 16px;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 750;
+      cursor: pointer;
+      transition: color var(--ease), background var(--ease), border-color var(--ease), transform var(--ease);
+    }
+    .button:hover { transform: translateY(-1px); }
+    .button:active { transform: translateY(0); }
+    .button:disabled { cursor: not-allowed; opacity: .45; transform: none; }
+    .button-primary { background: var(--ink); color: var(--paper); }
+    .button-primary:hover { background: var(--orange); }
+    .button-secondary { border-color: var(--line-strong); background: var(--paper); }
+    .button-secondary:hover { border-color: var(--ink); }
+    .button-danger { border-color: rgba(183, 63, 48, .25); color: #a13d31; background: #fff8f6; }
+    .button-danger:hover { border-color: #a13d31; }
+    .button:focus-visible,
+    .date-button:focus-visible,
+    .time-button:focus-visible,
+    .machine:focus-visible,
+    input:focus-visible,
+    select:focus-visible,
+    .switch:focus-visible { outline: 3px solid rgba(242, 106, 27, .22); outline-offset: 2px; }
+
+    .page { padding: 40px 0 64px; }
+    .page-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 20px; }
+    .page-heading h1 { font-size: clamp(32px, 4vw, 42px); line-height: 1.12; letter-spacing: -.04em; }
+    .instruction { margin-top: 8px; color: var(--muted); font-size: 14px; }
+    .demo-label { color: var(--orange); font-size: 13px; font-weight: 800; }
+
+    .workspace { border: 1px solid var(--line); border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow); overflow: hidden; }
+    .picker-section { padding: 22px 24px; border-bottom: 1px solid var(--line); }
+    .picker-label { display: block; margin-bottom: 10px; color: var(--muted); font-size: 13px; font-weight: 750; }
+    .date-strip { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+    .date-button {
+      min-height: 68px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 8px 6px;
+      background: var(--paper);
+      cursor: pointer;
+      text-align: center;
+      transition: border-color var(--ease), background var(--ease), color var(--ease);
+    }
+    .date-button:hover { border-color: var(--line-strong); }
+    .date-button[aria-pressed="true"] { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+    .date-week { display: block; color: var(--muted); font-size: 12px; }
+    .date-button[aria-pressed="true"] .date-week { color: rgba(255, 255, 255, .68); }
+    .date-value { display: block; margin-top: 1px; font-size: 17px; font-weight: 800; }
+
+    .time-strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .time-button {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 14px;
+      background: var(--paper);
+      cursor: pointer;
+      text-align: left;
+      transition: border-color var(--ease), background var(--ease);
+    }
+    .time-button:hover { border-color: var(--line-strong); }
+    .time-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange-soft); }
+    .time-button.is-closed { color: var(--muted); background: #f4f1eb; }
+    .time-name { display: block; font-size: 15px; font-weight: 800; }
+    .time-value { display: block; margin-top: 1px; color: var(--muted); font-size: 12px; }
+    .time-count { color: var(--green); font-size: 13px; font-weight: 800; white-space: nowrap; }
+    .time-count.is-full, .time-count.is-closed { color: var(--muted); }
+
+    .workspace-grid { display: grid; grid-template-columns: minmax(0, 1.32fr) minmax(280px, .68fr); }
+    .map-panel { padding: 24px; }
+    .map-head { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px; }
+    .map-head h2 { font-size: 20px; letter-spacing: -.02em; }
+    .map-legend { display: flex; gap: 12px; color: var(--muted); font-size: 12px; }
+    .legend-item { display: inline-flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); }
+    .legend-dot.booked { background: #aaa49a; }
+    .legend-dot.maintenance { border-radius: 2px; background: repeating-linear-gradient(135deg, #bcb7af 0 2px, #e4e0d9 2px 4px); }
+
+    .room-map { width: min(590px, 100%); margin: 0 auto; }
+    .machine-row { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .machine {
+      min-height: 132px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      padding: 12px 8px;
+      background: var(--paper);
+      cursor: pointer;
+      transition: border-color var(--ease), background var(--ease), color var(--ease), transform var(--ease);
+    }
+    .machine:hover:not(:disabled) { border-color: var(--ink); transform: translateY(-2px); }
+    .machine.is-selected { border-color: var(--ink); background: var(--ink); color: var(--paper); }
+    .machine.is-booked { border-color: transparent; background: var(--disabled); color: #777168; }
+    .machine.is-maintenance {
+      border-color: transparent;
+      color: #777168;
+      background: repeating-linear-gradient(135deg, #eeeae4 0 8px, #e1ddd6 8px 16px);
+    }
+    .machine.is-closed { border-color: transparent; background: #efebe5; color: #a19b91; }
+    .machine-visual { position: relative; width: 72px; height: 42px; display: block; margin-bottom: 7px; }
+    .screen { position: absolute; left: 16px; width: 40px; height: 25px; border: 2px solid currentColor; border-radius: 4px; }
+    .screen::after { position: absolute; left: 17px; width: 2px; height: 7px; background: currentColor; content: ""; }
+    .chair { position: absolute; left: 23px; width: 26px; height: 8px; border: 2px solid currentColor; border-radius: 5px; }
+    .row-top .screen { top: 0; }
+    .row-top .screen::after { top: 24px; }
+    .row-top .chair { bottom: 0; }
+    .row-bottom .screen { bottom: 0; }
+    .row-bottom .screen::after { bottom: 24px; }
+    .row-bottom .chair { top: 0; }
+    .machine-number { font-size: 18px; font-weight: 850; line-height: 1.2; }
+    .machine-state { margin-top: 3px; color: var(--green); font-size: 12px; font-weight: 750; }
+    .machine.is-selected .machine-state { color: rgba(255, 255, 255, .76); }
+    .machine.is-booked .machine-state,
+    .machine.is-maintenance .machine-state,
+    .machine.is-closed .machine-state { color: currentColor; }
+    .machine-person { max-width: 100%; margin-top: 3px; overflow: hidden; font-size: 12px; font-weight: 750; text-overflow: ellipsis; white-space: nowrap; }
+
+    .facing-axis { position: relative; height: 52px; display: flex; align-items: center; justify-content: center; }
+    .facing-axis::before { position: absolute; left: 0; right: 0; height: 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #f7f3ed; content: ""; }
+    .facing-axis span { position: relative; z-index: 1; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; background: var(--paper); color: var(--muted); font-size: 12px; font-weight: 750; }
+
+    .side-panel { min-height: 458px; border-left: 1px solid var(--line); padding: 24px; background: #fdfbf7; }
+    .side-empty { height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); text-align: center; }
+    .side-empty strong { color: var(--ink); font-size: 18px; }
+    .side-empty p { max-width: 220px; margin-top: 6px; font-size: 14px; }
+    .selection-title { color: var(--orange); font-size: 13px; font-weight: 800; }
+    .selection-machine { margin-top: 7px; font-size: 30px; font-weight: 850; letter-spacing: -.03em; }
+    .selection-meta { margin-top: 3px; color: var(--muted); font-size: 14px; }
+
+    .form { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--line); }
+    .field { margin-bottom: 13px; }
+    .field label { display: block; margin-bottom: 5px; font-size: 13px; font-weight: 750; }
+    .field input, .field select {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 9px 11px;
+      background: var(--paper);
+      color: var(--ink);
+      outline: none;
+      transition: border-color var(--ease), box-shadow var(--ease);
+    }
+    .field input:focus, .field select:focus { border-color: var(--orange); box-shadow: 0 0 0 3px var(--orange-soft); }
+    .field.has-error input, .field.has-error select { border-color: #b74738; }
+    .field-error { min-height: 17px; margin-top: 3px; color: #a13d31; font-size: 12px; }
+    .form .button { width: 100%; margin-top: 3px; }
+    .privacy { margin-top: 8px; color: var(--muted); font-size: 12px; text-align: center; }
+
+    .closed-note { min-height: 458px; display: grid; grid-column: 1 / -1; place-items: center; padding: 24px; background: #f5f1eb; color: var(--muted); text-align: center; }
+    .closed-note strong { display: block; color: var(--ink); font-size: 18px; }
+    .closed-note span { display: block; margin-top: 4px; font-size: 14px; }
+
+    .admin-tools { display: flex; align-items: center; gap: 10px; }
+    .status-bar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 24px; border-bottom: 1px solid var(--line); background: #fdfbf7; }
+    .status-counts { display: flex; gap: 18px; }
+    .status-count { color: var(--muted); font-size: 13px; }
+    .status-count strong { margin-left: 4px; color: var(--ink); font-size: 16px; }
+    .slot-switch { display: flex; align-items: center; gap: 9px; font-size: 13px; font-weight: 750; }
+    .switch { position: relative; width: 42px; height: 24px; border: 0; border-radius: 999px; padding: 0; background: #cac5bd; cursor: pointer; transition: background var(--ease); }
+    .switch::after { position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; border-radius: 50%; background: var(--paper); box-shadow: var(--shadow); content: ""; transition: transform var(--ease); }
+    .switch[aria-pressed="true"] { background: var(--green); }
+    .switch[aria-pressed="true"]::after { transform: translateX(18px); }
+
+    .admin-machine-copy { margin-top: 10px; padding: 12px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .admin-machine-copy span { display: block; color: var(--muted); font-size: 12px; }
+    .admin-machine-copy strong { display: block; margin-top: 2px; font-size: 16px; }
+    .admin-actions { display: grid; gap: 9px; margin-top: 18px; }
+    .admin-actions .button { width: 100%; }
+
+    .roster { border-top: 1px solid var(--line); padding: 20px 24px 24px; }
+    .roster h2 { font-size: 18px; }
+    .roster-list { display: grid; margin-top: 12px; border-top: 1px solid var(--line); }
+    .roster-row { display: grid; grid-template-columns: 80px 1fr 130px; gap: 14px; align-items: center; min-height: 50px; border-bottom: 1px solid var(--line); font-size: 14px; }
+    .roster-row strong { font-size: 14px; }
+    .roster-row span { color: var(--muted); }
+    .roster-empty { padding: 24px 0 0; color: var(--muted); font-size: 14px; }
+
+    .success-layer { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; padding: 20px; background: rgba(14, 14, 17, .46); }
+    .success-card { width: min(450px, 100%); border-radius: var(--radius); padding: 30px; background: var(--paper); box-shadow: var(--shadow); }
+    .success-mark { width: 44px; height: 44px; display: grid; place-items: center; border-radius: 50%; background: var(--green-soft); color: var(--green); }
+    .success-mark svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .success-card h2 { margin-top: 18px; font-size: 28px; letter-spacing: -.03em; }
+    .success-code { margin-top: 5px; color: var(--muted); font-size: 13px; }
+    .success-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 20px; padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .success-item span { display: block; color: var(--muted); font-size: 12px; }
+    .success-item strong { display: block; margin-top: 1px; font-size: 14px; }
+    .success-card .button { width: 100%; margin-top: 20px; }
+
+    .toast { position: fixed; right: 20px; bottom: 20px; z-index: 120; max-width: calc(100vw - 40px); border-radius: 10px; padding: 11px 14px; background: var(--ink); color: var(--paper); font-size: 14px; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity var(--ease), transform var(--ease); }
+    .toast.is-visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 760px) {
+      .container { padding: 0 16px; }
+      .site-header { height: 56px; }
+      .page { padding: 20px 0 36px; }
+      .page-heading { align-items: flex-start; flex-direction: column; gap: 10px; }
+      .page-heading { margin-bottom: 12px; }
+      .page-heading h1 { font-size: 30px; }
+      .instruction { margin-top: 4px; }
+      .demo-label,
+      .instruction,
+      .picker-label,
+      .date-week,
+      .time-value,
+      .time-count,
+      .map-legend,
+      .machine-state,
+      .machine-person,
+      .facing-axis span,
+      .selection-title,
+      .field label,
+      .field-error,
+      .privacy,
+      .status-count,
+      .slot-switch,
+      .admin-machine-copy span,
+      .success-code,
+      .success-item span { font-size: 14px; }
+      .picker-section { padding: 14px 16px; }
+      .date-strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 3px; }
+      .date-button { min-width: 82px; min-height: 60px; scroll-snap-align: start; }
+      .time-strip { gap: 6px; }
+      .time-button { min-height: 68px; align-items: flex-start; flex-direction: column; gap: 2px; padding: 8px; }
+      .workspace-grid { grid-template-columns: 1fr; }
+      .map-panel { padding: 16px 12px; }
+      .map-head { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .map-head { margin-bottom: 12px; }
+      .map-legend { gap: 9px; }
+      .machine-row { gap: 7px; }
+      .machine { min-height: 100px; padding: 7px 4px; }
+      .machine-visual { width: 60px; height: 34px; margin-bottom: 4px; }
+      .screen { left: 13px; width: 34px; height: 21px; }
+      .screen::after { left: 15px; }
+      .chair { left: 18px; width: 24px; }
+      .row-top .screen::after { top: 20px; }
+      .row-bottom .screen::after { bottom: 20px; }
+      .machine-number { font-size: 17px; }
+      .facing-axis { height: 38px; }
+      .side-panel, .closed-note { min-height: auto; border-top: 1px solid var(--line); border-left: none; padding: 22px 20px; }
+      .side-empty { min-height: 130px; }
+      .status-bar { align-items: flex-start; flex-direction: column; padding: 15px 16px; }
+      .status-counts { width: 100%; justify-content: space-between; gap: 8px; }
+      .admin-tools { width: 100%; justify-content: space-between; }
+      .roster { padding: 18px 16px; }
+      .roster-row { grid-template-columns: 60px 1fr; gap: 8px; padding: 8px 0; }
+      .roster-row span:last-child { grid-column: 2; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+
+    /* Production theme: mirrors the current xinghai-ai.com brand shell. */
+    :root {
+      --bg: #0f0e0c;
+      --paper: #161410;
+      --ink: #ece6d8;
+      --muted: #9b937f;
+      --line: rgba(211, 169, 85, .20);
+      --line-strong: rgba(211, 169, 85, .42);
+      --orange: #d3a955;
+      --orange-soft: rgba(211, 169, 85, .12);
+      --green: #d3a955;
+      --green-soft: rgba(211, 169, 85, .12);
+      --disabled: #24211b;
+      --shadow: 0 1px 3px rgba(0, 0, 0, .24);
+    }
+    body { background: radial-gradient(circle at 50% -10%, rgba(211, 169, 85, .08), transparent 34%), var(--bg); }
+    .site-header { background: rgba(15, 14, 12, .92); }
+    .brand { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; letter-spacing: .08em; }
+    .brand svg { flex: none; }
+    .button-primary { background: linear-gradient(135deg, #e8c877, #d3a955); color: #1a1408; }
+    .button-primary:hover { background: #e8c877; }
+    .button-secondary { border-color: var(--line-strong); background: transparent; }
+    .button-secondary:hover { border-color: var(--orange); color: var(--orange); }
+    .button-danger { border-color: rgba(205, 105, 91, .38); color: #e5a299; background: rgba(205, 105, 91, .07); }
+    .page-heading h1, .map-head h2, .roster h2, .success-card h2 { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; letter-spacing: .05em; }
+    .workspace, .date-button, .time-button, .machine, .field input, .field select, .success-card { background: var(--paper); }
+    .date-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange); color: #1a1408; }
+    .date-button[aria-pressed="true"] .date-week { color: rgba(26, 20, 8, .66); }
+    .time-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange-soft); }
+    .time-button.is-closed, .closed-note { background: #1c1914; }
+    .machine:hover:not(:disabled) { border-color: var(--orange); }
+    .machine.is-selected { border-color: var(--orange); background: var(--orange); color: #1a1408; }
+    .machine.is-selected .machine-state { color: rgba(26, 20, 8, .68); }
+    .machine.is-booked { background: #25221c; color: #756f62; }
+    .machine.is-maintenance { color: #827b6d; background: repeating-linear-gradient(135deg, #201d18 0 8px, #2b271f 8px 16px); }
+    .machine.is-closed { background: #1c1914; color: #625d53; }
+    .facing-axis::before { background: #12110e; }
+    .facing-axis span, .side-panel, .status-bar { background: #12110e; }
+    .field input, .field select { color: var(--ink); color-scheme: dark; }
+    .switch { background: #4b453a; }
+    .switch[aria-pressed="true"] { background: var(--orange); }
+    .success-layer { background: rgba(0, 0, 0, .72); }
+    .success-mark { background: var(--green-soft); color: var(--orange); }
+    .toast { background: var(--orange); color: #1a1408; }
+    .loading-note { min-height: 420px; display: grid; place-items: center; color: var(--muted); text-align: center; }
+    .login-card { width: min(420px, 100%); margin: 72px auto; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; background: var(--paper); }
+    .login-card h1 { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; font-size: 30px; letter-spacing: .06em; }
+    .login-card p { margin-top: 8px; color: var(--muted); font-size: 14px; }
+    .login-card .form { margin-top: 24px; }
+    .login-card .button { width: 100%; }
+    .error-banner { margin-bottom: 16px; border: 1px solid rgba(205, 105, 91, .35); border-radius: 10px; padding: 12px 14px; background: rgba(205, 105, 91, .08); color: #e5a299; font-size: 14px; }
+    .admin-tools { flex-wrap: wrap; }
+    @media (max-width: 760px) { .login-card { margin: 28px auto; padding: 24px 20px; } }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="/" aria-label="返回星海少年AI计划官网"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 0 L13.2 8.8 L22 11 L13.2 13.2 L11 22 L8.8 13.2 L0 11 L8.8 8.8 Z" fill="#d3a955"/></svg><span>星海少年AI计划</span></a>
+      <button class="button button-secondary" id="viewSwitch" type="button" data-testid="view-switch">管理后台</button>
+    </div>
+  </header>
+
+  <main class="page" id="parentView">
+    <div class="container">
+      <div class="page-heading">
+        <div><h1>预约机位</h1><p class="instruction">先选日期和时段，再选机器。灰色已占用，斜线维护中。</p></div>
+      </div>
+
+      <section class="workspace" aria-label="机位预约">
+        <div class="picker-section"><span class="picker-label">日期</span><div class="date-strip" id="parentDates" data-testid="parent-dates"></div></div>
+        <div class="picker-section"><span class="picker-label">时间</span><div class="time-strip" id="parentTimes" data-testid="parent-times"></div></div>
+        <div class="workspace-grid">
+          <div class="map-panel">
+            <div class="map-head"><h2>选择机器</h2><div class="map-legend"><span class="legend-item"><i class="legend-dot"></i>可选</span><span class="legend-item"><i class="legend-dot booked"></i>已预约</span><span class="legend-item"><i class="legend-dot maintenance"></i>维护</span></div></div>
+            <div class="room-map" id="parentSeatMap" data-testid="parent-seat-map"></div>
+          </div>
+          <aside class="side-panel" id="parentSide" data-testid="parent-side"></aside>
+          <aside class="closed-note" id="parentClosed" hidden><div><strong>当前时段不开放</strong><span>请选择其他时间</span></div></aside>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <main class="page" id="adminView" hidden>
+    <div class="container">
+      <section class="login-card" id="adminLogin">
+        <h1>管理后台</h1>
+        <p>请输入管理员密码。</p>
+        <form class="form" id="adminLoginForm">
+          <div class="error-banner" id="loginError" hidden></div>
+          <div class="field"><label for="adminPassword">管理员密码</label><input id="adminPassword" name="password" type="password" autocomplete="current-password" required /></div>
+          <button class="button button-primary" id="loginButton" type="submit">登录</button>
+        </form>
+      </section>
+
+      <div id="adminDashboard" hidden>
+        <div class="page-heading">
+          <div><h1>机位管理</h1><p class="instruction">预约数据已同步到云端。</p></div>
+          <div class="admin-tools"><button class="button button-secondary" id="logoutAdmin" type="button">退出登录</button></div>
+        </div>
+
+      <section class="workspace" aria-label="机位管理">
+        <div class="picker-section"><span class="picker-label">日期</span><div class="date-strip" id="adminDates" data-testid="admin-dates"></div></div>
+        <div class="picker-section"><span class="picker-label">时间</span><div class="time-strip" id="adminTimes" data-testid="admin-times"></div></div>
+        <div class="status-bar">
+          <div class="status-counts" id="adminCounts"></div>
+          <div class="slot-switch"><span>开放时段</span><button class="switch" id="slotSwitch" type="button" role="switch" aria-label="开放当前时段" aria-pressed="true"></button></div>
+        </div>
+        <div class="workspace-grid">
+          <div class="map-panel">
+            <div class="map-head"><h2>现场座位</h2><span class="instruction" id="adminCurrentSlot"></span></div>
+            <div class="room-map" id="adminSeatMap" data-testid="admin-seat-map"></div>
+          </div>
+          <aside class="side-panel" id="adminSide" data-testid="admin-side"></aside>
+        </div>
+        <section class="roster"><h2>当前预约</h2><div id="rosterList"></div></section>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <section class="success-layer" id="successLayer" role="dialog" aria-modal="true" aria-labelledby="successTitle" hidden>
+    <div class="success-card">
+      <div class="success-mark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"></path></svg></div>
+      <h2 id="successTitle">预约成功</h2>
+      <div class="success-code" id="successCode"></div>
+      <div class="success-summary" id="successSummary"></div>
+      <button class="button button-primary" id="successDone" type="button">完成</button>
+    </div>
+  </section>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="./booking.js" defer></script>
+</body>
+</html>

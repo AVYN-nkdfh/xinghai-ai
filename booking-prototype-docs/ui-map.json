@@ -1,0 +1,46 @@
+{
+  "project": "星海工作室机位预约",
+  "version": "1.0",
+  "referenceMode": true,
+  "pages": [
+    {
+      "id": "parent-booking",
+      "path": "/booking/",
+      "role": "parent",
+      "job": "按日期、时段和机器编号完成预约",
+      "components": ["brand-header", "compact-instruction", "date-strip", "time-tabs", "facing-seat-map", "minimal-booking-form", "success-dialog"],
+      "states": ["default", "machine-selected", "machine-booked", "machine-maintenance", "slot-closed", "form-error", "submitting", "success"],
+      "actions": [
+        {"id": "select-date", "transition": "update time and machine availability"},
+        {"id": "select-time", "transition": "update machine map"},
+        {"id": "select-machine", "transition": "open minimal form"},
+        {"id": "submit-booking", "transition": "lock date-time-machine and show success"},
+        {"id": "open-admin", "transition": "/booking/#admin"}
+      ],
+      "data": ["dates", "slots", "machines", "bookings", "maintenance", "bookingForm"]
+    },
+    {
+      "id": "admin-dashboard",
+      "path": "/booking/#admin",
+      "role": "admin",
+      "job": "按日期和时段管理六台机器",
+      "components": ["admin-header", "date-strip", "time-tabs", "slot-toggle", "machine-stats", "facing-seat-map", "machine-actions", "slot-roster"],
+      "states": ["logged-out", "login-error", "default", "machine-selected", "slot-closed", "maintenance-edit", "booking-cancelled", "saved", "empty"],
+      "actions": [
+        {"id": "select-admin-date", "transition": "load date machine state"},
+        {"id": "select-admin-time", "transition": "load slot machine state"},
+        {"id": "toggle-slot", "transition": "open or close all machines in slot"},
+        {"id": "toggle-maintenance", "transition": "change one machine availability"},
+        {"id": "cancel-booking", "transition": "release selected machine"},
+        {"id": "login-admin", "transition": "authenticated admin dashboard"},
+        {"id": "open-parent", "transition": "/booking/"}
+      ],
+      "data": ["adminSession", "selectedDate", "selectedSlot", "machines", "bookings", "maintenance"]
+    }
+  ],
+  "services": [
+    {"id": "booking-api", "path": "/api/booking/*", "auth": "public", "returnsPII": false},
+    {"id": "admin-api", "path": "/api/admin/*", "auth": "httpOnly session", "returnsPII": true},
+    {"id": "postgres", "constraint": "one active booking per date-slot-machine"}
+  ]
+}

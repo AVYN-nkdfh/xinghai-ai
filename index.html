@@ -1,1571 +1,1208 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>星海少年AI计划｜3天完成第一个AI商业项目</title>
-  <meta name="description" content="星海少年AI计划：3天让孩子用AI完成一个可以落地展示的商业项目，经历创作、发布与路演。" />
-  <link rel="icon" href="assets/brand-mark-xinghai-v21.jpg" type="image/jpeg" />
-  <link rel="apple-touch-icon" href="assets/brand-mark-xinghai-v21.jpg" />
-  <style>
-    /* ==========================================================================
-       小小 AI 创业家 landing page
-       Cleanup notes:
-       - 保留 v14 的页面结构、视觉方向与导师页正式版式
-       - 合并 v10-v14 追加样式，移除未使用的旧组件样式
-       - 图片 / 图标 / 二维码占位见 HTML 注释与 ASSET_TODO.md
-       ========================================================================== */
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<meta name="x-preview-version" content="2026-07-22-0253">
+<title>星海少年AI计划 · 一天学完一学期，三天开启第一次创业</title>
+<meta name="description" content="先用 AI 让孩子自己投入地自学文化课，再挑战真实的商业项目。">
+<style>
+  :root{
+    --ink:#0f0e0c;
+    --ink-2:#161410;
+    --paper:#ece6d8;
+    --muted:#9b937f;
+    --gold:#d3a955;
+    --gold-soft:#e8c877;
+    --line:rgba(211,169,85,.28);
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--ink); color:var(--paper);
+    font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  .serif{ font-family:"Songti SC","STSong","Noto Serif SC","SimSun",serif; }
 
-    /* Theme tokens & reset */
-    :root {
-      --bg:#fbf8f2;
-      --paper:#fffdf8;
-      --cream:#f1ebe0;
-      --ink:#101010;
-      --muted:#746e64;
-      --line:rgba(16,16,16,.08);
-      --line2:rgba(16,16,16,.05);
-      --orange:#f26a1b;
-      --copper:#b47a3a;
-      --dark:#111;
-      --shadow:0 36px 110px rgba(26,22,17,.10);
-      --shadow2:0 18px 54px rgba(26,22,17,.08);
-    }
+  /* ============ 导航 ============ */
+  nav{
+    position:fixed; inset:0 0 auto 0; z-index:50;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 5vw;
+    background:linear-gradient(to bottom, rgba(15,14,12,.94), rgba(15,14,12,0));
+  }
+  .brand{ display:flex; align-items:center; gap:12px; font-size:16px; letter-spacing:4px; }
+  .brand svg{ flex:none; }
+  .brand small{ display:block; font-size:10px; letter-spacing:3px; color:var(--muted); margin-top:3px; }
+  .nav-links{ display:flex; align-items:center; }
+  .nav-links a{
+    color:var(--muted); text-decoration:none; font-size:13px;
+    letter-spacing:2px; margin-left:24px; transition:color .3s;
+  }
+  .nav-links a:hover{ color:var(--gold-soft); }
+  .nav-cta{
+    color:#1a1408 !important; background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+    padding:9px 22px; border-radius:999px; font-weight:700;
+  }
 
-    * { box-sizing:border-box; }
-    html { scroll-behavior:smooth; }
-    body {
-      margin:0;
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Noto Sans SC","Microsoft YaHei",Arial,sans-serif;
-      -webkit-font-smoothing:antialiased;
-      background:var(--bg);
-      color:var(--ink);
-      overflow-x:hidden;
-    }
-    a { color:inherit; text-decoration:none; }
-    h1,h2,h3,h4,p { margin:0; }
+  /* ============ 英雄区 ============ */
+  header{
+    position:relative;
+    min-height:100vh; display:grid; grid-template-columns:1.1fr .9fr;
+    align-items:center; gap:5vw; padding:130px 5vw 80px;
+    max-width:1360px; margin:0 auto;
+  }
+  header::before{
+    content:""; position:absolute; top:-60px; left:50%; transform:translateX(-50%);
+    width:min(1000px,90vw); height:560px; pointer-events:none;
+    background:radial-gradient(ellipse, rgba(211,169,85,.09), transparent 65%);
+  }
+  .eyebrow{
+    font-size:12.5px; letter-spacing:5px; color:var(--gold);
+    text-transform:uppercase; margin-bottom:30px;
+    display:flex; align-items:center; gap:16px;
+  }
+  .eyebrow::before{ content:""; width:44px; height:1px; background:var(--gold); }
+  h1{
+    font-size:clamp(36px, 4.3vw, 60px);
+    font-weight:700; line-height:1.32; letter-spacing:.06em;
+  }
+  h1 i{ font-style:normal; color:var(--gold); white-space:nowrap; }
+  h1 .num{
+    font-family:Georgia,serif; font-style:italic; font-weight:400;
+    font-size:1.5em; color:var(--gold); line-height:.9;
+    text-shadow:0 0 34px rgba(211,169,85,.35);
+  }
+  /* 首屏入场：逐行升起 */
+  .hl{ display:block; overflow:hidden; padding-bottom:.08em; }
+  .hl-in{
+    display:block; transform:translateY(110%); opacity:0;
+    animation:hl-rise .9s cubic-bezier(.2,.75,.2,1) forwards;
+  }
+  @keyframes hl-rise{ to{ transform:none; opacity:1; } }
+  .hero-in{
+    opacity:0; transform:translateY(18px);
+    animation:hero-fade .9s cubic-bezier(.2,.75,.2,1) forwards;
+  }
+  @keyframes hero-fade{ to{ opacity:1; transform:none; } }
+  .hero-p{
+    margin-top:30px; max-width:520px;
+    font-size:16.5px; line-height:2.1; color:var(--muted); letter-spacing:.05em;
+  }
+  .hero-p em{ font-style:normal; color:var(--paper); border-bottom:1px solid var(--line); padding-bottom:2px; }
+  .cta-row{ margin-top:46px; display:flex; gap:18px; flex-wrap:wrap; }
+  .btn{
+    padding:16px 38px; border-radius:999px; font-size:16px; font-weight:700;
+    letter-spacing:2px; cursor:pointer; text-decoration:none; transition:.3s; border:none;
+  }
+  .btn-primary{ color:#1a1408; background:linear-gradient(135deg,var(--gold-soft),var(--gold)); }
+  .btn-primary:hover{ transform:translateY(-3px); filter:brightness(1.08); }
+  .btn-ghost{ color:var(--gold-soft); background:none; border:1px solid var(--line); }
+  .btn-ghost:hover{ border-color:var(--gold); }
+  .hero-visual{ display:flex; justify-content:center; }
+  .disc{
+    position:relative; width:min(42vw,500px); aspect-ratio:1;
+    border-radius:50%; border:1px solid var(--line); padding:26px;
+  }
+  .disc::before{
+    content:""; position:absolute; inset:-24px; border-radius:50%;
+    border:1px dashed rgba(211,169,85,.28);
+    animation:spin-slow 46s linear infinite;
+  }
+  .orbit{
+    position:absolute; inset:-52px; border-radius:50%;
+    border:1px solid rgba(211,169,85,.13);
+    animation:spin-slow 26s linear infinite reverse;
+    pointer-events:none;
+  }
+  .orbit::after{
+    content:""; position:absolute; top:-4px; left:50%; margin-left:-4px;
+    width:8px; height:8px; border-radius:50%;
+    background:var(--gold-soft); box-shadow:0 0 14px 3px rgba(211,169,85,.8);
+  }
+  @keyframes spin-slow{ to{ transform:rotate(360deg); } }
+  .disc::after{
+    content:"星海 · XINGHAI";
+    position:absolute; bottom:-8px; left:50%; transform:translateX(-50%);
+    background:var(--ink); padding:0 18px;
+    font-size:12.5px; letter-spacing:5px; color:var(--gold); white-space:nowrap;
+  }
+  .disc canvas{ width:100%; height:100%; display:block; border-radius:50%; }
 
-    /* Navigation */
-    .nav {
-      position:sticky; top:0; z-index:1000;
-      height:58px;
-      display:flex; align-items:center; justify-content:center;
-      background:rgba(251,248,242,.78);
-      backdrop-filter:saturate(180%) blur(24px);
-      border-bottom:1px solid rgba(0,0,0,.06);
-    }
-    .nav-inner {
-      width:min(1220px,calc(100% - 42px));
-      display:flex; align-items:center; justify-content:space-between;
-      gap:18px;
-      color:rgba(16,16,16,.64);
-      font-size:13px;
-    }
-    .brand {
-      display:flex; align-items:center; gap:10px;
-      color:#111; font-weight:820; white-space:nowrap;
-      letter-spacing:-.03em;
-    }
-    .brand-mark {
-      width:28px; height:28px; border-radius:9px;
-      background:url("assets/brand-mark-xinghai-v21.jpg") center/cover no-repeat;
-      position:relative; overflow:hidden;
-      box-shadow:0 8px 18px rgba(16,16,16,.16);
-    }
-    .brand-mark::before {
-      content:none;
-    }
-    .brand-mark::after {
-      content:none;
-    }
-    .links { display:flex; align-items:center; gap:24px; }
-    .top-cta {
-      padding:8px 14px; border-radius:999px;
-      background:#111; color:#fff; font-weight:740;
-    }
+  /* ============ 学生作品 ============ */
+  .works{ padding:40px 0 20px; }
+  .works-title{
+    text-align:center; color:var(--muted); font-size:13px;
+    letter-spacing:4px; margin-bottom:34px;
+  }
+  .works-title b{ color:var(--gold-soft); font-weight:600; }
+  .works-strip{
+    overflow:hidden;
+    -webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+    mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);
+  }
+  .works-track{ display:flex; gap:24px; width:max-content; animation:scroll 46s linear infinite; }
+  .works-strip:hover .works-track{ animation-play-state:paused; }
+  @keyframes scroll{ to{ transform:translateX(-50%); } }
+  .work{ width:300px; flex:none; }
+  .work img{
+    width:100%; aspect-ratio:16/9; object-fit:cover; display:block;
+    border-radius:14px; border:1px solid var(--line); filter:saturate(.92);
+    transition:.35s;
+  }
+  .work:hover img{ filter:saturate(1.05); border-color:var(--gold); }
+  .work .cap{
+    margin-top:12px; font-size:13px; letter-spacing:2px; color:var(--muted);
+    display:flex; align-items:center; gap:10px;
+  }
+  .work .cap::before{ content:""; width:16px; height:1px; background:var(--gold); }
 
-    /* Shared layout, typography, buttons */
-    .section {
-      position:relative;
-      padding:108px 22px;
-      overflow:hidden;
-      scroll-margin-top:86px;
-    }
-    .container {
-      width:min(1220px,100%);
-      margin:0 auto;
-      position:relative; z-index:2;
-    }
-    .center { text-align:center; }
-    .label {
-      display:inline-flex; align-items:center; gap:8px;
-      margin-bottom:16px;
-      color:var(--orange);
-      font-size:15px; font-weight:780; letter-spacing:.01em;
-    }
-    .label::before {
-      content:""; width:8px; height:8px; border-radius:50%;
-      background:var(--orange);
-      box-shadow:0 0 0 6px rgba(242,106,27,.12);
-    }
-    .display {
-      font-size:clamp(56px,8.1vw,128px);
-      line-height:.94; letter-spacing:-.09em; font-weight:830;
-      text-wrap:balance;
-    }
-    .title {
-      font-size:clamp(40px,5.7vw,88px);
-      line-height:.98; letter-spacing:-.082em; font-weight:830;
-      text-wrap:balance;
-    }
-    .sub {
-      margin:20px auto 0;
-      max-width:680px;
-      color:rgba(16,16,16,.60);
-      font-size:clamp(18px,1.9vw,23px);
-      line-height:1.5; letter-spacing:-.03em;
-      text-wrap:balance;
-    }
-    .tiny {
-      color:rgba(16,16,16,.44);
-      font-size:13px;
-    }
-    .btns {
-      display:flex; justify-content:center; flex-wrap:wrap;
-      gap:12px; margin-top:26px;
-    }
-    .btn {
-      min-height:46px; padding:0 20px;
-      border:0;
-      border-radius:999px;
-      display:inline-flex; align-items:center; justify-content:center;
-      appearance:none;
-      text-decoration:none;
-      font-size:16px; font-weight:730; letter-spacing:-.02em;
-      cursor:pointer;
-    }
-    .btn.black { background:#111; color:#fff; }
-    .btn.light { background:rgba(16,16,16,.06); color:#111; }
-    .btn.orange { background:var(--orange); color:#fff; }
+  /* ============ 章节通用 ============ */
+  section{ padding:130px 5vw; max-width:1180px; margin:0 auto; }
+  .chap{ display:flex; align-items:baseline; gap:26px; margin-bottom:26px; }
+  .chap .no{ font-size:15px; color:var(--gold); letter-spacing:3px; }
+  .chap .rule{ flex:1; height:1px; background:var(--line); transform:translateY(-4px); }
+  h2{
+    font-size:clamp(32px,4.4vw,54px); font-weight:700;
+    letter-spacing:.1em; line-height:1.35;
+  }
+  .sec-p{
+    margin-top:24px; max-width:640px; color:var(--muted);
+    font-size:16px; line-height:2.15; letter-spacing:.05em;
+  }
+  .sec-p b{ color:var(--gold-soft); font-weight:600; }
+  .frame{
+    margin-top:64px; border:1px solid var(--line); background:var(--ink-2);
+    padding:56px 6%; position:relative;
+  }
+  .presets{ display:flex; gap:14px; flex-wrap:wrap; }
+  .presets button{
+    background:none; border:1px solid var(--line); color:var(--muted);
+    padding:11px 24px; font-size:13.5px; letter-spacing:1.5px; cursor:pointer;
+    border-radius:999px; font-family:inherit; transition:.3s;
+  }
+  .presets button:hover{ border-color:var(--gold); color:var(--gold-soft); }
+  .presets button.star{ border-color:var(--gold); color:var(--gold); }
 
-    /* Dark section foundation */
-    .black-section {
-      color:#fff; background:#101010;
-    }
-    .black-section::before {
-      content:""; position:absolute; inset:-20%;
-      background:
-        radial-gradient(circle at 52% 10%, rgba(242,106,27,.30), transparent 30%),
-        radial-gradient(circle at 10% 90%, rgba(180,122,58,.18), transparent 24%);
-      opacity:.8;
-    }
-    .black-section .sub { color:rgba(255,255,255,.58); }
-    .black-section .label { color:#ff8a3d; }
-    .black-section .label::before {
-      background:#ff8a3d;
-      box-shadow:0 0 0 6px rgba(255,138,61,.13);
-    }
+  /* ============ 成长路径：时间轴跑道 ============ */
+  .timeline{ margin-top:80px; position:relative; }
+  .tl-rail{
+    position:absolute; top:7px; left:0; right:0; height:2px;
+    background:rgba(211,169,85,.16); border-radius:2px;
+  }
+  .tl-rail i{
+    display:block; height:100%; width:0; border-radius:2px;
+    background:linear-gradient(90deg, var(--gold), var(--gold-soft));
+    box-shadow:0 0 12px rgba(211,169,85,.55);
+  }
+  .tl-nodes{ display:grid; grid-template-columns:repeat(4,1fr); gap:34px; }
+  .tl-node{
+    position:relative; padding-top:38px; opacity:.35; transition:opacity .8s ease;
+  }
+  .tl-node::before{
+    content:""; position:absolute; top:0; left:0;
+    width:14px; height:14px; border-radius:50%;
+    border:1px solid var(--line); background:var(--ink);
+    transition:background .5s, border-color .5s, box-shadow .5s;
+  }
+  .tl-node.lit{ opacity:1; }
+  .tl-node.lit::before{
+    background:var(--gold); border-color:var(--gold);
+    box-shadow:0 0 18px rgba(211,169,85,.9);
+  }
+  .tl-when{ font-size:12.5px; letter-spacing:4px; color:var(--gold); }
+  .tl-node h3{ margin-top:12px; font-size:21px; letter-spacing:1.5px; font-weight:700; }
+  .tl-node p{ margin-top:12px; font-size:13.5px; color:var(--muted); line-height:1.9; }
+  .tl-node .tags{ margin-top:16px; display:flex; gap:8px; flex-wrap:wrap; }
+  .tl-node .tags span{
+    font-size:12px; border:1px solid var(--line); border-radius:999px;
+    padding:5px 13px; color:var(--gold-soft); letter-spacing:1px;
+  }
+  .path-note{ margin-top:44px; text-align:center; color:var(--muted); font-size:14px; letter-spacing:2px; }
+  .path-note b{ color:var(--gold-soft); font-weight:600; }
 
-    /* Screen 01: Hero / project passport */
-    .hero {
-      min-height:calc(100vh - 58px);
-      display:flex; align-items:center;
-      padding-top:74px;
-      background:
-        radial-gradient(circle at 50% 102%, rgba(242,106,27,.13), transparent 34%),
-        radial-gradient(circle at 82% 18%, rgba(180,122,58,.12), transparent 28%),
-        linear-gradient(180deg,#fffdf8 0%,#fbf8f2 58%,#f0ebe2 100%);
-    }
-    .hero::before {
-      content:"XINGHAI";
-      position:absolute; left:50%; top:45%;
-      transform:translate(-50%,-50%);
-      font-size:18vw; font-weight:860; letter-spacing:-.08em;
-      color:rgba(16,16,16,.026); white-space:nowrap;
-      z-index:0; user-select:none; pointer-events:none;
-    }
-    .orbit {
-      position:absolute; left:50%; top:58%;
-      width:980px; height:980px;
-      transform:translate(-50%,-50%) rotate(-12deg);
-      border-radius:50%;
-      background:
-        radial-gradient(circle, transparent 0 40%, rgba(16,16,16,.045) 40.1% 40.25%, transparent 40.4% 57%, rgba(242,106,27,.16) 57.1% 57.25%, transparent 57.4% 70%, rgba(16,16,16,.035) 70.1% 70.25%, transparent 70.4%),
-        conic-gradient(from 20deg, transparent 0 12%, rgba(242,106,27,.18) 13%, transparent 18% 54%, rgba(180,122,58,.15) 56%, transparent 63% 100%);
-      opacity:.78; z-index:0;
-    }
-    .wordmark {
-      margin:0 auto 12px;
-      font-size:17px; letter-spacing:.86em; text-indent:.86em;
-      color:rgba(16,16,16,.54); font-weight:700;
-    }
-    .passport {
-      width:min(1040px,96%);
-      margin:58px auto 0;
-      display:grid; grid-template-columns:.86fr 1.14fr;
-      border-radius:48px;
-      overflow:hidden;
-      border:1px solid var(--line);
-      background:rgba(255,253,248,.80);
-      backdrop-filter:blur(18px);
-      box-shadow:var(--shadow);
-      text-align:left;
-    }
-    .passport-left {
-      min-height:380px;
-      padding:36px;
-      background:
-        radial-gradient(circle at 18% 12%, rgba(242,106,27,.11), transparent 28%),
-        linear-gradient(180deg,#fff,#f5efe5);
-      border-right:1px solid var(--line);
-      display:flex; flex-direction:column; justify-content:space-between;
-    }
-    .stamp {
-      width:112px; height:112px; border-radius:50%;
-      border:1px solid rgba(242,106,27,.32);
-      display:grid; place-items:center;
-      color:var(--orange);
-      font-size:13px; font-weight:830; letter-spacing:.14em;
-      transform:rotate(-12deg);
-      box-shadow:inset 0 0 0 10px rgba(242,106,27,.045);
-    }
-    .passport-left small {
-      color:var(--orange); font-weight:850; letter-spacing:.13em;
-    }
-    .passport-left h3 {
-      margin-top:16px;
-      font-size:44px; line-height:1.02; letter-spacing:-.075em;
-      max-width:360px;
-    }
-    .passport-right {
-      padding:34px;
-      background:
-        radial-gradient(circle at 86% 18%, rgba(242,106,27,.17), transparent 34%),
-        linear-gradient(180deg,rgba(255,255,255,.54),rgba(241,235,224,.74));
-      display:grid; gap:14px;
-    }
-    .demo-window {
-      min-height:178px;
-      border-radius:30px;
-      color:#fff;
-      padding:24px;
-      background:
-        radial-gradient(circle at 80% 15%, rgba(242,106,27,.56), transparent 36%),
-        linear-gradient(135deg,#111,#29231c);
-      position:relative; overflow:hidden;
-    }
-    .demo-window::after {
-      content:""; position:absolute; right:-36px; top:-36px;
-      width:136px; height:136px; border-radius:50%;
-      border:1px solid rgba(255,255,255,.22);
-      box-shadow:0 0 0 28px rgba(255,255,255,.045),0 0 0 62px rgba(255,255,255,.025);
-    }
-    .demo-window small {
-      color:rgba(255,255,255,.58); letter-spacing:.12em; font-weight:760;
-    }
-    .demo-window b {
-      position:relative; z-index:1;
-      display:block; margin-top:16px;
-      max-width:360px; font-size:34px; line-height:1.05; letter-spacing:-.06em;
-    }
-    .project-types {
-      display:grid;
-      grid-template-columns:repeat(2,1fr);
-      gap:10px;
-    }
-    .project-type {
-      min-height:112px;
-      border-radius:22px;
-      background:#fff;
-      border:1px solid var(--line);
-      padding:14px;
-      box-shadow:0 10px 26px rgba(26,22,17,.045);
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      overflow:hidden;
-    }
-    .project-type-head {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .project-type b {
-      color:var(--orange);
-      font-size:13px;
-      letter-spacing:.12em;
-    }
-    .project-thumb {
-      width:64px;
-      height:64px;
-      flex:0 0 auto;
-      border-radius:16px;
-      overflow:hidden;
-      background:#f8f4ec;
-      box-shadow:0 8px 20px rgba(26,22,17,.08);
-      display:grid;
-      place-items:center;
-      padding:12px;
-    }
-    .vector-icon {
-      width:100%;
-      height:100%;
-      display:block;
-      overflow:visible;
-    }
-    .vector-icon .line {
-      fill:none;
-      stroke:#111;
-      stroke-width:4;
-      stroke-linecap:round;
-      stroke-linejoin:round;
-    }
-    .vector-icon .thin {
-      stroke-width:2.8;
-    }
-    .vector-icon .fill-dark { fill:#111; }
-    .vector-icon .fill-soft { fill:rgba(16,16,16,.08); }
-    .vector-icon .accent {
-      fill:var(--orange);
-      stroke:var(--orange);
-    }
-    .vector-icon .accent[fill="none"] {
-      fill:none;
-    }
-    .project-type span {
-      color:rgba(16,16,16,.70);
-      font-size:15px;
-      font-weight:760;
-      letter-spacing:-.02em;
-    }
+  /* ============ 对比：格子日历 ============ */
+  .duo{ display:grid; grid-template-columns:1fr 1px 1fr; }
+  .duo-side{ padding:0 6%; display:flex; flex-direction:column; }
+  .duo-h{ text-align:center; font-size:14px; letter-spacing:3px; color:#7d7663; margin-bottom:26px; }
+  .duo-h.gold{ color:var(--gold); }
+  .duo-div{ background:rgba(211,169,85,.14); }
+  .duo-stage{ flex:1; display:flex; align-items:center; justify-content:center; min-height:380px; }
 
-    /* Screen 02: Why now */
-    .signal-one-line {
-      max-width:1080px;
-      margin-left:auto;
-      margin-right:auto;
-      white-space:normal;
-    }
-    .signal-grid {
-      margin-top:52px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:16px;
-    }
-    .signal-card {
-      min-height:250px;
-      border-radius:34px;
-      padding:28px;
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.11);
-      text-align:left;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .signal-card b {
-      display:block;
-      color:#ff9a55;
-      font-size:62px;
-      line-height:.9;
-      letter-spacing:-.07em;
-    }
-    .signal-card h3 {
-      margin-top:16px;
-      font-size:30px;
-      line-height:1.04;
-      letter-spacing:-.055em;
-    }
-    .signal-card p {
-      color:rgba(255,255,255,.58);
-      font-size:14px;
-      line-height:1.6;
-      margin-top:12px;
-    }
-    .source-note {
-      margin-top:20px;
-      color:rgba(255,255,255,.36);
-      font-size:12px;
-    }
+  .days-grid{
+    display:grid; grid-template-columns:repeat(10,1fr); gap:6px;
+    width:100%; max-width:340px;
+  }
+  .days-grid i{
+    aspect-ratio:1; border-radius:3px; background:rgba(255,255,255,.05);
+    transition:background .45s;
+  }
+  .days-grid i.on{ background:rgba(155,147,127,.8); }
+  .days-grid i.forgot{ background:rgba(155,147,127,.14); }
 
-    /* Screen 03: Three-day curriculum */
-    .module-grid {
-      margin-top:52px;
-      display:grid;
-      gap:12px;
-    }
-    .curriculum-grid {
-      grid-template-columns:repeat(3,1fr);
-    }
-    .module {
-      min-height:340px;
-      border-radius:34px;
-      padding:24px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:0 18px 48px rgba(26,22,17,.055);
-      text-align:left;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-      gap:24px;
-    }
-    .module b {
-      display:block;
-      color:rgba(242,106,27,.55);
-      font-size:13px;
-      letter-spacing:.12em;
-    }
-    .module-visual {
-      margin-top:18px;
-      height:146px;
-      border-radius:24px;
-      overflow:hidden;
-      background:linear-gradient(180deg,#fffaf5 0%,#f5eee3 100%);
-      border:1px solid rgba(16,16,16,.045);
-      display:grid;
-      place-items:center;
-    }
-    .module-visual .vector-icon {
-      width:118px;
-      height:118px;
-    }
-    .module h3 {
-      font-size:34px;
-      letter-spacing:-.065em;
-      line-height:1.02;
-    }
-    .module p {
-      color:rgba(16,16,16,.55);
-      font-size:15px;
-      line-height:1.62;
-      margin-top:12px;
-    }
+  /* 右侧：AI 对话流 */
+  .ai-cap{ text-align:center; font-size:12px; letter-spacing:3px; color:#7d7663; margin-bottom:12px; }
+  .ai-badges{ display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-bottom:20px; }
+  .ai-badges span{
+    display:inline-flex; align-items:center; gap:6px;
+    font-size:11.5px; letter-spacing:1px; color:var(--gold-soft);
+    border:1px solid var(--line); border-radius:999px; padding:4px 13px;
+  }
+  .ai-badges span::before{
+    content:""; width:5px; height:5px; border-radius:50%;
+    background:var(--gold); box-shadow:0 0 6px rgba(211,169,85,.9);
+  }
+  .chat{
+    width:100%; max-width:400px; height:320px; overflow:hidden;
+    display:flex; flex-direction:column; gap:12px;
+    padding:6px 2px; position:relative;
+  }
+  .chat::after{
+    content:""; position:absolute; top:0; left:0; right:0; height:54px;
+    background:linear-gradient(180deg, var(--ink-2), transparent);
+    pointer-events:none;
+  }
+  .msg{
+    max-width:88%; padding:11px 15px; border-radius:14px; flex-shrink:0;
+    font-size:13.5px; line-height:1.75;
+    opacity:0; transform:translateY(16px); transition:opacity .45s ease, transform .45s ease;
+  }
+  .msg.show{ opacity:1; transform:none; }
+  .msg.kid{
+    align-self:flex-end; border-bottom-right-radius:4px;
+    background:rgba(211,169,85,.15); border:1px solid rgba(211,169,85,.42);
+    color:var(--gold-soft);
+  }
+  .msg.ai{
+    align-self:flex-start; border-bottom-left-radius:4px;
+    background:rgba(255,255,255,.045); border:1px solid var(--line);
+    color:var(--paper);
+  }
+  .msg.ai i{
+    font-style:normal; display:inline-block; margin-right:8px;
+    font-size:10.5px; letter-spacing:1px; color:var(--gold);
+    border:1px solid var(--line); border-radius:999px; padding:1px 9px;
+    vertical-align:1px;
+  }
+  .msg.ai em{
+    font-style:normal; display:inline-block; margin-right:8px;
+    font-size:10.5px; letter-spacing:1px; color:#1a1408;
+    background:linear-gradient(135deg,var(--gold-soft),var(--gold));
+    border-radius:999px; padding:1px 9px; vertical-align:1px;
+  }
 
-    /* Screen 04: PCL methodology */
-    .method-sec { background:#f1ebe0; }
-    .method-cards {
-      margin-top:52px;
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:14px;
-    }
-    .method-card {
-      min-height:280px;
-      border-radius:36px;
-      padding:30px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow2);
-      text-align:left;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .method-card:nth-child(2) { background:#181818; color:#fff; }
-    .method-card:nth-child(2) p { color:rgba(255,255,255,.58); }
-    .method-card b {
-      color:var(--orange);
-      font-size:14px;
-      letter-spacing:.12em;
-    }
-    .method-card h3 {
-      font-size:38px;
-      letter-spacing:-.065em;
-      line-height:1.02;
-    }
-    .method-card p {
-      color:rgba(16,16,16,.56);
-      font-size:15px;
-      line-height:1.6;
-      margin-top:12px;
-    }
+  .duo-stats{ display:flex; justify-content:center; gap:44px; margin-top:26px; text-align:center; }
+  .duo-stats b{
+    display:block; font-family:Georgia,"Songti SC","Noto Serif SC",serif;
+    font-weight:400; font-size:clamp(22px,2.4vw,30px); color:var(--gold-soft);
+  }
+  .duo-stats small{ display:block; margin-top:6px; font-size:11.5px; letter-spacing:2px; color:var(--muted); }
+  .duo-stats.muted b{ color:#8d8672; }
+  .tl-cap-out{ margin-top:28px; text-align:center; color:var(--muted); font-size:14px; letter-spacing:2px; }
 
-    /* Screen 05: Creator workspace */
-    .workspace-section {
-      background:
-        radial-gradient(circle at 72% 12%, rgba(242,106,27,.10), transparent 30%),
-        linear-gradient(180deg,#fffdf8,#f1ebe0);
-    }
-    .workspace-section .sub {
-      max-width:620px;
-    }
-    .device {
-      margin-top:56px;
-      border-radius:54px;
-      background:#161616;
-      padding:18px;
-      box-shadow:0 42px 120px rgba(26,22,17,.18);
-    }
-    .screen {
-      min-height:528px;
-      border-radius:38px;
-      background:linear-gradient(180deg,#fdfbf6,#ece6dc);
-      overflow:hidden;
-      padding:34px;
-      position:relative;
-    }
-    .screen::before {
-      content:""; position:absolute; right:-110px; top:-130px;
-      width:340px; height:340px; border-radius:50%;
-      background:radial-gradient(circle,rgba(242,106,27,.18),transparent 64%);
-    }
-    .tool-layout {
-      position:relative; z-index:1;
-      display:grid; grid-template-columns:1.04fr .96fr;
-      gap:16px;
-    }
-    .tool-big {
-      min-height:420px;
-      border-radius:34px;
-      background:#fff;
-      border:1px solid var(--line);
-      padding:34px;
-      display:flex; flex-direction:column; justify-content:space-between;
-    }
-    .tool-big h3 {
-      font-size:48px; line-height:1.0; letter-spacing:-.075em;
-      max-width:520px;
-    }
-    .tool-big p {
-      margin-top:16px;
-      color:rgba(16,16,16,.58);
-      font-size:16px; line-height:1.55;
-      max-width:510px;
-    }
-    .workspace-kit {
-      margin-top:30px;
-      border-radius:32px;
-      padding:22px;
-      background:
-        radial-gradient(circle at 82% 8%, rgba(242,106,27,.34), transparent 30%),
-        linear-gradient(135deg,#111 0%,#1e1a15 56%,#2a221a 100%);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      box-shadow:0 28px 70px rgba(16,16,16,.18);
-      position:relative;
-      overflow:hidden;
-    }
-    .workspace-kit::before {
-      content:"";
-      position:absolute;
-      inset:14px;
-      border-radius:24px;
-      border:1px solid rgba(255,255,255,.07);
-      pointer-events:none;
-    }
-    .kit-head {
-      position:relative;
-      z-index:1;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:18px;
-    }
-    .kit-label {
-      display:block;
-      color:#ff9a55;
-      font-size:12px;
-      font-weight:840;
-      letter-spacing:.14em;
-      text-transform:uppercase;
-    }
-    .kit-title {
-      display:block;
-      margin-top:8px;
-      font-size:22px;
-      line-height:1.08;
-      letter-spacing:-.045em;
-      font-weight:850;
-    }
-    .kit-meta {
-      color:rgba(255,255,255,.46);
-      font-size:12px;
-      letter-spacing:.12em;
-      white-space:nowrap;
-      padding-top:3px;
-    }
-    .kit-cloud {
-      position:relative;
-      z-index:1;
-      margin-top:22px;
-      display:grid;
-      grid-template-columns:repeat(4,minmax(0,1fr));
-      gap:12px;
-    }
-    .brand-chip {
-      min-height:74px;
-      border-radius:22px;
-      padding:12px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:rgba(255,255,255,.08);
-      border:1px solid rgba(255,255,255,.11);
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.08);
-      transition:transform .18s ease, background .18s ease, border-color .18s ease;
-    }
-    .brand-chip:hover {
-      transform:translateY(-3px);
-      background:rgba(255,255,255,.12);
-      border-color:rgba(255,255,255,.22);
-    }
-    .brand-chip.primary {
-      background:#fffaf2;
-      color:#111;
-      border-color:rgba(255,255,255,.78);
-    }
-    .brand-chip.accent {
-      background:linear-gradient(135deg,#ff8a2a,#f26a1b);
-      color:#111;
-      border-color:rgba(255,154,85,.65);
-    }
-    .brand-word {
-      font-size:18px;
-      line-height:1;
-      font-weight:850;
-      letter-spacing:-.035em;
-      white-space:nowrap;
-    }
-    .brand-word.small {
-      font-size:16px;
-      letter-spacing:-.025em;
-    }
-    .brand-word.code {
-      font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;
-      font-size:17px;
-      letter-spacing:-.04em;
-    }
-    .tool-small {
-      display:grid; gap:16px;
-    }
-    .tile {
-      min-height:198px;
-      border-radius:32px;
-      padding:28px;
-      background:#111;
-      color:#fff;
-    }
-    .tile.light {
-      background:#fff; color:#111; border:1px solid var(--line);
-    }
-    .tile b {
-      display:block;
-      font-size:36px; letter-spacing:-.07em;
-      margin-bottom:8px;
-    }
-    .tile span {
-      color:rgba(255,255,255,.56);
-      font-size:14px; line-height:1.55;
-    }
-    .tile.light span {
-      color:rgba(16,16,16,.54);
-    }
+  /* ============ 04 三种能力：充能条 ============ */
+  .meters{ margin-top:64px; display:flex; flex-direction:column; gap:40px; }
+  .m-top{ display:flex; align-items:baseline; gap:16px; }
+  .m-no{
+    font-family:Georgia,serif; font-style:italic; font-size:20px; color:var(--gold);
+  }
+  .m-top h3{ font-size:21px; letter-spacing:2px; font-weight:700; flex:1; }
+  .m-badge{
+    font-size:10.5px; letter-spacing:2px; color:var(--gold);
+    border:1px solid var(--line); border-radius:999px; padding:3px 12px;
+    opacity:0; transform:translateX(8px);
+    transition:opacity .6s .9s, transform .6s .9s;
+  }
+  .meter.lit .m-badge{ opacity:1; transform:none; }
+  .m-bar{
+    margin-top:14px; height:10px; border-radius:99px;
+    border:1px solid var(--line); background:rgba(255,255,255,.03);
+    overflow:hidden;
+  }
+  .m-bar i{
+    display:block; height:100%; width:0; border-radius:99px;
+    background:linear-gradient(90deg,var(--gold),var(--gold-soft));
+    box-shadow:0 0 14px rgba(211,169,85,.55);
+    transition:width 1.5s cubic-bezier(.25,.7,.2,1);
+  }
+  .meter p{ margin-top:14px; font-size:13.5px; color:var(--muted); line-height:1.95; max-width:640px; }
 
-    /* Screen 06: Outcomes */
-    .outcomes-section {
-      background:#101010;
-      color:#fff;
-    }
-    .outcomes-section .sub {
-      max-width:620px;
-      color:rgba(255,255,255,.58);
-    }
-    .takeaway-grid {
-      margin-top:52px;
-      display:grid;
-      grid-template-columns:repeat(5,1fr);
-      gap:12px;
-    }
-    .takeaway {
-      min-height:250px;
-      border-radius:34px;
-      padding:24px;
-      background:rgba(255,255,255,.07);
-      border:1px solid rgba(255,255,255,.10);
-      color:#fff;
-      text-align:left;
-      display:flex;
-      flex-direction:column;
-      justify-content:space-between;
-    }
-    .takeaway-top {
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:16px;
-    }
-    .takeaway b {
-      color:#ff9a55;
-      font-size:13px;
-      letter-spacing:.12em;
-    }
-    .takeaway-visual {
-      width:74px;
-      height:74px;
-      flex:0 0 auto;
-      border-radius:22px;
-      overflow:hidden;
-      background:rgba(255,250,241,.96);
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow:0 16px 34px rgba(0,0,0,.18);
-      display:grid;
-      place-items:center;
-      padding:15px;
-    }
-    .takeaway-visual .vector-icon .line {
-      stroke:#111;
-    }
-    .takeaway-body {
-      margin-top:auto;
-    }
-    .takeaway h3 {
-      font-size:28px;
-      letter-spacing:-.055em;
-      line-height:1.08;
-    }
-    .takeaway p {
-      color:rgba(255,255,255,.58);
-      font-size:14px;
-      line-height:1.55;
-      margin-top:12px;
-    }
+  /* ============ PCL ============ */
+  .levels{ margin-top:64px; }
+  .level{
+    display:grid; grid-template-columns:150px 220px 1fr; gap:30px; align-items:baseline;
+    padding:34px 10px; border-bottom:1px solid rgba(211,169,85,.14);
+  }
+  .level:first-child{ border-top:1px solid rgba(211,169,85,.14); }
+  .level .lv{ font-family:Georgia,serif; font-size:14px; letter-spacing:3px; color:var(--gold); }
+  .level h3{ font-size:22px; letter-spacing:2px; font-weight:700; }
+  .level p{ font-size:14.5px; color:var(--muted); line-height:2; }
 
-    /* Screen 07: Mentor */
-    .mentor-card {
-      margin-top:54px;
-      border-radius:46px;
-      background:rgba(255,253,248,.82);
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      position:relative;
-    }
-    .mentor-card::before {
-      content:"MENTOR";
-      position:absolute; right:34px; top:20px;
-      font-size:92px; font-weight:830; letter-spacing:-.08em;
-      color:rgba(16,16,16,.034);
-      user-select:none; pointer-events:none;
-    }
-    .mentor-grid {
-      display:grid;
-      grid-template-columns:360px 1fr;
-      gap:44px;
-      padding:26px;
-      align-items:center;
-    }
-    .mentor-photo {
-      min-height:500px;
-      border-radius:32px;
-      overflow:hidden;
-      position:relative;
-      background:#efe9de;
-      box-shadow:var(--shadow2);
-    }
-    .mentor-photo img {
-      width:100%; height:100%; object-fit:cover; display:block;
-    }
-    .mentor-badge {
-      position:absolute; left:18px; right:18px; bottom:18px;
-      padding:15px 16px; border-radius:20px;
-      background:rgba(16,16,16,.72);
-      color:#fff;
-      border:1px solid rgba(255,255,255,.12);
-      backdrop-filter:blur(14px);
-    }
-    .mentor-badge small {
-      display:block; color:rgba(255,255,255,.58);
-      font-size:12px; letter-spacing:.12em; margin-bottom:8px;
-    }
-    .mentor-badge strong {
-      display:block; font-size:22px; letter-spacing:-.04em;
-    }
-    .mentor-content {
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:flex-start;
-      text-align:left;
-      padding:34px 36px 34px 0;
-    }
-    .mentor-role {
-      margin-top:0;
-      max-width:660px;
-      color:#111;
-      font-size:clamp(30px,3.1vw,46px);
-      line-height:1.14;
-      letter-spacing:-.065em;
-      font-weight:830;
-    }
-    .mentor-list {
-      margin-top:34px;
-      display:grid;
-      gap:14px;
-      width:min(680px,100%);
-    }
-    .mentor-row {
-      display:grid;
-      grid-template-columns:150px 1fr;
-      gap:18px;
-      padding:16px 0;
-      border-top:1px solid rgba(16,16,16,.08);
-      align-items:start;
-    }
-    .mentor-row:last-child {
-      border-bottom:1px solid rgba(16,16,16,.08);
-    }
-    .mentor-row b {
-      color:rgba(16,16,16,.42);
-      font-size:13px;
-      letter-spacing:.10em;
-      text-transform:uppercase;
-      padding-top:3px;
-    }
-    .mentor-row span {
-      color:rgba(16,16,16,.78);
-      font-size:18px;
-      line-height:1.48;
-      letter-spacing:-.035em;
-      font-weight:700;
-    }
+  /* ============ 学生之音 ============ */
+  #student-voices, #parent-voices{ padding-top:128px; padding-bottom:128px; }
+  .student-voice-grid{
+    margin-top:64px; display:grid; grid-template-columns:repeat(3,1fr); gap:28px;
+  }
+  .student-voice{ min-width:0; border-top:1px solid var(--line); padding-top:20px; }
+  .student-voice-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:18px;
+    margin-bottom:16px;
+  }
+  .student-voice-no{
+    font-family:Georgia,"Times New Roman",serif; color:var(--gold);
+    font-size:15px; font-style:italic; letter-spacing:2px;
+  }
+  .student-voice-topic{ color:var(--muted); font-size:12px; letter-spacing:2px; }
+  .student-voice-media{
+    overflow:hidden; border:1px solid var(--line); border-radius:14px; background:#0b0b0b;
+    transition:border-color .35s ease-out, transform .35s ease-out;
+  }
+  .student-voice:hover .student-voice-media{ border-color:var(--gold); transform:translateY(-3px); }
+  .student-voice-media video{ display:block; width:100%; aspect-ratio:16/9; background:#0b0b0b; }
+  .student-voice blockquote{
+    margin-top:22px; color:var(--paper); font-size:16px; line-height:1.9;
+    letter-spacing:.04em;
+  }
+  .student-voice-source{
+    margin-top:12px; color:var(--gold); font-size:11.5px; letter-spacing:2px;
+  }
 
-    /* Screen 08: Parent Q&A */
-    .qa-sec { background:#f1ebe0; }
-    .qa-board {
-      margin-top:42px;
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-      max-width:960px;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .qa-card {
-      border-radius:28px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:0 12px 34px rgba(26,22,17,.05);
-      padding:22px 24px;
-      text-align:left;
-      display:grid;
-      grid-template-columns:260px 1fr;
-      gap:22px;
-      align-items:start;
-    }
-    .q {
-      display:flex; align-items:flex-start; gap:10px;
-      font-size:18px; font-weight:780; letter-spacing:-.04em;
-    }
-    .q i,.a i {
-      width:26px; height:26px; border-radius:50%;
-      display:grid; place-items:center;
-      flex:0 0 auto;
-      font-style:normal; font-weight:850;
-    }
-    .q i { background:rgba(242,106,27,.12); color:var(--orange); }
-    .a {
-      margin-top:0;
-      display:flex; gap:10px;
-      color:rgba(16,16,16,.58);
-      font-size:15px; line-height:1.68;
-    }
-    .a i {
-      background:#111; color:#fff; font-size:12px;
-      margin-top:2px;
-    }
+  /* ============ 家长之音 ============ */
+  .parent-voice-grid{
+    margin-top:64px; display:grid; grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  }
+  .parent-voice{ padding:36px 34px 38px; min-width:0; }
+  .parent-voice + .parent-voice{ border-left:1px solid var(--line); }
+  .parent-voice-mark{
+    height:64px; color:rgba(211,169,85,.72); font-family:"Songti SC","STSong",serif;
+    font-size:88px; line-height:.92; font-weight:700;
+  }
+  .parent-voice-head{ min-height:92px; }
+  .parent-voice-no{
+    display:block; color:var(--gold); font-family:Georgia,"Times New Roman",serif;
+    font-size:15px; font-style:italic; letter-spacing:2px;
+  }
+  .parent-voice h3{ margin-top:14px; font-size:19px; line-height:1.6; letter-spacing:1px; }
+  .parent-voice blockquote{ position:relative; padding-bottom:22px; }
+  .parent-voice p{ margin-top:24px; color:var(--paper); font-size:15px; line-height:2.05; }
+  .parent-voice blockquote::after{
+    content:"”"; position:absolute; right:0; bottom:-16px; color:rgba(211,169,85,.38);
+    font-family:"Songti SC","STSong",serif; font-size:58px; line-height:1;
+  }
+  .parent-voice-source{
+    display:flex; align-items:center; gap:12px; margin-top:26px;
+    color:var(--gold); font-size:11.5px; letter-spacing:2px;
+  }
+  .parent-voice-source::before{ content:""; width:22px; height:1px; background:var(--gold); }
+  .parent-project-link{
+    display:inline-flex; align-items:center; gap:12px; margin-top:22px; color:var(--gold-soft);
+    font-size:13px; letter-spacing:2px; text-decoration:none; border-bottom:1px solid var(--line);
+    padding-bottom:7px; transition:color .3s ease-out, border-color .3s ease-out, transform .3s ease-out;
+  }
+  .parent-project-link:hover{ color:var(--paper); border-color:var(--gold); transform:translateX(3px); }
+  .parent-project-link:active{ transform:translateX(1px); }
+  .parent-project-feature{
+    display:grid; grid-template-columns:1.1fr .9fr; margin-top:34px; overflow:hidden;
+    border:1px solid var(--line); border-radius:14px; color:var(--paper); text-decoration:none;
+    background:var(--ink-2); transition:border-color .35s ease-out, transform .35s ease-out;
+  }
+  .parent-project-feature:hover{ border-color:var(--gold); transform:translateY(-3px); }
+  .parent-project-feature:active{ transform:translateY(-1px); }
+  .parent-project-image{ min-height:300px; overflow:hidden; }
+  .parent-project-image img{ width:100%; height:100%; display:block; object-fit:cover; transition:transform .6s ease-out; }
+  .parent-project-feature:hover img{ transform:scale(1.025); }
+  .parent-project-copy{ display:flex; flex-direction:column; justify-content:center; padding:46px; border-left:1px solid var(--line); }
+  .parent-project-copy small{ color:var(--gold); font-size:11.5px; letter-spacing:3px; text-transform:uppercase; }
+  .parent-project-copy h3{ margin-top:16px; font-size:clamp(23px,3vw,34px); line-height:1.45; letter-spacing:.05em; }
+  .parent-project-copy p{ margin-top:16px; color:var(--muted); font-size:14px; line-height:1.9; }
+  .parent-project-open{ display:inline-flex; margin-top:24px; color:var(--gold-soft); font-size:13px; letter-spacing:2px; }
 
-    /* Screen 09: Final CTA and QR hover popover */
-    .final-section {
-      text-align:center;
-      background:#fffdf8;
-      padding-bottom:100px;
-      overflow:visible;
-    }
-    .final-section .title {
-      max-width:960px;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .qr-wrap {
-      position:relative;
-      display:inline-flex;
-      justify-content:center;
-    }
-    .qr-pop {
-      position:absolute;
-      left:50%;
-      bottom:calc(100% + 12px);
-      transform:translateX(-50%) translateY(8px);
-      width:220px;
-      max-width:calc(100vw - 40px);
-      box-sizing:border-box;
-      padding:12px 12px 13px;
-      border-radius:22px;
-      background:#fff;
-      border:1px solid var(--line);
-      box-shadow:0 22px 58px rgba(26,22,17,.18);
-      opacity:0;
-      pointer-events:none;
-      z-index:20;
-      transition:.22s ease;
-    }
-    .qr-wrap:hover .qr-pop,
-    .qr-wrap:focus-within .qr-pop {
-      opacity:1;
-      pointer-events:auto;
-      transform:translateX(-50%) translateY(0);
-    }
-    .qr-pop::before {
-      content:"";
-      position:absolute;
-      left:0;
-      right:0;
-      bottom:-18px;
-      height:18px;
-    }
-    .qr-pop::after {
-      content:"";
-      position:absolute;
-      left:50%;
-      bottom:-8px;
-      width:16px;
-      height:16px;
-      transform:translateX(-50%) rotate(45deg);
-      background:#fff;
-      border-right:1px solid var(--line);
-      border-bottom:1px solid var(--line);
-    }
-    .qr {
-      width:196px;
-      height:198px;
-      margin:0 auto;
-      border-radius:18px;
-      background-color:#fff;
-      border:1px solid rgba(16,16,16,.08);
-      box-shadow:0 8px 18px rgba(16,16,16,.05);
-      position:relative;
-      overflow:hidden;
-      display:block;
-    }
-    .qr::before,
-    .qr::after {
-      content:none;
-    }
-    .qr::before {
-      left:8px; top:8px;
-      box-shadow:106px 0 0 -8px #fff,106px 0 0 0 #111,0 106px 0 -8px #fff,0 106px 0 0 #111;
-    }
-    .qr::after { display:none; }
-    .qr img {
-      width:100%;
-      height:100%;
-      object-fit:contain;
-      display:block;
-      background:#fff;
-    }
-    .qr-text {
-      display:block;
-      margin-top:12px;
-      color:rgba(16,16,16,.58);
-      font-size:13px;
-      line-height:1.35;
-    }
+  /* ============ 项目路演 ============ */
+  #project-proof{ padding-top:128px; padding-bottom:128px; }
+  .project-proof-grid{ max-width:880px; margin:64px auto 0; }
+  .project-proof-item{ min-width:0; border-top:1px solid var(--line); padding-top:20px; }
+  .project-proof-label{ color:var(--gold); font-size:11.5px; letter-spacing:3px; text-transform:uppercase; }
+  .project-proof-title{ margin-top:12px; margin-bottom:18px; font-size:19px; line-height:1.55; letter-spacing:1px; }
 
-    /* Responsive rules */
-    @media(max-width:1120px) {
-      .module-grid,
-      .takeaway-grid {
-        grid-template-columns:repeat(2,1fr);
-      }
-      .workspace-section .kit-cloud {
-        grid-template-columns:repeat(4,1fr);
-      }
-    }
-    @media(max-width:980px) {
-      .links a:not(.top-cta) { display:none; }
-      .section { padding:84px 20px; }
-      .passport,
-      .tool-layout,
-      .mentor-grid {
-        grid-template-columns:1fr;
-      }
-      .passport-left {
-        border-right:0;
-        border-bottom:1px solid var(--line);
-      }
-      .signal-grid,
-      .module-grid,
-      .method-cards,
-      .takeaway-grid {
-        grid-template-columns:1fr;
-      }
-      .workspace-section .kit-cloud {
-        grid-template-columns:1fr 1fr;
-      }
-      .mentor-content {
-        padding:14px 4px 18px;
-      }
-      .mentor-photo {
-        min-height:440px;
-      }
-      .qa-card {
-        grid-template-columns:1fr;
-      }
-      .a {
-        margin-top:16px;
-      }
-    }
-    @media(max-width:640px) {
-      .nav { height:56px; }
-      .nav-inner { width:calc(100% - 24px); gap:10px; }
-      .brand { gap:8px; min-width:0; }
-      .brand-mark { width:26px; height:26px; border-radius:8px; flex:0 0 auto; }
-      .brand span { font-size:13px; overflow:hidden; text-overflow:ellipsis; }
-      .top-cta { padding:8px 12px; font-size:13px; }
-      .section { padding:72px 16px; scroll-margin-top:64px; }
-      .hero { min-height:auto; padding-top:64px; }
-      .wordmark { font-size:12px; letter-spacing:.38em; text-indent:.38em; }
-      .display { font-size:46px; line-height:.98; letter-spacing:-.075em; }
-      .title { font-size:36px; line-height:1.05; letter-spacing:-.065em; }
-      .sub { font-size:16px; line-height:1.55; margin-top:16px; }
-      .btns { gap:10px; margin-top:22px; }
-      .btn { min-height:44px; padding:0 16px; font-size:15px; }
-      .passport,
-      .mentor-card {
-        border-radius:26px;
-      }
-      .passport { width:100%; margin-top:36px; }
-      .passport-left,
-      .passport-right {
-        padding:20px;
-      }
-      .passport-left { min-height:220px; }
-      .stamp { width:86px; height:86px; font-size:11px; box-shadow:inset 0 0 0 8px rgba(242,106,27,.045); }
-      .passport-left h3 { font-size:32px; }
-      .passport-right { gap:12px; }
-      .demo-window { min-height:142px; border-radius:24px; padding:20px; }
-      .demo-window b { font-size:25px; line-height:1.08; }
-      .project-types { grid-template-columns:repeat(2,minmax(0,1fr)); }
-      .project-type { min-height:96px; border-radius:18px; padding:12px; }
-      .project-thumb { width:50px; height:50px; border-radius:14px; padding:10px; }
-      .project-type span { font-size:14px; }
-      .signal-card { min-height:190px; padding:22px; border-radius:26px; }
-      .signal-card b { font-size:48px; }
-      .module { min-height:260px; border-radius:26px; padding:20px; }
-      .module-visual { height:112px; border-radius:20px; }
-      .module-visual .vector-icon { width:96px; height:96px; }
-      .module h3 { font-size:29px; }
-      .method-card { min-height:220px; border-radius:28px; padding:24px; }
-      .method-card h3 { font-size:31px; }
-      .device { margin-top:36px; padding:8px; border-radius:30px; }
-      .screen { padding:14px; border-radius:24px; min-height:auto; }
-      .tool-layout { gap:12px; }
-      .tool-big { padding:22px; min-height:auto; border-radius:24px; }
-      .tool-big h3 { font-size:31px; line-height:1.05; }
-      .tool-big p { font-size:15px; }
-      .workspace-kit { margin-top:22px; padding:16px; border-radius:24px; }
-      .kit-title { font-size:19px; }
-      .workspace-section .kit-cloud { grid-template-columns:1fr 1fr; }
-      .kit-cloud { gap:10px; margin-top:18px; }
-      .brand-chip { min-height:58px; border-radius:18px; padding:10px; }
-      .brand-word { font-size:16px; }
-      .brand-word.small { font-size:14px; }
-      .kit-head { display:block; }
-      .kit-meta { margin-top:12px; }
-      .tile { min-height:128px; border-radius:24px; padding:22px; }
-      .tile b { font-size:30px; }
-      .takeaway-grid { gap:10px; }
-      .takeaway { min-height:190px; padding:20px; border-radius:26px; }
-      .takeaway-visual { width:58px; height:58px; border-radius:18px; padding:12px; }
-      .takeaway h3 { font-size:24px; }
-      .mentor-grid { padding:14px; gap:18px; }
-      .mentor-photo { border-radius:22px; min-height:330px; }
-      .mentor-badge { left:12px; right:12px; bottom:12px; padding:12px; border-radius:16px; }
-      .mentor-badge strong { font-size:18px; }
-      .mentor-role { font-size:26px; line-height:1.18; letter-spacing:-.055em; }
-      .mentor-row { grid-template-columns:1fr; gap:6px; }
-      .mentor-row span { font-size:16px; }
-      .qa-card { padding:18px; border-radius:22px; gap:10px; }
-      .final-section { padding-bottom:76px; }
-      .final-section .btns { align-items:center; }
-      .qr-wrap {
-        display:flex;
-        flex-direction:column;
-        align-items:center;
-      }
-      .qr-pop {
-        position:static;
-        width:min(86vw,292px);
-        max-width:292px;
-        max-height:0;
-        margin-top:0;
-        padding:0 14px;
-        overflow:hidden;
-        border:0;
-        box-shadow:none;
-        opacity:0;
-        transform:none;
-      }
-      .qr-wrap:hover .qr-pop,
-      .qr-wrap:focus-within .qr-pop {
-        max-height:360px;
-        margin-top:14px;
-        padding:14px;
-        border:1px solid var(--line);
-        box-shadow:0 18px 50px rgba(26,22,17,.16);
-        opacity:1;
-        transform:none;
-      }
-      .qr-pop::before,
-      .qr-pop::after {
-        display:none;
-      }
-      .qr { width:100%; height:auto; aspect-ratio:693 / 700; border-radius:16px; }
-    }
+  /* ============ 收获 / 视频区 ============ */
+  .gains{ margin-top:64px; }
+  .video-wrap{ max-width:880px; margin:70px auto 0; }
+  .v-cap{
+    text-align:center; font-size:13px; letter-spacing:2px;
+    color:var(--muted); margin-bottom:20px;
+  }
+  .v-cap span{ color:var(--gold); letter-spacing:5px; margin-right:14px; }
+  .v-frame{
+    border:1px solid var(--line); border-radius:14px; overflow:hidden;
+    transition:border-color .5s, box-shadow .5s;
+  }
+  .v-frame:hover{ border-color:var(--gold); box-shadow:0 0 40px rgba(211,169,85,.12); }
+  .v-frame video{ display:block; width:100%; aspect-ratio:16/9; background:#000; }
+  .gain{
+    display:grid; grid-template-columns:90px 240px 1fr; gap:30px; align-items:baseline;
+    padding:30px 10px; border-bottom:1px solid rgba(211,169,85,.14);
+  }
+  .gain:first-child{ border-top:1px solid rgba(211,169,85,.14); }
+  .gain .n{ font-family:Georgia,serif; font-style:italic; font-size:34px; color:var(--gold); }
+  .gain h3{ font-size:20px; letter-spacing:2px; font-weight:700; }
+  .gain p{ font-size:14.5px; color:var(--muted); line-height:2; }
 
-  </style>
+  /* ============ 导师 ============ */
+  .mentor{ display:grid; grid-template-columns:340px 1fr; gap:60px; margin-top:64px; align-items:start; }
+  .m-photo{ border-radius:50%; padding:14px; border:1px solid var(--line); }
+  .m-photo img{
+    width:100%; aspect-ratio:1; object-fit:cover; border-radius:50%; display:block;
+    filter:grayscale(.25) contrast(1.05);
+  }
+  .m-name{ margin-bottom:26px; }
+  .m-name .tag{ font-size:13px; letter-spacing:4px; color:var(--gold); }
+  .m-name h3{ margin-top:10px; font-size:30px; letter-spacing:2px; font-weight:700; }
+  .cred{ padding:18px 0; border-bottom:1px solid rgba(211,169,85,.14); display:grid; grid-template-columns:120px 1fr; gap:20px; }
+  .cred:first-of-type{ border-top:1px solid rgba(211,169,85,.14); }
+  .cred .k{ font-family:Georgia,serif; font-size:13.5px; letter-spacing:2px; color:var(--gold); }
+  .cred .v{ font-size:14.5px; color:var(--paper); line-height:1.9; }
+
+  /* ============ FAQ ============ */
+  .faq{ margin-top:64px; }
+  details{ border-bottom:1px solid rgba(211,169,85,.14); padding:6px 10px; }
+  details:first-of-type{ border-top:1px solid rgba(211,169,85,.14); }
+  summary{
+    list-style:none; cursor:pointer; padding:24px 0;
+    display:flex; align-items:baseline; gap:22px; transition:color .3s;
+  }
+  summary::-webkit-details-marker{ display:none; }
+  summary:hover{ color:var(--gold-soft); }
+  summary .q{
+    font-family:Georgia,serif; font-style:italic; color:var(--gold);
+    font-size:19px; flex:none; width:26px;
+  }
+  summary h3{ font-size:17.5px; letter-spacing:1px; font-weight:600; }
+  summary .plus{ margin-left:auto; color:var(--gold); font-size:20px; transition:transform .3s; }
+  details[open] summary .plus{ transform:rotate(45deg); }
+  details .a{ padding:0 0 26px 48px; color:var(--muted); font-size:14.5px; line-height:2.1; }
+  details .a::before{ content:"A"; font-family:Georgia,serif; font-style:italic; color:var(--gold); margin-right:14px; }
+
+  /* ============ 最终 CTA ============ */
+  .final{ text-align:center; }
+  .final h2{ font-size:clamp(32px,4.6vw,58px); }
+  .final .sub{ margin-top:22px; color:var(--muted); font-size:15.5px; letter-spacing:2px; line-height:2; }
+  .qr-card{ margin:56px auto 0; width:250px; padding:20px; background:#f5f1e6; border-radius:20px; }
+  .qr-card img{ width:100%; display:block; border-radius:8px; }
+  .qr-cap{ margin-top:22px; font-size:14px; color:var(--gold-soft); letter-spacing:3px; }
+  .qr-cap small{ display:block; margin-top:8px; color:var(--muted); font-size:12.5px; letter-spacing:2px; }
+
+  footer{
+    border-top:1px solid rgba(211,169,85,.16);
+    padding:70px 5vw 60px; text-align:center;
+    color:var(--muted); font-size:13px; letter-spacing:2px; line-height:2.2;
+  }
+  footer .f-brand{ font-size:20px; letter-spacing:.2em; color:var(--paper); margin-bottom:12px; }
+
+  .reveal{ opacity:0; transform:translateY(28px); transition:opacity 1s ease, transform 1s cubic-bezier(.2,.7,.2,1); }
+  .reveal.show{ opacity:1; transform:none; }
+
+  @media (max-width:960px){
+    header{ grid-template-columns:1fr; gap:56px; padding-top:120px; }
+    .hero-visual{ justify-content:flex-start; }
+    .disc{ width:min(76vw,440px); }
+    .mentor{ grid-template-columns:1fr; gap:40px; }
+    .m-photo{ max-width:300px; }
+    .level, .gain{ grid-template-columns:1fr; gap:8px; }
+    .nav-links a:not(.nav-cta){ display:none; }
+    section{ padding:90px 6vw; }
+    .work{ width:230px; }
+    .tl-rail{ display:none; }
+    .tl-nodes{ grid-template-columns:1fr; gap:30px; }
+    .tl-node{ opacity:1; padding-top:0; padding-left:32px; }
+    .tl-node::before{ top:5px; }
+    .student-voice-grid{ grid-template-columns:1fr; gap:48px; }
+    .student-voice blockquote{ font-size:15px; }
+    #student-voices, #parent-voices{ padding-top:88px; padding-bottom:88px; }
+    .student-voice-topic, .student-voice-source, .parent-voice-source{ font-size:14px; }
+    .parent-voice-grid{ grid-template-columns:1fr; }
+    .parent-voice{ padding:32px 0; }
+    .parent-voice + .parent-voice{ border-left:0; border-top:1px solid var(--line); }
+    .parent-voice-head{ min-height:0; }
+    .parent-voice p{ font-size:14px; }
+    .parent-voice-mark{ font-size:76px; }
+    .parent-project-link{ font-size:14px; }
+    .parent-project-feature{ grid-template-columns:1fr; }
+    .parent-project-image{ min-height:220px; }
+    .parent-project-copy{ padding:30px 24px 34px; border-left:0; border-top:1px solid var(--line); }
+    .parent-project-copy small, .parent-project-open{ font-size:14px; }
+    #project-proof{ padding-top:88px; padding-bottom:88px; }
+    .project-proof-grid{ margin-top:48px; }
+    .project-proof-label{ font-size:14px; }
+    .duo{ grid-template-columns:1fr; gap:44px; }
+    .duo-div{ height:1px; width:100%; }
+    .duo-stage{ min-height:300px; }
+  }
+
+</style>
 </head>
+<body data-preview-version="2026-07-22-0253">
 
-<body>
-  <nav class="nav">
-    <div class="nav-inner">
-      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span><span>星海少年AI计划</span></a>
-      <div class="links">
-        <a href="#signal">为什么</a>
-        <a href="#curriculum">课程</a>
-        <a href="#method">方法</a>
-        <a href="#workspace">工作台</a>
-        <a href="#mentor">导师</a>
-        <a class="top-cta" href="#apply">预约咨询</a>
+<nav>
+  <div class="brand">
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M11 0 L13.2 8.8 L22 11 L13.2 13.2 L11 22 L8.8 13.2 L0 11 L8.8 8.8 Z" fill="#d3a955"/>
+    </svg>
+    <span>星海少年AI计划<small>XINGHAI YOUTH AI PROGRAM</small></span>
+  </div>
+  <div class="nav-links">
+    <a href="#path">成长路径</a>
+    <a href="#compare">一天 vs 一学期</a>
+    <a href="#skills">三种能力</a>
+    <a href="#mentor">导师</a>
+    <a href="#faq">家长问答</a>
+    <a href="#contact">预约咨询</a>
+    <a href="/booking/" class="nav-cta">上机预约</a>
+  </div>
+</nav>
+
+<!-- ============ 英雄区 ============ -->
+<header>
+  <div>
+    <div class="eyebrow hero-in" style="animation-delay:.1s">Xinghai Youth AI Program</div>
+    <h1 class="serif">
+      <span class="hl"><span class="hl-in" style="animation-delay:.35s"><b class="num">1</b> 天学完一学期，</span></span>
+      <span class="hl"><span class="hl-in" style="animation-delay:.6s"><b class="num">3</b> 天开启<i>第一次创业</i></span></span>
+    </h1>
+    <p class="hero-p hero-in" style="animation-delay:.95s">
+      先用 AI 让孩子<em>自己投入</em>地自学文化课——快的一天、慢也只要三天；然后带着成绩和兴趣，挑战真实的商业项目。
+    </p>
+    <div class="cta-row hero-in" style="animation-delay:1.15s">
+      <a class="btn btn-primary" href="#contact">预约咨询</a>
+      <a class="btn btn-ghost" href="#path">看看孩子怎么学</a>
+    </div>
+  </div>
+  <div class="hero-visual hero-in" style="animation-delay:.5s">
+    <div class="disc">
+      <i class="orbit"></i>
+      <canvas id="stars"></canvas>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 学生作品 ============ -->
+<div class="works">
+  <div class="works-title reveal">STUDENT WORKS · <b>三天打造孩子的第一个创业作品</b></div>
+  <div class="works-strip reveal">
+    <div class="works-track" id="worksTrack">
+      <div class="work"><img src="assets/ai-pet-doctor.webp" alt="AI宠物医生"><div class="cap">AI 宠物医生</div></div>
+      <div class="work"><img src="assets/future-campus.webp" alt="未来校园"><div class="cap">未来校园</div></div>
+      <div class="work"><img src="assets/mars-farm.webp" alt="火星农场"><div class="cap">火星农场</div></div>
+      <div class="work"><img src="assets/robot-companion.webp" alt="机器人伙伴"><div class="cap">机器人伙伴</div></div>
+      <div class="work"><img src="assets/space-diary.webp" alt="太空日记"><div class="cap">太空日记</div></div>
+      <div class="work"><img src="assets/undersea-city.webp" alt="海底城市"><div class="cap">海底城市</div></div>
+      <div class="work"><img src="assets/weather-station.webp" alt="气象站"><div class="cap">气象站</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 01 成长路径 ============ -->
+<section id="path">
+  <div class="chap reveal"><span class="no">01</span><span class="rule"></span></div>
+  <h2 class="serif reveal">先提分，再实战</h2>
+  <p class="sec-p reveal">
+    我们不直接谈创业。先把一学期的成绩拿到手，再上真战场——<b>两步，缺一不可</b>。
+  </p>
+
+  <div class="timeline reveal">
+    <div class="tl-rail"><i id="tlFill"></i></div>
+    <div class="tl-nodes">
+      <div class="tl-node">
+        <div class="tl-when">第 1 天</div>
+        <h3>打开 AI，开始自学</h3>
+        <p>孩子自己规划、自己提问——不是我们逼着学。</p>
+      </div>
+      <div class="tl-node">
+        <div class="tl-when">第 1 – 3 天</div>
+        <h3>一学期单科，拿下</h3>
+        <p>快的一天，慢的三天。</p>
+        <div class="tags"><span>提分</span><span>兴趣</span><span>自驱</span></div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-when">紧随其后</div>
+        <h3>挑战真实商业项目</h3>
+        <p>把想法变成真产品。</p>
+        <div class="tags"><span>产品设计</span><span>AI 编程</span><span>商业逻辑</span></div>
+      </div>
+      <div class="tl-node">
+        <div class="tl-when">结业</div>
+        <h3>第一个创业作品</h3>
+        <p>站上路演台，讲成一门生意。</p>
       </div>
     </div>
-  </nav>
+  </div>
+  <div class="path-note reveal">路就这么长：<b>先拿到成绩，再上真战场</b>。</div>
+</section>
 
-  <!-- Screen 01: Hero / project directions -->
-  <section class="section hero" id="top">
-    <div class="orbit" aria-hidden="true"></div>
-    <div class="container center">
-      <div class="wordmark">XINGHAI · AI FOUNDER CAMP</div>
-      <h1 class="display">小小 AI 创业家</h1>
-      <p class="sub">3 天 让孩子独立用 AI 完成一个可以落地的商业项目</p>
-      <div class="btns">
-        <a class="btn black" href="#curriculum">查看课程安排</a>
-        <a class="btn light" href="#apply">预约咨询</a>
-      </div>
+<!-- ============ 02 学习方式对比 ============ -->
+<section id="compare">
+  <div class="chap reveal"><span class="no">02</span><span class="rule"></span></div>
+  <h2 class="serif reveal">一学期，还是一天？</h2>
+  <p class="sec-p reveal">
+    数学，可能是孩子最讨厌的学科。左边，是跟着课堂进度走的一学期；右边，是 <b>AI 带孩子自学的一天</b>——定计划、换着花样讲、用游戏记、随时考。
+  </p>
 
-      <div class="passport">
-        <div class="passport-left">
-          <div class="stamp">DEMO<br>DAY</div>
-          <div>
-            <small>PROJECT PASSPORT</small>
-            <h3>孩子的第一个 AI 商业项目</h3>
-          </div>
+  <div class="frame reveal">
+    <div class="duo">
+      <div class="duo-side">
+        <div class="duo-h">传统课堂 · 一学期</div>
+        <div class="duo-stage">
+          <div class="days-grid" id="daysGrid"></div>
         </div>
-
-        <div class="passport-right">
-          <div class="demo-window">
-            <small>PROJECT DIRECTIONS</small>
-            <b>兴趣出发 用 AI 完成 公开路演 真实反馈</b>
-          </div>
-
-          <div class="project-types">
-            <!-- HERO_ASSETS: These describe what children can build, not existing case studies. -->
-            <div class="project-type" data-asset-slot="hero-ai-website">
-              <div class="project-type-head">
-                <b>01</b>
-                <div class="project-thumb" aria-hidden="true">
-                  <svg class="vector-icon" viewBox="0 0 64 64">
-                    <rect class="line" x="10" y="14" width="44" height="34" rx="8"></rect>
-                    <path class="thin line" d="M10 24h44M18 20h.1M25 20h.1M32 20h.1"></path>
-                    <rect class="fill-soft" x="17" y="31" width="14" height="10" rx="3"></rect>
-                    <path class="thin line" d="M36 32h10M36 39h7"></path>
-                    <path class="accent" d="M47 47l7 7M54 47v7h-7" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-                  </svg>
-                </div>
-              </div>
-              <span>AI 网站</span>
-            </div>
-            <div class="project-type" data-asset-slot="hero-ai-video">
-              <div class="project-type-head">
-                <b>02</b>
-                <div class="project-thumb" aria-hidden="true">
-                  <svg class="vector-icon" viewBox="0 0 64 64">
-                    <rect class="line" x="12" y="16" width="40" height="28" rx="7"></rect>
-                    <path class="accent" d="M29 25l11 7-11 7z" stroke="none"></path>
-                    <path class="thin line" d="M14 50h36M18 50v-6M28 50v-6M38 50v-6M48 50v-6"></path>
-                  </svg>
-                </div>
-              </div>
-              <span>AI 视频</span>
-            </div>
-            <div class="project-type" data-asset-slot="hero-ai-music">
-              <div class="project-type-head">
-                <b>03</b>
-                <div class="project-thumb" aria-hidden="true">
-                  <svg class="vector-icon" viewBox="0 0 64 64">
-                    <path class="line" d="M16 35v-6M24 42V22M32 47V17M40 42V22M48 35v-6"></path>
-                    <path class="thin line" d="M15 47c10-10 24-10 34 0"></path>
-                    <circle class="accent" cx="49" cy="18" r="4" stroke="none"></circle>
-                  </svg>
-                </div>
-              </div>
-              <span>AI 音乐</span>
-            </div>
-            <div class="project-type" data-asset-slot="hero-ai-novel">
-              <div class="project-type-head">
-                <b>04</b>
-                <div class="project-thumb" aria-hidden="true">
-                  <svg class="vector-icon" viewBox="0 0 64 64">
-                    <path class="line" d="M17 12h25l8 8v32H17z"></path>
-                    <path class="thin line" d="M42 12v10h8M25 30h18M25 38h18M25 46h10"></path>
-                    <path class="accent" d="M47 36l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" stroke="none"></path>
-                  </svg>
-                </div>
-              </div>
-              <span>AI 小说</span>
-            </div>
-          </div>
+        <div class="duo-stats muted">
+          <div><b id="tDay">—</b><small>学习天数</small></div>
+          <div><b id="tKnow">0 / 120</b><small>期末还记得</small></div>
+          <div><b id="tAsk">0</b><small>主动提问</small></div>
         </div>
       </div>
-
-      <p class="tiny" style="margin-top:20px;">大连线下营 · 7–14 岁 · 小班制 · 课前 1V1 项目诊断</p>
-    </div>
-  </section>
-
-  <!-- Screen 02: Why now / market signal -->
-  <section class="section black-section" id="signal">
-    <div class="container center">
-      <div class="label">Why Now</div>
-      <h2 class="title signal-one-line">AI 正在重新筛选下一代</h2>
-
-      <div class="signal-grid">
-        <div class="signal-card">
-          <div>
-            <b>78%</b>
-            <h3>企业已经在用 AI</h3>
-          </div>
-          <p>AI 已经进入真实工作场景</p>
-        </div>
-        <div class="signal-card">
-          <div>
-            <b>40%</b>
-            <h3>岗位正在承压</h3>
-          </div>
-          <p>雇主预计减少可被 AI 自动化的岗位</p>
-        </div>
-        <div class="signal-card">
-          <div>
-            <b>90%</b>
-            <h3>会用 AI 的人更占优</h3>
-          </div>
-          <p>在创意产品任务中 使用 GPT-4 的参与者多数表现提升</p>
-        </div>
-      </div>
-
-      <p class="source-note">数据来源：Stanford AI Index 2025 / World Economic Forum Future of Jobs Report 2025 / BCG x Harvard 生成式 AI 实验</p>
-    </div>
-  </section>
-
-  <!-- Screen 03: Three-day curriculum -->
-  <section class="section" id="curriculum">
-    <div class="container center">
-      <div class="label">3-Day Camp</div>
-      <h2 class="title">三天 完成一次 AI 创业冲刺</h2>
-
-      <div class="module-grid curriculum-grid">
-        <div class="module">
-          <div>
-            <b>DAY 1</b>
-            <div class="module-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 128 128">
-                <path class="line" d="M46 77c-11-4-18-14-18-28 0-20 16-34 36-34s36 14 36 34c0 14-7 24-18 28"></path>
-                <path class="line" d="M48 86h32M52 98h24M58 110h12"></path>
-                <path class="thin line" d="M45 48c5-7 12-9 19-5 7-4 14-2 19 5M46 60c6 5 13 5 18 0 5 5 12 5 18 0"></path>
-                <path class="accent" d="M64 28l4 9 9 4-9 4-4 9-4-9-9-4 9-4z" stroke="none"></path>
-              </svg>
+      <div class="duo-div"></div>
+      <div class="duo-side">
+        <div class="duo-h gold">星海 AI · 一天</div>
+        <div class="duo-stage">
+          <div style="width:100%; display:flex; flex-direction:column; align-items:center;">
+            <div class="ai-cap">一个孩子，配一支 AI 老师团</div>
+            <div class="ai-badges">
+              <span>GPT</span><span>Claude</span><span>Gemini</span><span>Kimi</span>
             </div>
-          </div>
-          <div>
-            <h3>头脑风暴</h3>
-            <p>从孩子的兴趣出发 找到真实问题 确定一个可以落地的 AI 商业项目</p>
+            <div class="chat" id="chatBox"></div>
           </div>
         </div>
-        <div class="module">
-          <div>
-            <b>DAY 2</b>
-            <div class="module-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 128 128">
-                <rect class="line" x="22" y="26" width="84" height="58" rx="12"></rect>
-                <path class="line" d="M22 43h84M44 66l-12 10 12 10M84 66l12 10-12 10M59 90l10-32"></path>
-                <path class="accent" d="M50 104h28" fill="none" stroke-width="6" stroke-linecap="round"></path>
-              </svg>
-            </div>
-          </div>
-          <div>
-            <h3>黑客马拉松</h3>
-            <p>用 GPT Codex Claude 等 AI 工具做出网站 视频 账号 或产品原型</p>
-          </div>
-        </div>
-        <div class="module">
-          <div>
-            <b>DAY 3</b>
-            <div class="module-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 128 128">
-                <rect class="line" x="25" y="24" width="78" height="50" rx="10"></rect>
-                <path class="thin line" d="M42 58l13-13 12 9 18-20M39 90h50M49 100h30"></path>
-                <path class="line" d="M64 74v26"></path>
-                <circle class="accent" cx="86" cy="34" r="7" stroke="none"></circle>
-              </svg>
-            </div>
-          </div>
-          <div>
-            <h3>模拟投资路演</h3>
-            <p>讲清用户 产品 商业模式 和增长想象 接受现场反馈</p>
-          </div>
+        <div class="duo-stats">
+          <div><b id="aDay">—</b><small>学习天数</small></div>
+          <div><b id="aKnow">0 / 120</b><small>全部掌握</small></div>
+          <div><b id="aAsk">0</b><small>主动提问</small></div>
         </div>
       </div>
     </div>
-  </section>
-
-  <!-- Screen 04: PCL methodology -->
-  <section class="section method-sec" id="method">
-    <div class="container center">
-      <div class="label">PCL</div>
-      <h2 class="title">把学习变成一场创业闯关</h2>
-
-      <div class="method-cards">
-        <div class="method-card">
-          <b>LEVEL 1</b>
-          <div>
-            <h3>先有兴趣</h3>
-            <p>从孩子真正喜欢的主题出发 找到一个值得做的小项目</p>
-          </div>
-        </div>
-        <div class="method-card">
-          <b>LEVEL 2</b>
-          <div>
-            <h3>不断升级</h3>
-            <p>从想法 到产品 到账号 到商业模式 每一步都有明确任务</p>
-          </div>
-        </div>
-        <div class="method-card">
-          <b>LEVEL 3</b>
-          <div>
-            <h3>真实反馈</h3>
-            <p>不是交作业 而是把作品讲给家长 同伴 和真实观众听</p>
-          </div>
-        </div>
-      </div>
+    <div class="presets" style="justify-content:center; margin-top:38px;">
+      <button id="raceReplay" class="star">↺ 再看一遍</button>
     </div>
-  </section>
+  </div>
+  <div class="tl-cap-out reveal">一边是一学期砌起的一面墙，还忘了三分之一；一边是一天 47 次提问，120 个知识点全部拿下。</div>
+</section>
 
-  <!-- Screen 05: Creator workspace -->
-  <section class="section workspace-section black-section" id="workspace">
-    <div class="container center">
-      <div class="label">Creator Workspace</div>
-      <h2 class="title">给孩子真正的 AI 创作装备</h2>
-      <p class="sub">设备 模型 代码 记忆与资源 组成一条真实 AI 创作工作流</p>
+<!-- ============ 03 学生之音 ============ -->
+<section id="student-voices">
+  <div class="chap reveal"><span class="no">03</span><span class="rule"></span></div>
+  <h2 class="serif reveal">真正的学习，会从孩子嘴里说出来</h2>
+  <p class="sec-p reveal">不只看完成了什么，也听听他们怎样思考、怎样判断、怎样把学习变得更有趣。</p>
 
-      <div class="device">
-        <div class="screen">
-          <div class="tool-layout">
-            <div class="tool-big">
-              <div>
-                <h3>不是体验工具 是进入真实工作流</h3>
-                <p>孩子用真实创作者的设备和模型 完成研究 设计 搭建 发布</p>
-              </div>
-
-              <div class="workspace-kit">
-                <div class="kit-head">
-                  <div>
-                    <span class="kit-label">AI Workspace Kit</span>
-                    <strong class="kit-title">一套完整的创作环境</strong>
-                  </div>
-                  <span class="kit-meta">REAL TOOLS</span>
-                </div>
-                <div class="kit-cloud">
-                  <div class="brand-chip primary" data-asset-slot="workspace-mac"><span class="brand-word">Mac</span></div>
-                  <div class="brand-chip" data-asset-slot="workspace-macos"><span class="brand-word small">macOS</span></div>
-                  <div class="brand-chip primary" data-asset-slot="workspace-openai"><span class="brand-word">OpenAI</span></div>
-                  <div class="brand-chip accent" data-asset-slot="workspace-gpt"><span class="brand-word">GPT 5.5</span></div>
-                  <div class="brand-chip" data-asset-slot="workspace-codex"><span class="brand-word code">Codex</span></div>
-                  <div class="brand-chip" data-asset-slot="workspace-claude"><span class="brand-word">Claude</span></div>
-                  <div class="brand-chip primary" data-asset-slot="workspace-hermes"><span class="brand-word">Hermes</span></div>
-                  <div class="brand-chip" data-asset-slot="workspace-token"><span class="brand-word">Token+</span></div>
-                </div>
-              </div>
-            </div>
-
-            <div class="tool-small">
-              <div class="tile"><b>Think</b><span>用 AI 拆问题 找方向 做判断</span></div>
-              <div class="tile light"><b>Ship</b><span>用 AI 搭页面 做内容 发作品</span></div>
-            </div>
-          </div>
-        </div>
+  <div class="student-voice-grid">
+    <article class="student-voice reveal">
+      <div class="student-voice-head">
+        <span class="student-voice-no">VOICE · 01</span>
+        <span class="student-voice-topic">独立思考</span>
       </div>
-    </div>
-  </section>
-
-  <!-- Screen 06: Outcomes -->
-  <section class="section outcomes-section" id="outcomes">
-    <div class="container center">
-      <div class="label">Outcomes</div>
-      <h2 class="title">孩子带走的 是一次真正完成创造的经验</h2>
-
-      <div class="takeaway-grid">
-        <div class="takeaway">
-          <div class="takeaway-top">
-            <b>01</b>
-            <div class="takeaway-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 64 64">
-                <rect class="line" x="10" y="14" width="44" height="34" rx="7"></rect>
-                <path class="thin line" d="M10 24h44M18 20h.1M25 20h.1M20 36h16M20 42h24"></path>
-                <path class="accent" d="M44 39l8 8M52 39v8h-8" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="takeaway-body"><h3>已发布的网站</h3><p>项目可以被打开 被浏览 被展示</p></div>
-        </div>
-        <div class="takeaway">
-          <div class="takeaway-top">
-            <b>02</b>
-            <div class="takeaway-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 64 64">
-                <path class="line" d="M15 30h34l-3 20H18zM21 30V18h22v12"></path>
-                <path class="thin line" d="M23 42h18"></path>
-                <circle class="accent" cx="49" cy="20" r="6" stroke="none"></circle>
-              </svg>
-            </div>
-          </div>
-          <div class="takeaway-body"><h3>生意雏形</h3><p>理解用户 需求 定价 和成交模拟</p></div>
-        </div>
-        <div class="takeaway">
-          <div class="takeaway-top">
-            <b>03</b>
-            <div class="takeaway-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 64 64">
-                <rect class="line" x="14" y="12" width="36" height="44" rx="10"></rect>
-                <circle class="line" cx="32" cy="30" r="8"></circle>
-                <path class="thin line" d="M22 47c5-7 15-7 20 0"></path>
-                <path class="accent" d="M45 15h7v7" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="takeaway-body"><h3>IP 账号</h3><p>围绕兴趣建立主题 积累内容资产</p></div>
-        </div>
-        <div class="takeaway">
-          <div class="takeaway-top">
-            <b>04</b>
-            <div class="takeaway-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 64 64">
-                <path class="line" d="M16 44h32M20 44V24h24v20M28 24v-6h8v6"></path>
-                <path class="thin line" d="M24 34h16M24 39h10"></path>
-                <path class="accent" d="M48 24c5 3 8 8 8 14" fill="none" stroke-width="4" stroke-linecap="round"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="takeaway-body"><h3>公开路演</h3><p>把项目讲清楚 接受现场反馈</p></div>
-        </div>
-        <div class="takeaway">
-          <div class="takeaway-top">
-            <b>05</b>
-            <div class="takeaway-visual" aria-hidden="true">
-              <svg class="vector-icon" viewBox="0 0 64 64">
-                <path class="line" d="M19 36c-3-4-5-8-5-13 0-10 8-17 18-17s18 7 18 17c0 5-2 9-5 13"></path>
-                <path class="line" d="M25 42h14M27 50h10"></path>
-                <path class="accent" d="M44 42l8-8M52 34v8h-8" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
-              </svg>
-            </div>
-          </div>
-          <div class="takeaway-body"><h3>创造信心</h3><p>相信自己可以用 AI 做出真实东西</p></div>
-        </div>
+      <div class="student-voice-media">
+        <video controls preload="none" poster="assets/student-thinking-poster.jpg" src="assets/student-thinking.mp4" aria-label="几位孩子分享怎样先确认思路并把学习做成项目"></video>
       </div>
-    </div>
-  </section>
+      <blockquote>“先给我一个思路，我确认没问题再做。”</blockquote>
+      <div class="student-voice-source">学生原声</div>
+    </article>
 
-  <!-- Screen 07: Mentor. Keep the formal v14 layout and current photo. -->
-  <section class="section" id="mentor">
-    <div class="container center">
-      <div class="label">Mentor</div>
-
-      <div class="mentor-card">
-        <div class="mentor-grid">
-          <div class="mentor-photo">
-            <!-- CURRENT_ASSET: Embedded mentor portrait. Do not replace unless a new approved portrait is provided. -->
-            <img src="assets/mentor-wanghao-v21.jpg" alt="王浩导师照片" />
-            <div class="mentor-badge">
-              <small>MENTOR</small>
-              <strong>项目导师 · 王浩</strong>
-            </div>
-          </div>
-
-          <div class="mentor-content">
-            <p class="mentor-role">从求职与商业视角，带孩子建立 AI 项目思维。</p>
-
-            <div class="mentor-list">
-              <div class="mentor-row">
-                <b>Career</b>
-                <span>前爱奇艺产品经理，上市公司产品总监</span>
-              </div>
-              <div class="mentor-row">
-                <b>Influence</b>
-                <span>BOSS直聘官方星推官，全网 40 万粉丝知识博主</span>
-              </div>
-              <div class="mentor-row">
-                <b>Coaching</b>
-                <span>求职辅导专家，辅导 200+ 人上岸互联网大厂</span>
-              </div>
-              <div class="mentor-row">
-                <b>Result</b>
-                <span>30+ 人年收入突破 50 万</span>
-              </div>
-              <div class="mentor-row">
-                <b>Focus</b>
-                <span>擅长把兴趣、产品、商业模式和表达能力，拆成孩子能完成的真实项目</span>
-              </div>
-            </div>
-          </div>
-        </div>
+    <article class="student-voice reveal">
+      <div class="student-voice-head">
+        <span class="student-voice-no">VOICE · 02</span>
+        <span class="student-voice-topic">学习兴趣</span>
       </div>
-    </div>
-  </section>
-
-  <!-- Screen 08: Parent Q&A -->
-  <section class="section qa-sec" id="faq">
-    <div class="container center">
-      <div class="label">Parents</div>
-      <h2 class="title">家长关心的问题</h2>
-
-      <div class="qa-board">
-        <div class="qa-card"><div class="q"><i>Q</i><span>没有编程基础可以参加吗</span></div><div class="a"><i>A</i><span>可以 课程会把复杂任务拆成孩子能理解的步骤 重点不是写代码 而是用 AI 完成项目</span></div></div>
-        <div class="qa-card"><div class="q"><i>Q</i><span>会不会只是玩电脑</span></div><div class="a"><i>A</i><span>不会 每一天都有明确项目任务 孩子需要完成选题 产品 账号 商业模式 和路演表达</span></div></div>
-        <div class="qa-card"><div class="q"><i>Q</i><span>是否保证赚钱或获奖</span></div><div class="a"><i>A</i><span>不承诺赚钱或获奖 课程会按照真实商业项目和参赛表达标准训练孩子</span></div></div>
-        <div class="qa-card"><div class="q"><i>Q</i><span>家长最后能看到什么</span></div><div class="a"><i>A</i><span>家长可以看到孩子的项目网站 账号雏形 商业方案 和现场路演表现</span></div></div>
-        <div class="qa-card"><div class="q"><i>Q</i><span>设备和软件怎么解决</span></div><div class="a"><i>A</i><span>课程提供统一创作环境 包含 Mac AI 工具和项目搭建支持</span></div></div>
+      <div class="student-voice-media">
+        <video controls preload="none" poster="assets/student-learning-poster.jpg" src="assets/student-learning.mp4" aria-label="孩子分享怎样在游戏中学习"></video>
       </div>
-    </div>
-  </section>
+      <blockquote>“我希望能在这个游戏里面学习，又能玩。”</blockquote>
+      <div class="student-voice-source">团团 · 学习兴趣</div>
+    </article>
 
-  <!-- Screen 09: Final CTA / QR hover popover -->
-  <section class="section final-section" id="apply">
-    <div class="container center">
-      <h2 class="title">让孩子完成第一个 AI 商业项目</h2>
-      <p class="sub">3 天 从兴趣出发 做出作品 讲给真实世界听</p>
-      <div class="btns">
-        <span class="qr-wrap">
-          <button class="btn orange" type="button" aria-haspopup="dialog">预约咨询</button>
-          <span class="qr-pop">
-            <span class="qr" data-asset-slot="cta-consultation-qr">
-              <img src="assets/qr-consultation-v21.png" alt="咨询二维码" />
-            </span>
-            <span class="qr-text">扫码预约咨询<br>添加微信了解课程安排</span>
-          </span>
-        </span>
+    <article class="student-voice reveal">
+      <div class="student-voice-head">
+        <span class="student-voice-no">VOICE · 03</span>
+        <span class="student-voice-topic">学习复盘</span>
       </div>
+      <div class="student-voice-media">
+        <video controls preload="none" poster="assets/student-erbao-poster.jpg" src="assets/student-erbao.mp4" aria-label="二宝分享语文预习方法和学习感受"></video>
+      </div>
+      <blockquote>“背课文太难了，我就让 AI 把它变得更有趣一点。”</blockquote>
+      <div class="student-voice-source">二宝 · 语文学习复盘</div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 04 三种能力 ============ -->
+<section id="skills">
+  <div class="chap reveal"><span class="no">04</span><span class="rule"></span></div>
+  <h2 class="serif reveal">实战里练出的三种能力</h2>
+  <p class="sec-p reveal">商业项目不是过家家。孩子在一个完整项目里，同时练到<b>产品设计、AI 编程、商业逻辑</b>——这三种能力，会陪他走很远。</p>
+
+  <div class="meters reveal">
+    <div class="meter">
+      <div class="m-top"><span class="m-no">Ⅰ</span><h3>产品设计能力</h3><span class="m-badge">实战解锁</span></div>
+      <div class="m-bar"><i data-w="88"></i></div>
+      <p>从真实用户的真实问题出发，学会定义一个产品：为谁做、解决什么、做成什么样。</p>
     </div>
-  </section>
+    <div class="meter">
+      <div class="m-top"><span class="m-no">Ⅱ</span><h3>AI 编程能力</h3><span class="m-badge">实战解锁</span></div>
+      <div class="m-bar"><i data-w="76"></i></div>
+      <p>不背语法，用 AI 把想法变成真的能打开的网站和工具，理解代码背后的逻辑。</p>
+    </div>
+    <div class="meter">
+      <div class="m-top"><span class="m-no">Ⅲ</span><h3>商业逻辑</h3><span class="m-badge">实战解锁</span></div>
+      <div class="m-bar"><i data-w="64"></i></div>
+      <p>用户是谁、凭什么付费、怎么增长——把项目讲成一门生意，而不只是做完它。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 05 自驱的机制 ============ -->
+<section id="pcl">
+  <div class="chap reveal"><span class="no">05</span><span class="rule"></span></div>
+  <h2 class="serif reveal">自驱，是被设计出来的</h2>
+  <p class="sec-p reveal">孩子不是被逼着坐住的。三个机制，让他<b>自己想往下学</b>。</p>
+
+  <div class="levels">
+    <div class="level reveal">
+      <span class="lv">机制 1</span>
+      <h3>闯关地图</h3>
+      <p>一学期的知识点变成一张看得见的地图：今天攻哪关、下一关是什么，进度握在孩子自己手里。</p>
+    </div>
+    <div class="level reveal">
+      <span class="lv">机制 2</span>
+      <h3>掌握图鉴</h3>
+      <p>每答对一次、每攻克一个难点，就收进一枚图鉴——像集卡一样，孩子会想把它集满。</p>
+    </div>
+    <div class="level reveal">
+      <span class="lv">机制 3</span>
+      <h3>间隔抽查</h3>
+      <p>AI 会在第二天、一周后回头考他。不是考倒孩子，是让记住的东西再也忘不掉。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 06 收获 ============ -->
+<section id="outcomes">
+  <div class="chap reveal"><span class="no">06</span><span class="rule"></span></div>
+  <h2 class="serif reveal">孩子带走的，是一次真正完成创造的经验</h2>
+
+  <div class="gains">
+    <div class="gain reveal"><span class="n">01</span><h3>已发布的网站</h3><p>项目可以被打开、被浏览、被展示。</p></div>
+    <div class="gain reveal"><span class="n">02</span><h3>IP 账号</h3><p>围绕兴趣建立主题，积累内容资产。</p></div>
+    <div class="gain reveal"><span class="n">03</span><h3>创造信心</h3><p>相信自己可以用 AI 做出真实东西。</p></div>
+  </div>
+
+</section>
+
+<!-- ============ 07 项目路演 ============ -->
+<section id="project-proof">
+  <div class="chap reveal"><span class="no">07</span><span class="rule"></span></div>
+  <h2 class="serif reveal">站上台，把自己的项目讲明白</h2>
+  <p class="sec-p reveal">她把一门历史课拆成故事视频、闯关测评、历史辩论与学习总结——每一部分，都由孩子自己讲出来。</p>
+
+  <div class="project-proof-grid">
+    <article class="project-proof-item reveal">
+      <div class="project-proof-label">Project Roadshow · Student Voice</div>
+      <h3 class="project-proof-title">历史学习软件：从故事视频到辩论与错题总结</h3>
+      <div class="v-frame">
+        <video controls preload="none" poster="assets/student-roadshow-history-poster.jpg" src="assets/student-roadshow-history.mp4" aria-label="一位女孩介绍自己设计的历史学习软件"></video>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 08 家长之音 ============ -->
+<section id="parent-voices">
+  <div class="chap reveal"><span class="no">08</span><span class="rule"></span></div>
+  <h2 class="serif reveal">孩子的变化，家长最先看见</h2>
+  <p class="sec-p reveal">三位家长从不同角度看到的变化：从愿意来，到愿意创造，再到愿意自己学习。</p>
+
+  <div class="parent-voice-grid">
+    <article class="parent-voice reveal">
+      <div class="parent-voice-mark" aria-hidden="true">“</div>
+      <div class="parent-voice-head">
+        <span class="parent-voice-no">PARENT · 01</span>
+        <h3>从抵触，到主动感谢妈妈坚持让他来</h3>
+      </div>
+      <blockquote><p>孩子本来有些抵触，不太想来。上完以后却主动对我说：“妈妈，我觉得这个课挺好的，谢谢你坚持让我来。”一天完成了下学期数学，测试题全对；第二天又完成了半学期语文。看到孩子把自己的长处发挥出来，我真的特别开心。</p></blockquote>
+      <div class="parent-voice-source">家长口述整理 · 已匿名</div>
+    </article>
+
+    <article class="parent-voice reveal">
+      <div class="parent-voice-mark" aria-hidden="true">“</div>
+      <div class="parent-voice-head">
+        <span class="parent-voice-no">PARENT · 02</span>
+        <h3>原来孩子的想象力，真的可以被做出来</h3>
+      </div>
+      <blockquote><p>以前我只知道孩子喜欢海洋动物，没想到他真的能用 AI，把环保、救助海洋动物、解决海洋污染这些想法做成游戏和动画片。原来孩子的想象力不只是说说而已，真的可以被创造出来。</p></blockquote>
+      <div class="parent-voice-source">家长口述整理 · 已匿名</div>
+    </article>
+
+    <article class="parent-voice reveal">
+      <div class="parent-voice-mark" aria-hidden="true">“</div>
+      <div class="parent-voice-head">
+        <span class="parent-voice-no">PARENT · 03</span>
+        <h3>学习关系松下来，孩子开始愿意自己往前走</h3>
+      </div>
+      <blockquote><p>我们因为学习这件事，关系紧张了很长时间。没想到短短几天，孩子重新对学习有了兴趣。现在我只需要和他约定一个小激励，他就愿意自己努力地用 AI 学习。花得比以前少，改变却远超预期，这笔钱真的太值了。</p></blockquote>
+      <div class="parent-voice-source">家长口述整理 · 已匿名</div>
+    </article>
+  </div>
+
+  <a class="parent-project-feature reveal" href="projects/ocean-governance/index.html" target="_blank" rel="noopener" aria-label="在新标签打开孩子完成的海洋治理视觉项目《一只塑料瓶的450年》">
+    <span class="parent-project-image">
+      <img src="projects/ocean-governance/assets/scene-1-surface.jpg" alt="海洋治理视觉项目的海面场景">
+    </span>
+    <span class="parent-project-copy">
+      <small>Parent 02 · Project Evidence</small>
+      <h3 class="serif">这句话，已经变成一个能打开的作品</h3>
+      <p>从“想保护海洋动物”出发，孩子把污染问题做成了一段可浏览、可分享的视觉旅程。</p>
+      <span class="parent-project-open">打开《一只塑料瓶的 450 年》 →</span>
+    </span>
+  </a>
+</section>
+
+<!-- ============ 09 导师 ============ -->
+<section id="mentor">
+  <div class="chap reveal"><span class="no">09</span><span class="rule"></span></div>
+  <h2 class="serif reveal">项目导师</h2>
+
+  <div class="mentor">
+    <div class="m-photo reveal"><img src="assets/mentor-wanghao-v21.jpg" alt="项目导师王浩"></div>
+    <div>
+      <div class="m-name reveal">
+        <div class="tag">MENTOR · 王浩</div>
+        <h3>从求职与商业视角，带孩子建立 AI 项目思维</h3>
+      </div>
+      <div class="cred reveal"><span class="k">Career</span><span class="v">前爱奇艺产品经理，上市公司产品总监</span></div>
+      <div class="cred reveal"><span class="k">Influence</span><span class="v">BOSS直聘官方星推官，全网 40 万粉丝知识博主</span></div>
+      <div class="cred reveal"><span class="k">Coaching</span><span class="v">求职辅导专家，辅导 200+ 人上岸互联网大厂</span></div>
+      <div class="cred reveal"><span class="k">Result</span><span class="v">30+ 人年收入突破 50 万</span></div>
+      <div class="cred reveal"><span class="k">Focus</span><span class="v">擅长把兴趣、产品、商业模式和表达能力，拆成孩子能完成的真实项目</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10 家长问答 ============ -->
+<section id="faq">
+  <div class="chap reveal"><span class="no">10</span><span class="rule"></span></div>
+  <h2 class="serif reveal">家长关心的问题</h2>
+
+  <div class="faq">
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>一天真的能学完一学期吗</h3><span class="plus">+</span></summary>
+      <div class="a">最快的孩子一天可以完成，节奏慢一些的孩子三天也能完成。关键不是速度，而是孩子用 AI 自己规划、随时追问，全程主动投入——学会自学，比学完更重要。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>孩子平时不主动学习，怎么办</h3><span class="plus">+</span></summary>
+      <div class="a">恰恰适合。AI 不用课本语言，而是用孩子喜欢的东西讲——篮球、披萨、游戏；再把知识点做成闯关地图和掌握图鉴，让他想集满；之后还会间隔抽查，记得牢。多数孩子第一次课就会追问「还有吗」。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>会不会影响校内学习</h3><span class="plus">+</span></summary>
+      <div class="a">不会。自学的就是校内同步教材，孩子提前掌握后，校内课堂反而更轻松；而且 AI 自学的方法，会迁移到所有学科。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>适合几年级的孩子</h3><span class="plus">+</span></summary>
+      <div class="a">主要面向 8–12 岁（二到六年级）的孩子。自学内容按孩子当前年级同步教材匹配，项目难度也会按年龄分层。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>孩子用 AI，安全吗</h3><span class="plus">+</span></summary>
+      <div class="a">孩子使用的是课程统一配置的创作环境，内容由导师筛选和引导，AI 只用于学习和创作。一天里大量时间在讨论、动手和路演上，不是盯着屏幕。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>没有编程基础可以参加吗</h3><span class="plus">+</span></summary>
+      <div class="a">可以。课程会把复杂任务拆成孩子能理解的步骤，重点不是写代码，而是用 AI 完成项目。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>会不会只是玩电脑</h3><span class="plus">+</span></summary>
+      <div class="a">不会。每一天都有明确项目任务，孩子需要完成选题、产品、账号、商业模式和路演表达。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>是否保证赚钱或获奖</h3><span class="plus">+</span></summary>
+      <div class="a">不承诺赚钱或获奖。课程会按照真实商业项目和参赛表达标准训练孩子。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>家长最后能看到什么</h3><span class="plus">+</span></summary>
+      <div class="a">家长可以看到孩子的项目网站、账号雏形、商业方案和现场路演表现。</div>
+    </details>
+    <details class="reveal">
+      <summary><span class="q">Q</span><h3>设备和软件怎么解决</h3><span class="plus">+</span></summary>
+      <div class="a">课程提供统一的创作环境：Mac 设备、GPT 与 Claude 等大模型账号、项目搭建支持全部配好，孩子拎包入住。</div>
+    </details>
+  </div>
+</section>
+
+<!-- ============ 最终 CTA ============ -->
+<section id="contact" class="final">
+  <h2 class="serif reveal">让孩子完成第一个<br>AI 商业项目</h2>
+  <p class="sub reveal">扫码预约咨询 · 添加微信了解课程安排</p>
+  <div class="qr-card reveal"><img src="assets/qr-consultation-v21.png" alt="预约咨询二维码"></div>
+  <div class="qr-cap reveal">微信扫码<small>星海少年AI计划 · 课程咨询</small></div>
+</section>
+
+<footer>
+  <div class="f-brand serif">星海少年AI计划</div>
+  先用 AI 提分，再挑战真实的商业项目<br>
+  XINGHAI YOUTH AI PROGRAM
+</footer>
+
+<script>
+/* ================= 入场动画 ================= */
+(function(){
+  const io = new IntersectionObserver(es=>{
+    es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('show'); io.unobserve(e.target); } });
+  },{threshold:.12});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+})();
+
+/* ================= 作品走马灯 ================= */
+(function(){
+  const t = document.getElementById('worksTrack');
+  t.innerHTML += t.innerHTML;
+})();
+
+/* ================= 星海圆盘 ================= */
+(function(){
+  const cv = document.getElementById('stars');
+  const ctx = cv.getContext('2d');
+  const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+  const SIZE = 480;
+  cv.width = SIZE * DPR; cv.height = SIZE * DPR;
+  ctx.scale(DPR, DPR);
+
+  const N = 150, stars = [];
+  for(let i=0; i<N; i++){
+    const r = Math.pow(Math.random(), .6) * SIZE/2 * .92;
+    const a = Math.random() * Math.PI * 2;
+    stars.push({
+      x: SIZE/2 + r*Math.cos(a), y: SIZE/2 + r*Math.sin(a),
+      r: .6 + Math.random()*1.7,
+      p: Math.random()*Math.PI*2,
+      s: .008 + Math.random()*.02
+    });
+  }
+  let visible = false, rot = 0;
+
+  function render(){
+    rot += .0006;
+    ctx.clearRect(0, 0, SIZE, SIZE);
+    for(const st of stars){
+      st.p += st.s;
+      const tw = .35 + .65 * Math.abs(Math.sin(st.p));
+      const dx = st.x - SIZE/2, dy = st.y - SIZE/2;
+      const x = SIZE/2 + dx*Math.cos(rot) - dy*Math.sin(rot);
+      const y = SIZE/2 + dx*Math.sin(rot) + dy*Math.cos(rot);
+      ctx.beginPath();
+      ctx.arc(x, y, st.r, 0, 6.2832);
+      ctx.fillStyle = `hsla(43,60%,${58+18*tw}%,${.25+.65*tw})`;
+      ctx.fill();
+    }
+  }
+  function frame(){
+    if(!visible) return;
+    render();
+    requestAnimationFrame(frame);
+  }
+  render();
+  new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting && !visible){ visible = true; requestAnimationFrame(frame); }
+      else if(!e.isIntersecting){ visible = false; }
+    });
+  },{threshold:.05}).observe(cv);
+})();
+
+/* ================= 一学期 vs 一天：格子日历竞速 ================= */
+(function(){
+  const N = 120;
+  const forgotten = new Set();
+  let seed = 7;
+  while(forgotten.size < 48){
+    seed = (seed * 9301 + 49297) % 233280;
+    forgotten.add(Math.floor(seed / 233280 * N));
+  }
+
+  const grid = document.getElementById('daysGrid');
+  const cells = [];
+  for(let i=0; i<N; i++){
+    const c = document.createElement('i');
+    grid.appendChild(c);
+    cells.push(c);
+  }
+  const tDay = document.getElementById('tDay');
+  const tKnow = document.getElementById('tKnow');
+  const aDay = document.getElementById('aDay');
+  const aKnow = document.getElementById('aKnow');
+  const tAsk = document.getElementById('tAsk');
+  const aAsk = document.getElementById('aAsk');
+
+  /* 右侧：孩子与 AI 的对话流（节选） */
+  const chatBox = document.getElementById('chatBox');
+  const chatScript = [
+    { who:'ai', model:'Kimi', tag:'今日计划', text:'早上好！今日闯关地图：先攻「分数」，再拿下「方程」。' },
+    { who:'kid', text:'好，先学分数！' },
+    { who:'ai', model:'GPT', tag:'趣学', text:'用你最喜欢的披萨讲：8 块吃掉 3 块，还剩几分之几？' },
+    { who:'kid', text:'5/8！这样一讲我就懂了' },
+    { who:'ai', model:'Claude', tag:'记忆游戏', text:'挑战 30 秒：「山巅一寺一壶酒」——π 的前 6 位就记住了。' },
+    { who:'kid', text:'3.14159！哈哈这也行' },
+    { who:'ai', model:'Gemini', tag:'随堂考', text:'考考你：鸡兔同笼，头 35、脚 94，兔子几只？' },
+    { who:'kid', text:'12 只！' },
+    { who:'ai', model:'Gemini', tag:'随堂考', text:'答对！已收进你的「掌握图鉴」，明天我再抽查一次。' },
+    { who:'kid', text:'方程也能这样学吗？' },
+    { who:'ai', model:'Kimi', tag:'趣学', text:'当然——x 是个还没揭牌的座位，等你把它找出来。' }
+  ];
+  let chatIdx = 0;
+  function pushMsg(m){
+    const d = document.createElement('div');
+    d.className = 'msg ' + m.who;
+    if(m.who === 'ai'){
+      if(m.tag){
+        const em = document.createElement('em');
+        em.textContent = m.tag;
+        d.appendChild(em);
+      }
+      const i = document.createElement('i');
+      i.textContent = m.model;
+      d.appendChild(i);
+      d.appendChild(document.createTextNode(m.text));
+    } else {
+      d.textContent = m.text;
+    }
+    chatBox.appendChild(d);
+    void d.offsetWidth;
+    d.classList.add('show');
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+
+  let startT = 0, forgetT = 0, forgot = false;
+  let visible = false, raf = null, played = false;
+
+  function step(now){
+    const t = now - startT;
+
+    /* 右：一天，对话刷出来 + 计数飞涨 */
+    const msgTarget = Math.min(chatScript.length, Math.floor(Math.max(0, t - 300) / 520));
+    while(chatIdx < msgTarget){ pushMsg(chatScript[chatIdx]); chatIdx++; }
+    const lit = Math.min(N, Math.floor(Math.max(0, t - 300) / 8));
+    aDay.textContent = '第 1 天';
+    aKnow.textContent = lit + ' / ' + N;
+
+    /* 左：一学期，逐格填灰，期末忘 40% */
+    const idx = Math.min(N, Math.floor(t / 45) + 1);
+    for(let i=0; i<N; i++){
+      if(i < idx){
+        cells[i].classList.add('on');
+        cells[i].classList.toggle('forgot', forgot && forgotten.has(i));
+      } else {
+        cells[i].classList.remove('on', 'forgot');
+      }
+    }
+    if(idx >= N && !forgetT) forgetT = t + 800;
+    if(forgetT && t >= forgetT) forgot = true;
+    tDay.textContent = '第 ' + Math.min(120, idx) + ' 天';
+    tKnow.textContent = (forgot ? N - 48 : idx) + ' / ' + N;
+
+    /* 主动提问：传统一学期举手 0 次；AI 一天里越问越多 */
+    tAsk.textContent = '0';
+    aAsk.textContent = Math.min(47, Math.floor(Math.max(0, t - 300) / 30));
+  }
+
+  function loop(now){
+    if(!visible){ raf = null; return; }
+    step(now);
+    raf = requestAnimationFrame(loop);
+  }
+  function ensureLoop(){ if(!raf) raf = requestAnimationFrame(loop); }
+
+  function play(){
+    startT = performance.now(); forgot = false; forgetT = 0;
+    cells.forEach(c => c.classList.remove('on', 'forgot'));
+    chatBox.innerHTML = ''; chatIdx = 0;
+    tDay.textContent = '第 1 天'; tKnow.textContent = '0 / ' + N;
+    aDay.textContent = '第 1 天'; aKnow.textContent = '0 / ' + N;
+    tAsk.textContent = '0'; aAsk.textContent = '0';
+    visible = true; ensureLoop();
+  }
+
+  new IntersectionObserver((es, io)=>{
+    es.forEach(e=>{
+      if(!e.isIntersecting || played) return;
+      played = true; io.disconnect(); play();
+    });
+  },{threshold:.3}).observe(grid);
+
+  new IntersectionObserver(es=>{
+    es.forEach(e=>{
+      if(e.isIntersecting){ if(played){ visible = true; ensureLoop(); } }
+      else visible = false;
+    });
+  },{threshold:.05}).observe(grid);
+
+  document.getElementById('raceReplay').addEventListener('click', play);
+})();
+
+/* ============ 成长路径：时间轴金线生长，节点依次点亮 ============ */
+(function(){
+  const fill = document.getElementById('tlFill');
+  const box = document.querySelector('.timeline');
+  const nodes = document.querySelectorAll('.tl-node');
+  if(!fill || !box) return;
+
+  /* 移动端：竖排，直接全部点亮 */
+  if(window.matchMedia('(max-width:960px)').matches){
+    nodes.forEach(n => n.classList.add('lit'));
+    return;
+  }
+
+  const litAt = [.04, .30, .56, .82];
+  const DUR = 4200;
+  let startT = 0, played = false;
+
+  function frame(now){
+    if(!startT) startT = now;
+    const p = Math.min(1, (now - startT) / DUR);
+    const e = p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2;
+    fill.style.width = (e * 100) + '%';
+    litAt.forEach((at, i)=>{
+      if(e >= at) nodes[i].classList.add('lit');
+    });
+    if(p < 1) requestAnimationFrame(frame);
+  }
+
+  new IntersectionObserver((es, io)=>{
+    es.forEach(en=>{
+      if(!en.isIntersecting || played) return;
+      played = true; io.disconnect();
+      requestAnimationFrame(frame);
+    });
+  },{threshold:.3}).observe(box);
+})();
+
+/* ============ 04 三种能力：充能条 ============ */
+(function(){
+  const box = document.querySelector('.meters');
+  if(!box) return;
+  const meters = box.querySelectorAll('.meter');
+  let played = false;
+
+  new IntersectionObserver((es, io)=>{
+    es.forEach(en=>{
+      if(!en.isIntersecting || played) return;
+      played = true; io.disconnect();
+      meters.forEach((m, idx)=>{
+        setTimeout(()=>{
+          m.classList.add('lit');
+          const bar = m.querySelector('.m-bar i');
+          bar.style.width = bar.dataset.w + '%';
+        }, idx * 450);
+      });
+    });
+  },{threshold:.3}).observe(box);
+})();
+</script>
 </body>
-
 </html>
