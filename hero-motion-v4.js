@@ -12,6 +12,9 @@ const AUTO_DURATION = 800;
 const CATCH_SETTLE_DURATION = 120;
 const FRAME_COUNT = 30;
 const MIN_USABLE_FRAMES = 24;
+const PLAYABLE_PREFIX_FRAMES = 8;
+const AUTO_START_MAX_WAIT_MS = 360;
+const CAUGHT_PLAYBACK_FPS = 30;
 const CATCH_SETTLE_FRAMES = 6;
 const CATCH_SETTLE_START = (FRAME_COUNT - CATCH_SETTLE_FRAMES) / FRAME_COUNT;
 const REACTION_START = 0.05;
@@ -19,13 +22,13 @@ const DRAG_REACH_SHARE = CATCH_SETTLE_START;
 const FOLLOW_TIME_DESKTOP_MS = 24;
 const FOLLOW_TIME_COARSE_MS = 28;
 const LOAD_PRIORITY = { background: 0, hint: 1, interaction: 2 };
-const LOAD_WORKERS = { background: 1, hint: 2, interaction: 4 };
+const LOAD_WORKERS = { background: 1, hint: 2, interaction: 6 };
 // Four workers cap expensive bitmap decodes even when a chosen side is promoted.
 const MAX_CONCURRENT_DECODES = 4;
 const LOW_MEMORY_DEVICE_GB = 4;
 const FRAME_DECODE_SIZE = {
   desktop: { width: 768, height: 1080 },
-  mobile: { width: 448, height: 630 },
+  mobile: { width: 320, height: 450 },
 };
 
 function resolveResourcePolicy(navigatorLike = navigator) {
@@ -65,6 +68,7 @@ const SIDE_COPY = {
 
 const CHARACTER = { blue: 'boy', orange: 'girl' };
 const ASSET_BASE = 'assets/character-sequences/hero-reach-30f-20260823-r3';
+const MOBILE_ASSET_VERSION = '20260825-s320-r16';
 const PALM = {
   blue: { x: 0.919985, y: 0.406087 },
   orange: { x: 0.15477, y: 0.386302 },
@@ -78,6 +82,7 @@ const arcEnvelope = (value) => 16 * value * value * (1 - value) * (1 - value);
 
 let activeFrameDecodes = 0;
 const frameDecodeQueue = [];
+const frameBlobPromises = new Map();
 
 async function withFrameDecodeSlot(callback) {
   if (activeFrameDecodes >= MAX_CONCURRENT_DECODES) {
@@ -163,9 +168,11 @@ const runtime = {
   startClientX: 0,
   startClientY: 0,
   latestClientX: 0,
+  latestClientY: 0,
   holdReady: false,
   frame: 0,
   tweenFrame: 0,
+  caughtPlaybackFrame: 0,
   pressTimer: 0,
   token: 0,
   timers: new Set(),
@@ -175,6 +182,7 @@ const runtime = {
   visualProgress: 0,
   characterProgress: { blue: 0, orange: 0 },
   characterDrawKey: { blue: '', orange: '' },
+  orderedPaintAt: 0,
   lastFrameAt: 0,
   geometry: null,
   lastHeroSize: null,
@@ -210,8 +218,9 @@ function pendingSequenceLoading() {
 }
 
 function frameSrc(side, index, mobile) {
-  const suffix = mobile ? '-m' : '';
-  return `${ASSET_BASE}/hero-${CHARACTER[side]}-reach-${String(index).padStart(2, '0')}${suffix}.webp`;
+  const suffix = mobile ? '-s' : '';
+  const version = mobile ? `?v=${MOBILE_ASSET_VERSION}` : '';
+  return `${ASSET_BASE}/hero-${CHARACTER[side]}-reach-${String(index).padStart(2, '0')}${suffix}.webp${version}`;
 }
 
 function setStatus(text) {
@@ -227,7 +236,7 @@ function instructionText() {
   const { phase, candidate, caughtSide } = runtime;
   if (phase === 'idle') {
     return isTabPrimaryMode()
-      ? '点下面一个方向，看孩子接住这束光'
+      ? '长按光点左右滑，或点下面一个方向'
       : '按住中间的光 · 左右拖到孩子手里';
   }
   if (phase === 'pressing') {
@@ -262,7 +271,9 @@ function updateUi() {
   });
   hero.classList.toggle('sequence-loading', loading);
   hero.classList.toggle('tap-primary-mode', tabPrimaryMode);
-  hero.classList.toggle('drag-primary-mode', !tabPrimaryMode);
+  // Mobile keeps the direction tabs as the easiest entry, but the light itself
+  // remains a real long-press gesture target instead of a decorative image.
+  hero.classList.add('drag-primary-mode');
   hero.dataset.motionPhase = phase;
   hero.dataset.caughtSide = caughtSide || '';
   hero.dataset.sequenceBlue = sequences.blue.status;
@@ -279,11 +290,11 @@ function updateUi() {
       ? '向左或右'
       : '按住';
   handle.disabled = false;
-  handle.tabIndex = tabPrimaryMode ? -1 : 0;
-  handle.setAttribute('aria-hidden', tabPrimaryMode ? 'true' : 'false');
+  handle.tabIndex = 0;
+  handle.setAttribute('aria-hidden', 'false');
   handle.setAttribute(
     'aria-label',
-    '按住光点并左右拖动，也可以用键盘左右方向键选择',
+    '长按光点左右滑动，也可以点击下方方向按钮',
   );
   handle.setAttribute('aria-busy', loading ? 'true' : 'false');
   autoButtons.forEach((button) => {
@@ -418,6 +429,31 @@ function drawCharacterProgress(side, value, force = false) {
   return true;
 }
 
+function drawCharacterProgressInOrder(side, value, now = performance.now()) {
+  const progress = clamp(value, 0, 1);
+  runtime.characterProgress[side] = progress;
+  const sequence = sequences[side];
+  if (!['loading', 'ready'].includes(sequence.status) || !sequence.active) return false;
+
+  const desiredIndex = progress <= 0
+    ? 0
+    : Math.max(1, Math.min(FRAME_COUNT - 1, Math.floor(progress * FRAME_COUNT)));
+  const rawCurrent = Number(runtime.characterDrawKey[side]);
+  const currentIndex = Number.isFinite(rawCurrent) && runtime.characterDrawKey[side] !== ''
+    ? rawCurrent
+    : -1;
+  if (currentIndex >= desiredIndex) return true;
+
+  const nextIndex = currentIndex + 1;
+  if (nextIndex >= FRAME_COUNT || !sequence.frames[nextIndex]) return false;
+  if (now - runtime.orderedPaintAt < 1000 / CAUGHT_PLAYBACK_FPS) return false;
+  const exactProgress = nextIndex === 0 ? 0 : (nextIndex + 0.25) / FRAME_COUNT;
+  const painted = drawCharacterProgress(side, exactProgress, true);
+  runtime.characterProgress[side] = progress;
+  if (painted) runtime.orderedPaintAt = now;
+  return painted;
+}
+
 function activateSequence(side, progress = 0) {
   const sequence = sequences[side];
   if (!['loading', 'ready'].includes(sequence.status)) return false;
@@ -434,10 +470,23 @@ function activateSequence(side, progress = 0) {
   return false;
 }
 
+function fetchFrameBlob(url) {
+  if (frameBlobPromises.has(url)) return frameBlobPromises.get(url);
+  const request = fetch(url, { cache: 'force-cache' })
+    .then((response) => {
+      if (!response.ok) throw new Error(`Unable to load sequence frame: ${url}`);
+      return response.blob();
+    })
+    .catch((error) => {
+      frameBlobPromises.delete(url);
+      throw error;
+    });
+  frameBlobPromises.set(url, request);
+  return request;
+}
+
 async function loadImage(url, mobile) {
-  const response = await fetch(url, { cache: 'force-cache' });
-  if (!response.ok) throw new Error(`Unable to load sequence frame: ${url}`);
-  const blob = await response.blob();
+  const blob = await fetchFrameBlob(url);
   const size = FRAME_DECODE_SIZE[mobile ? 'mobile' : 'desktop'];
 
   return withFrameDecodeSlot(async () => {
@@ -476,6 +525,24 @@ async function loadImage(url, mobile) {
       URL.revokeObjectURL(objectUrl);
     }
   });
+}
+
+async function prefetchStarterFrames() {
+  const queue = [];
+  for (let index = 0; index < PLAYABLE_PREFIX_FRAMES; index += 1) {
+    queue.push(frameSrc('blue', index, true), frameSrc('orange', index, true));
+  }
+  const worker = async () => {
+    while (queue.length) {
+      const url = queue.shift();
+      try {
+        await fetchFrameBlob(url);
+      } catch {
+        // Interaction loading still owns the visible fallback and error report.
+      }
+    }
+  };
+  await Promise.all([worker(), worker()]);
 }
 
 function sequenceWorkerCount(sequence) {
@@ -555,7 +622,10 @@ function finalizeSequenceLoad(side) {
   const sequence = sequences[side];
   if (sequence.status !== 'loading' || sequence.activeWorkers > 0) return;
 
-  if (sequence.loadedFrames >= MIN_USABLE_FRAMES) {
+  const completeSequence = sequence.loadedFrames === FRAME_COUNT
+    && sequence.failedFrames.length === 0
+    && sequence.frames.every(Boolean);
+  if (sequence.loadedFrames >= MIN_USABLE_FRAMES && completeSequence) {
     sequence.status = 'ready';
     sequence.readyAt = performance.now();
     const canvas = canvases[side];
@@ -564,28 +634,22 @@ function finalizeSequenceLoad(side) {
       canvas.height = sequence.frames[0].height;
       sequence.context = canvas.getContext('2d', { alpha: true, desynchronized: true });
     }
-    if (runtime.caughtSide === side && !sequence.frames[FRAME_COUNT - 1]) {
-      sequence.active = false;
-      sideElements[side].classList.remove('sequence-ready');
-      setPoseSide(side);
-    } else if (runtime.caughtSide === side && !(runtime.poseSide === side && !sequence.active)) {
+    const orderedCatchOwnsDrawing = runtime.caughtSide === side
+      || (runtime.phase === 'catching' && runtime.candidate === side);
+    if (orderedCatchOwnsDrawing && !(runtime.poseSide === side && !sequence.active)) {
       sequence.active = true;
-      activateSequence(side, 1);
+      if (runtime.caughtSide === side) startCaughtSequencePlayback(side);
     } else if (sequence.active) {
       activateSequence(side, runtime.characterProgress[side]);
     }
   } else {
     sequence.status = 'failed';
     sequence.readyAt = performance.now();
+    if (runtime.caughtSide === side) stopCaughtSequencePlayback();
     releaseSequenceFrames(sequence);
     sequence.active = false;
     sideElements[side].classList.remove('sequence-ready');
-    if (
-      runtime.candidate === side
-      && runtime.phase === 'caught'
-    ) {
-      setPoseSide(side);
-    }
+    if (runtime.caughtSide === side && runtime.phase === 'caught') fallbackCaughtSequence(side);
   }
 
   const completedStatus = sequence.status;
@@ -615,7 +679,12 @@ async function runSequenceWorker(side) {
       try {
         sequence.frames[index] = await loadImage(frameSrc(side, index, sequence.mobile), sequence.mobile);
         sequence.loadedFrames += 1;
-        if (sequence.active && drawCharacterProgress(side, runtime.characterProgress[side])) {
+        if (
+          sequence.active
+          && !(runtime.phase === 'caught' && runtime.caughtSide === side)
+          && !(runtime.phase === 'catching' && runtime.candidate === side)
+          && drawCharacterProgress(side, runtime.characterProgress[side])
+        ) {
           sideElements[side].classList.add('sequence-ready');
         }
       } catch (error) {
@@ -682,6 +751,44 @@ function loadSequence(side, reason = 'background') {
   return sequence.loadPromise;
 }
 
+function decodedPrefixLength(side) {
+  const frames = sequences[side].frames;
+  let count = 0;
+  while (count < FRAME_COUNT && frames[count]) count += 1;
+  return count;
+}
+
+function sequenceCanStart(side) {
+  const sequence = sequences[side];
+  return reducedQuery.matches
+    || sequence.status === 'ready'
+    || sequence.status === 'failed'
+    || decodedPrefixLength(side) >= PLAYABLE_PREFIX_FRAMES;
+}
+
+function waitForSequencePlayable(side, token) {
+  if (sequenceCanStart(side)) return Promise.resolve('playable');
+  const startedAt = performance.now();
+  return new Promise((resolve) => {
+    const check = (now) => {
+      if (runtime.token !== token || runtime.pendingSide !== side) {
+        resolve('cancelled');
+        return;
+      }
+      if (sequenceCanStart(side)) {
+        resolve('playable');
+        return;
+      }
+      if (now - startedAt >= AUTO_START_MAX_WAIT_MS) {
+        resolve('timeout');
+        return;
+      }
+      requestAnimationFrame(check);
+    };
+    requestAnimationFrame(check);
+  });
+}
+
 function scheduleComplementaryPreload(selectedSide) {
   if (
     reducedQuery.matches
@@ -710,7 +817,16 @@ function warmSequencePair(reason = 'hint') {
 }
 
 function scheduleInitialSequenceWarmup() {
-  if (reducedQuery.matches || RESOURCE_POLICY.constrained || coarseQuery.matches) return;
+  if (reducedQuery.matches || RESOURCE_POLICY.constrained) return;
+  if (coarseQuery.matches || runtime.geometry?.coarseInteraction) {
+    const start = () => { void prefetchStarterFrames(); };
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(start, { timeout: 900 });
+    } else {
+      window.setTimeout(start, 280);
+    }
+    return;
+  }
   const start = () => warmSequencePair('background');
   if ('requestIdleCallback' in window) {
     window.requestIdleCallback(start, { timeout: 600 });
@@ -810,11 +926,13 @@ function stopMotion(releasePointer = false) {
   clearTimers();
   if (runtime.frame) cancelAnimationFrame(runtime.frame);
   if (runtime.tweenFrame) cancelAnimationFrame(runtime.tweenFrame);
+  stopCaughtSequencePlayback();
   runtime.frame = 0;
   runtime.tweenFrame = 0;
   runtime.motionTarget = null;
   runtime.velocity = { x: 0, y: 0 };
   runtime.lastFrameAt = 0;
+  runtime.orderedPaintAt = 0;
   runtime.holdReady = false;
   if (releasePointer) releasePointerCapture();
   return runtime.token;
@@ -959,19 +1077,88 @@ function yieldToPageScroll() {
   releaseUnusedDecodedSequences();
 }
 
+function stopCaughtSequencePlayback() {
+  if (runtime.caughtPlaybackFrame) cancelAnimationFrame(runtime.caughtPlaybackFrame);
+  runtime.caughtPlaybackFrame = 0;
+}
+
+function fallbackCaughtSequence(side) {
+  stopCaughtSequencePlayback();
+  const sequence = sequences[side];
+  sequence.active = false;
+  sideElements[side].classList.remove('sequence-ready');
+  runtime.characterProgress[side] = 1;
+  setPoseSide(side);
+  setStatus(SIDE_COPY[side].status);
+}
+
+function startCaughtSequencePlayback(side) {
+  if (runtime.caughtPlaybackFrame) return;
+  const token = runtime.token;
+
+  const frame = (now) => {
+    if (
+      token !== runtime.token
+      || runtime.phase !== 'caught'
+      || runtime.caughtSide !== side
+    ) {
+      runtime.caughtPlaybackFrame = 0;
+      return;
+    }
+
+    const sequence = sequences[side];
+    const rawCurrent = Number(runtime.characterDrawKey[side]);
+    const currentIndex = Number.isFinite(rawCurrent) && runtime.characterDrawKey[side] !== ''
+      ? rawCurrent
+      : -1;
+    const nextIndex = currentIndex + 1;
+    if (
+      nextIndex < FRAME_COUNT
+      && sequence.frames[nextIndex]
+    ) {
+      drawCharacterProgressInOrder(side, 1, now);
+    }
+
+    const paintedIndex = Number(runtime.characterDrawKey[side]);
+    if (paintedIndex >= FRAME_COUNT - 1) {
+      runtime.characterProgress[side] = 1;
+      runtime.caughtPlaybackFrame = 0;
+      setStatus(SIDE_COPY[side].status);
+      return;
+    }
+    const terminalGap = sequence.status !== 'loading'
+      && nextIndex < FRAME_COUNT
+      && !sequence.frames[nextIndex];
+    if (sequence.status === 'failed' || terminalGap) {
+      fallbackCaughtSequence(side);
+      return;
+    }
+    runtime.caughtPlaybackFrame = requestAnimationFrame(frame);
+  };
+
+  runtime.caughtPlaybackFrame = requestAnimationFrame(frame);
+}
+
 function finishCatch(side) {
   const geometry = runtime.geometry || measure();
   const target = geometry[side];
+  const sequence = sequences[side];
+  const canKeepProgressing = ['loading', 'ready'].includes(sequence.status)
+    && sequence.failedFrames.length === 0
+    && Boolean(sequence.frames[0]);
   setCandidate(side);
   setBloomPosition(target);
-  if (sequences[side].status !== 'ready' || !sequences[side].frames[FRAME_COUNT - 1]) {
-    sequences[side].active = false;
+  if (canKeepProgressing) {
+    // On a cold connection, keep the decoded canvas visible and let later
+    // frames continue arriving in order. Never jump from an early arm pose
+    // straight to frame 29 merely because the light reached the palm first.
+    setPoseSide(null);
+    sequence.active = true;
+  } else {
+    sequence.active = false;
     sideElements[side].classList.remove('sequence-ready');
     setPoseSide(side);
-  } else {
-    activateSequence(side, 1);
   }
-  drawCharacterProgress(side, 1);
   setLight(target, 1.08);
   setEnergy(side === 'blue' ? 1 : 0, side === 'orange' ? 1 : 0);
   setBlooming(false);
@@ -979,8 +1166,11 @@ function finishCatch(side) {
   runtime.seenSides[side] = true;
   setCaughtSide(side);
   setPhase('caught');
-  setStatus(SIDE_COPY[side].status);
+  setStatus(canKeepProgressing
+    ? '光已经到了，孩子正把它稳稳接住。'
+    : SIDE_COPY[side].status);
   releaseUnusedDecodedSequences(side);
+  if (canKeepProgressing) startCaughtSequencePlayback(side);
   scheduleComplementaryPreload(side);
 }
 
@@ -995,6 +1185,7 @@ function playCatchSettle(side) {
   if (runtime.tweenFrame) cancelAnimationFrame(runtime.tweenFrame);
   const token = runtime.token;
   const startedAt = performance.now();
+  runtime.orderedPaintAt = startedAt;
   const fromProgress = Math.max(runtime.characterProgress[side], CATCH_SETTLE_START);
   setCandidate(side);
   setBloomPosition(target);
@@ -1008,7 +1199,7 @@ function playCatchSettle(side) {
     const raw = clamp((now - startedAt) / CATCH_SETTLE_DURATION, 0, 1);
     const progress = smoothStep(raw);
     const settleLift = Math.pow(Math.sin(Math.PI * progress), 2);
-    drawCharacterProgress(side, lerp(fromProgress, 1, raw));
+    drawCharacterProgressInOrder(side, lerp(fromProgress, 1, raw), now);
     setLight(
       { x: target.x, y: target.y - settleLift * 2.2 },
       1.08 + settleLift * 0.018,
@@ -1176,9 +1367,9 @@ function startDragging() {
 function handlePointerDown(event) {
   if (event.button !== undefined && event.button !== 0) return;
   runtime.geometry = measure();
-  if (event.pointerType !== 'mouse' || isTabPrimaryMode() || autoDeliveryLocked()) return;
+  if (autoDeliveryLocked()) return;
   if (event.pointerType === 'mouse') event.preventDefault();
-  warmSequencePair('hint');
+  if (event.pointerType === 'mouse') warmSequencePair('hint');
   if (runtime.phase === 'caught') {
     returnToCenter('光回到中间了。现在可以换一个方向。');
     return;
@@ -1190,6 +1381,7 @@ function handlePointerDown(event) {
   runtime.startClientX = event.clientX;
   runtime.startClientY = event.clientY;
   runtime.latestClientX = event.clientX;
+  runtime.latestClientY = event.clientY;
   runtime.holdReady = false;
   runtime.visualProgress = 0;
   // A sequence that completed in the background is revealed only at frame 0,
@@ -1217,6 +1409,15 @@ function handlePointerDown(event) {
         runtime.holdReady = true;
         setStatus('光圈已蓄满。现在向左或右滑。');
         updateUi();
+        const deltaX = runtime.latestClientX - runtime.startClientX;
+        const deltaY = runtime.latestClientY - runtime.startClientY;
+        if (
+          Math.abs(deltaX) >= AXIS_LOCK_SLOP
+          && Math.abs(deltaX) > Math.abs(deltaY) * AXIS_DOMINANCE
+        ) {
+          startDragging();
+          updateFromPointer(runtime.latestClientX);
+        }
       }
     }, HOLD_DELAY);
   } else {
@@ -1227,6 +1428,7 @@ function handlePointerDown(event) {
 function handlePointerMove(event) {
   if (event.pointerId !== runtime.pointerId) return;
   runtime.latestClientX = event.clientX;
+  runtime.latestClientY = event.clientY;
   if (runtime.phase === 'pressing') {
     const deltaX = event.clientX - runtime.startClientX;
     const deltaY = event.clientY - runtime.startClientY;
@@ -1236,13 +1438,16 @@ function handlePointerMove(event) {
       yieldToPageScroll();
       return;
     }
+    if (absX >= AXIS_LOCK_SLOP && absX > absY * AXIS_DOMINANCE && !reducedQuery.matches) {
+      void loadSequence(deltaX < 0 ? 'blue' : 'orange', 'hint');
+    }
     if (runtime.holdReady && absX >= AXIS_LOCK_SLOP && absX > absY * AXIS_DOMINANCE) {
       startDragging();
       updateFromPointer(event.clientX);
       return;
     }
     if (!runtime.holdReady && Math.hypot(deltaX, deltaY) > TOUCH_SLOP) {
-      returnToCenter('先长按住光点，等光圈蓄满后再左右滑。');
+      setStatus('先稳稳按住，光圈蓄满后会接着跟随你的方向。');
     }
     return;
   }
@@ -1327,26 +1532,75 @@ function beginAutoDeliver(side) {
   });
 }
 
-function autoDeliver(side) {
+async function autoDeliver(side) {
   if (!Object.prototype.hasOwnProperty.call(SIDE_COPY, side) || autoDeliveryLocked()) return;
-  if (!reducedQuery.matches && sequences[side].status === 'idle') {
-    void loadSequence(side, 'interaction');
-  }
   if (runtime.phase === 'idle') {
+    if (!reducedQuery.matches && !sequenceCanStart(side)) {
+      const token = runtime.token;
+      runtime.pendingSide = side;
+      runtime.pendingKind = 'auto';
+      setCandidate(side);
+      setStatus(`方向已选好，${side === 'blue' ? '男孩' : '女孩'}正在接住这束光。`);
+      void loadSequence(side, 'interaction');
+      activateSequence(side, 0);
+      updateUi();
+      const readiness = await waitForSequencePlayable(side, token);
+      if (
+        readiness === 'cancelled'
+        || runtime.token !== token
+        || runtime.pendingSide !== side
+      ) return;
+      runtime.pendingSide = null;
+      runtime.pendingKind = null;
+    } else if (!reducedQuery.matches && sequences[side].status === 'idle') {
+      void loadSequence(side, 'interaction');
+    }
     beginAutoDeliver(side);
     return;
   }
 
   const fromReach = { ...runtime.characterProgress };
   stopMotion(true);
+  const token = runtime.token;
   const geometry = measure();
   for (const currentSide of ['blue', 'orange']) {
     if (fromReach[currentSide] > 0) activateSequence(currentSide, fromReach[currentSide]);
   }
   resetVisualState();
+  runtime.pendingSide = side;
+  runtime.pendingKind = 'auto-switch';
+  setCandidate(side);
   setEnergy(0, 0);
   setPhase('returning');
   setStatus('光先回到中间，再完整走向你选的方向。');
+  if (!reducedQuery.matches) {
+    // Always promote a pointerdown hint load to interaction priority.
+    void loadSequence(side, 'interaction');
+    activateSequence(side, 0);
+  }
+
+  let returnReady = reducedQuery.matches;
+  let sequenceReady = sequenceCanStart(side);
+  let started = false;
+  const maybeBegin = () => {
+    if (
+      started
+      || !returnReady
+      || !sequenceReady
+      || runtime.token !== token
+      || runtime.pendingSide !== side
+    ) return;
+    started = true;
+    runtime.pendingSide = null;
+    runtime.pendingKind = null;
+    beginAutoDeliver(side);
+  };
+
+  void waitForSequencePlayable(side, token).then((readiness) => {
+    if (readiness === 'cancelled') return;
+    sequenceReady = true;
+    maybeBegin();
+  });
   animatePosition(geometry.center, 220, {
     scale: 1,
     arc: 10,
@@ -1357,7 +1611,8 @@ function autoDeliver(side) {
     onDone: () => {
       drawCharacterProgress('blue', 0);
       drawCharacterProgress('orange', 0);
-      beginAutoDeliver(side);
+      returnReady = true;
+      maybeBegin();
     },
   });
 }
@@ -1371,7 +1626,10 @@ function syncGeometry() {
     || previous.orientation !== orientation
   );
   runtime.lastHeroSize = { width: geometry.rect.width, height: geometry.rect.height, orientation };
-  if (structuralResize && runtime.phase !== 'idle' && runtime.phase !== 'caught') {
+  if (
+    structuralResize
+    && (runtime.pendingSide || (runtime.phase !== 'idle' && runtime.phase !== 'caught'))
+  ) {
     stopMotion(true);
     resetVisualState();
     drawCharacterProgress('blue', 0);
@@ -1401,10 +1659,10 @@ handle.addEventListener('keydown', (event) => {
   if (isTabPrimaryMode()) return;
   if (event.key === 'ArrowLeft') {
     event.preventDefault();
-    autoDeliver('blue');
+    void autoDeliver('blue');
   } else if (event.key === 'ArrowRight') {
     event.preventDefault();
-    autoDeliver('orange');
+    void autoDeliver('orange');
   }
 });
 window.addEventListener('keydown', (event) => {
@@ -1415,7 +1673,7 @@ window.addEventListener('keydown', (event) => {
 });
 
 document.querySelectorAll('[data-auto-side]').forEach((button) => {
-  button.addEventListener('click', () => autoDeliver(button.dataset.autoSide));
+  button.addEventListener('click', () => { void autoDeliver(button.dataset.autoSide); });
   const hint = () => {
     if (!reducedQuery.matches) void loadSequence(button.dataset.autoSide, 'hint');
   };
@@ -1496,6 +1754,8 @@ window.__heroMotion = {
       }];
     })),
     pendingSide: runtime.pendingSide,
+    caughtPlaybackActive: Boolean(runtime.caughtPlaybackFrame),
+    poseSide: runtime.poseSide,
     sequenceErrors: [...runtime.sequenceErrors],
     drawCount: runtime.drawCount,
     longTasks: [...runtime.longTasks],
@@ -1513,7 +1773,7 @@ window.__heroMotion = {
 syncGeometry();
 updateUi();
 scheduleInitialSequenceWarmup();
-hero.dataset.motionVersion = 'v4-single-take30-responsive-input-r12';
+hero.dataset.motionVersion = 'v4-single-take30-responsive-input-r16';
 window.__HERO_MOTION_V4_ACTIVE__ = true;
 
 } catch (error) {

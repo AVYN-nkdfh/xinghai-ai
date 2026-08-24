@@ -17,13 +17,19 @@
   <link rel="canonical" href="https://tudu.school/" />
   <link rel="icon" href="assets/icons/todo-crest-64.png" type="image/png" sizes="64x64" />
   <link rel="apple-touch-icon" href="assets/icons/todo-crest-180.png" sizes="180x180" />
-  <link rel="preload" href="assets/hero-stage-blue.jpg" as="image" />
-  <link rel="preload" href="assets/hero-stage-orange.jpg" as="image" />
-  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00-m.webp" as="image" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
-  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00-m.webp" as="image" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/hero-stage-blue.jpg?v=20260825-r13" as="image" />
+  <link rel="preload" href="assets/hero-stage-orange.jpg?v=20260825-r13" as="image" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00-s.webp?v=20260825-s320-r16" as="image" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00-s.webp?v=20260825-s320-r16" as="image" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-01-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-02-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-03-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-01-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-02-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
+  <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-03-s.webp?v=20260825-s320-r16" as="image" fetchpriority="low" media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" />
   <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00.webp" as="image" media="(min-width: 901px), (min-width: 769px) and (min-height: 501px)" />
   <link rel="preload" href="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00.webp" as="image" media="(min-width: 901px), (min-width: 769px) and (min-height: 501px)" />
-  <link rel="preload" href="assets/hero-light.webp" as="image" />
+  <link rel="preload" href="assets/hero-light.webp?v=20260825-r13" as="image" />
   <style>
     :root {
       --bg: #060609;
@@ -617,7 +623,7 @@
     .service-consent-cancel { border: 1px solid rgba(255,255,255,.15); background: transparent; color: var(--muted); }
     .service-consent-confirm { border: 0; background: linear-gradient(135deg, var(--blue-hi), var(--blue)); color: #fff; }
     .contact-qr {
-      display: grid; grid-template-columns: 132px 1fr; gap: 18px; align-items: center; padding: 20px;
+      width: 100%; max-width: 520px; justify-self: center; display: grid; grid-template-columns: 132px 1fr; gap: 18px; align-items: center; padding: 20px;
       border: 1px solid var(--line); border-radius: 18px; background: rgba(255, 255, 255, 0.03);
     }
     .contact-qr > img { width: 132px; height: auto; padding: 7px; border-radius: 12px; background: #fff; }
@@ -809,9 +815,10 @@
       .faq-section { padding-top: 30px; }
       .faq-grid { gap: 22px; }
       .lead-form { grid-row: auto; padding: 24px 18px; border-radius: 18px; }
-      .contact-qr { grid-template-columns: 108px 1fr; gap: 14px; padding: 16px; }
-      .contact-qr > img { width: 108px; }
-      .contact-qr a { margin-right: 10px; }
+      .contact-qr { max-width: 360px; grid-template-columns: 1fr; justify-items: center; gap: 12px; padding: 18px 16px; text-align: center; }
+      .contact-qr > img { width: 132px; }
+      .contact-qr p { max-width: 27em; }
+      .contact-qr a { justify-content: center; margin: 0 8px; }
       .path-media-caption { padding: 46px 16px 15px; }
       .path-media-caption strong { font-size: 15px; }
       .trust { padding: 84px 0; }
@@ -856,7 +863,7 @@
       .statement-sub { opacity: 1 !important; transform: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="hero-motion-v4.css?v=20260824-mobile-tab-primary-r11" />
+  <link rel="stylesheet" href="hero-motion-v4.css?v=20260825-mobile-dual-input-r16" />
 </head>
 <body>
   <script>document.documentElement.classList.add('js');</script>
@@ -865,7 +872,7 @@
   <nav class="nav" aria-label="顶部主导航">
     <div class="container nav-inner">
       <a href="/" class="brand" aria-label="图度AI未来学校首页">
-        <img class="brand-mark" src="assets/todo-shield.png" alt="" width="28" height="36" />
+        <img class="brand-mark" src="assets/todo-shield-56.webp?v=20260825-r13" alt="" width="28" height="36" fetchpriority="high" />
         <span>图度AI未来学校</span>
       </a>
       <div class="branch-switch" aria-label="网站栏目">
@@ -879,30 +886,30 @@
   </nav>
 
   <main>
-    <!-- 首屏：电脑拖动光，手机点选方向；两种入口复用同一段完整动画 -->
+    <!-- 首屏：电脑拖动光；手机可长按横滑，也可点选方向；入口复用同一段完整动画 -->
     <section class="duel-hero" id="duelHero" aria-labelledby="heroTitle">
       <div class="hero-stage" aria-hidden="true">
         <div class="hero-side hero-side-blue" id="heroBlue" data-side="blue">
-          <img class="hero-stage-bg" src="assets/hero-stage-blue.jpg" alt="" />
+          <img class="hero-stage-bg" src="assets/hero-stage-blue.jpg?v=20260825-r13" alt="" />
           <picture>
-            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00-m.webp" />
+            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00-s.webp?v=20260825-s320-r16" />
             <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00.webp" alt="" width="768" height="1080" />
           </picture>
           <picture>
-            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29-m.webp" />
+            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29-s.webp?v=20260825-s320-r16" />
             <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="blue" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29.webp" alt="" width="768" height="1080" />
           </picture>
           <canvas class="hero-character sequence-canvas" data-sequence="blue" width="768" height="1080"></canvas>
           <div class="hero-stage-shade"></div>
         </div>
         <div class="hero-side hero-side-orange" id="heroOrange" data-side="orange">
-          <img class="hero-stage-bg" src="assets/hero-stage-orange.jpg" alt="" />
+          <img class="hero-stage-bg" src="assets/hero-stage-orange.jpg?v=20260825-r13" alt="" />
           <picture>
-            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00-m.webp" />
+            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00-s.webp?v=20260825-s320-r16" />
             <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00.webp" alt="" width="768" height="1080" />
           </picture>
           <picture>
-            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29-m.webp" />
+            <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29-s.webp?v=20260825-s320-r16" />
             <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="orange" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29.webp" alt="" width="768" height="1080" />
           </picture>
           <canvas class="hero-character sequence-canvas" data-sequence="orange" width="768" height="1080"></canvas>
@@ -915,14 +922,14 @@
         <h1 class="hero-title" id="heroTitle">孩子的未来，<br class="hero-mobile-break" />不止一种答案</h1>
         <p class="hero-sub">把光交给他，看他会怎样回应</p>
       </div>
-      <p class="hero-instruction" id="heroInstruction" data-instruction>点下面一个方向，看孩子接住这束光</p>
+      <p class="hero-instruction" id="heroInstruction" data-instruction>长按光点左右滑，或点下面一个方向</p>
 
-      <button class="light-handle" id="heroLight" type="button" data-testid="gesture-handle" aria-hidden="true" tabindex="-1" aria-label="按住光点左右拖动，也可以点击下方方向按钮">
+      <button class="light-handle" id="heroLight" type="button" data-testid="gesture-handle" aria-hidden="false" tabindex="0" aria-label="长按光点左右滑动，也可以点击下方方向按钮">
         <span class="charge-ring" aria-hidden="true"></span>
-        <img src="assets/hero-light.webp" alt="" draggable="false" />
+        <img src="assets/hero-light.webp?v=20260825-r13" alt="" draggable="false" />
         <span class="handle-caption" aria-hidden="true">按住</span>
       </button>
-      <div class="catch-bloom" id="heroBloom" aria-hidden="true"><img src="assets/hero-light.webp" alt="" /></div>
+      <div class="catch-bloom" id="heroBloom" aria-hidden="true"><img src="assets/hero-light.webp?v=20260825-r13" alt="" /></div>
       <div class="catch-exposure" aria-hidden="true"></div>
 
       <div class="hero-tablist" role="group" aria-label="选择成长方向">
@@ -984,19 +991,19 @@
           <div class="works-grid-home">
             <article class="work-card-home reveal">
               <a class="work-cover-home" href="https://tudu.school/works/moments-copy" aria-label="打开学员作品《文案便利店》">
-                <img src="assets/works/copy-shop-v1.webp" alt="学员作品《文案便利店》网页预览" width="1600" height="900" loading="lazy" decoding="async" />
+                <img src="assets/works/copy-shop-v1.webp" alt="学员作品《文案便利店》网页预览" width="1600" height="900" loading="lazy" decoding="async" fetchpriority="low" />
               </a>
               <div class="work-copy-home"><span>网页产品 · 交互设计</span><h3>文案便利店</h3><p>把场景和心情整理成可搜索、收藏和复制的网页原型。</p></div>
             </article>
             <article class="work-card-home reveal">
               <a class="work-cover-home work-cover-portrait" href="https://tudu.school/projects/ocean-environment" aria-label="打开学员作品《海洋会记住》">
-                <img src="assets/works/ocean-story-v1.webp" alt="学员作品《海洋会记住》的儿童海洋画" width="706" height="1254" loading="lazy" decoding="async" />
+                <img src="assets/works/ocean-story-v1.webp" alt="学员作品《海洋会记住》的儿童海洋画" width="706" height="1254" loading="lazy" decoding="async" fetchpriority="low" />
               </a>
               <div class="work-copy-home"><span>环境主题 · 视觉叙事</span><h3>海洋会记住</h3><p>从一张海洋画出发，做成可以往下浏览的污染故事。</p></div>
             </article>
             <article class="work-card-home reveal">
               <a class="work-cover-home" href="https://tudu.school/projects/animal-cars" aria-label="打开学员作品《动物汽车收藏馆》">
-                <img src="assets/works/animal-cars-v1.webp" alt="学员 AI 辅助概念作品《动物汽车收藏馆》" width="1600" height="900" loading="lazy" decoding="async" />
+                <img src="assets/works/animal-cars-v1.webp" alt="学员 AI 辅助概念作品《动物汽车收藏馆》" width="1600" height="900" loading="lazy" decoding="async" fetchpriority="low" />
               </a>
               <div class="work-copy-home"><span>概念设计 · 互动展馆</span><h3>动物汽车收藏馆</h3><p>把动物特征转化成概念汽车，再做成可筛选的线上展馆。</p></div>
             </article>
@@ -1160,7 +1167,7 @@
     </div>
   </footer>
 
-  <script src="hero-motion-v4.js?v=20260824-responsive-input-r12"></script>
+  <script src="hero-motion-v4.js?v=20260825-responsive-input-r16"></script>
   <script>
     (function () {
       var hero = document.getElementById('duelHero');
@@ -1470,7 +1477,13 @@
           dockRaf = 0;
           var nav = document.querySelector('.nav');
           var navBottom = nav ? nav.getBoundingClientRect().bottom : 0;
-          setDockShown(hero.getBoundingClientRect().bottom <= navBottom + 1);
+          var heroBottom = hero.getBoundingClientRect().bottom;
+          var showBoundary = navBottom + 1;
+          var hideBoundary = Math.max(showBoundary, window.innerHeight * 0.72);
+          // Hysteresis prevents the mobile dock from vanishing during a small
+          // reverse scroll. It hides only after the user has genuinely returned
+          // to the upper part of the hero.
+          setDockShown(dockShown ? heroBottom < hideBoundary : heroBottom <= showBoundary);
         });
       }
       window.addEventListener('scroll', dockTick, { passive: true });

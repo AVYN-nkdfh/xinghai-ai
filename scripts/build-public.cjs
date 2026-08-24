@@ -237,11 +237,11 @@ async function collectRuntimeFiles() {
         if (!isInside(PROJECT_ROOT, absoluteDirectory)) throw new Error("Unsafe sequence directory");
         const entries = await fs.promises.readdir(absoluteDirectory, { withFileTypes: true });
         const frameNames = entries
-          .filter((entry) => entry.isFile() && /^hero-(?:boy|girl)-reach-\d{2}(?:-m)?\.webp$/.test(entry.name))
+          .filter((entry) => entry.isFile() && /^hero-(?:boy|girl)-reach-\d{2}(?:-[ms])?\.webp$/.test(entry.name))
           .map((entry) => entry.name)
           .sort();
-        if (frameNames.length !== 120) {
-          throw new Error(`Expected 120 current hero frames in ${sequenceDirectory}, found ${frameNames.length}`);
+        if (frameNames.length !== 180) {
+          throw new Error(`Expected 180 current hero frames in ${sequenceDirectory}, found ${frameNames.length}`);
         }
         for (const frameName of frameNames) queue.push(path.posix.join(sequenceDirectory, frameName));
       }

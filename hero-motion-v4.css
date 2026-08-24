@@ -81,18 +81,18 @@
 .drag-primary-mode .light-handle:active { cursor: grabbing; }
 .drag-primary-mode .handle-caption { visibility: visible; }
 
-.tap-primary-mode .light-handle { touch-action: auto; }
+.tap-primary-mode .light-handle { touch-action: pan-y; }
 
-.tap-primary-mode .handle-caption { display: none; }
+.tap-primary-mode .handle-caption { display: block; visibility: visible; }
 
 @media (max-width: 768px), (max-width: 900px) and (max-height: 500px), (pointer: coarse) {
   .light-handle {
-    pointer-events: none;
-    cursor: default;
-    touch-action: auto;
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: pan-y;
   }
 
-  .handle-caption { display: none; }
+  .handle-caption { display: block; visibility: visible; }
 }
 
 .light-handle img {
@@ -139,6 +139,7 @@
 
 .phase-idle .charge-ring { animation: heroRingBreath 2.2s ease-in-out infinite; }
 .phase-pressing .charge-ring { border-width: 2px; animation: heroHoldCharge 260ms linear both; }
+.sequence-loading .charge-ring { animation: heroRingBreath 0.78s ease-in-out infinite; }
 .phase-dragging .charge-ring,
 .phase-magnetizing .charge-ring {
   opacity: 1;
