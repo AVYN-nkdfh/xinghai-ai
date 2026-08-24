@@ -200,3 +200,12 @@ This test proves that the current Preview request reached the intended Base and 
 - `/admin` was removed from the deployment artifact because its Admin v2 Functions are intentionally excluded by the 12-Function budget. `/content-admin` remains the narrow protected production editor. This avoids publishing a knowingly broken hidden frontend.
 - Two release blockers remain: `production-lead-environment` (a real Cloudflare Turnstile widget for `tudu.school`, not the Preview dummy key) and `operator-filing-applicability`.
 - The filing marker remains because the 2024 amended MIIT rule defines a China-based organization using a domain to provide non-commercial internet information as an in-scope service. The owner's current choice to defer filing is recorded as an operating decision, not converted into a legal-compliance claim or silently used to bypass the build gate.
+
+### Traceable commit and cloud rebuild
+
+- Release candidate: `d9a57fa23561199307eac0317979a93245aeac16`; acceptance evidence: `c9c9876fdcb804d8557c9dc3f5f509585ed5454b`.
+- A rebuild from the exact commit exposed that Vercel's upload retained the five local Admin v2 handlers while omitting the two legacy content handlers. That partial state correctly failed the function-budget assertion in `dpl_GYbFh7R3svtD9JweseLE6nEZQyWj` and `dpl_HK9xzrZefEsekHXsozbZFy9S9Nkv`.
+- `e9566dd` made the upload exclusions explicit. `717150a` then removed the local-only Admin v2 handlers from the release-tracked `api/` tree while preserving the local files on this workstation under `.gitignore`; the production `/admin` route remains unpublished.
+- Full integration passed again: 27/27 leads tests, Admin tests, launch-gate test, r12 motion test, exactly 12 deployable Functions, 7 authorized works, 3 authorized media files, and a 512-file protected build.
+- Exact-commit Preview `dpl_2KzZjDiZac4SuPKZcVPiuH9GPcXX` reached `READY` at `https://xinghai-deploy-fank37ud0-haowangggggg-3935s-projects.vercel.app`. Authenticated readback returned the expected titles for the homepage, learning, create, works, privacy, a project, a work, and `/content-admin`; `/admin` returned 404, `/api/leads/create` returned 403 without a valid submission, and `/api/leads/retention` returned 401 without cron authorization.
+- The branch `codex/new-site-production-integration-20260824` is pushed to GitHub. The official `tudu.school` alias remains on the older `READY` Production deployment `dpl_7ipGFyzF6FhZAn8jekjM1QtXrTha`; no production traffic was switched during this closure.
