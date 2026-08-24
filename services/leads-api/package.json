@@ -1,0 +1,10 @@
+{
+  "name": "xinghai-leads-api",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "build": "node --check api/leads/create.js && node --check api/leads/retention.js && node --check api/_lib/feishu-leads.js && node --check api/_lib/lead-domain.js && node --check api/_lib/lead-retention.js",
+    "test": "npm run build && node --test test/test-leads-api.cjs"
+  }
+}

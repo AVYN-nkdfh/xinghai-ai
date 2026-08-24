@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1000" viewBox="0 0 720 1000" role="img" aria-labelledby="title desc">
+  <title id="title">砂狼白子资料图占位</title>
+  <desc id="desc">紫蓝渐变背景上的白字角色资料占位图</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#111b38"/>
+      <stop offset="0.55" stop-color="#4965bd"/>
+      <stop offset="1" stop-color="#8f73d8"/>
+    </linearGradient>
+  </defs>
+  <rect width="720" height="1000" rx="40" fill="url(#bg)"/>
+  <circle cx="360" cy="360" r="230" fill="#dbeafe" opacity="0.14"/>
+  <text x="360" y="420" fill="#fff" font-size="210" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="800" text-anchor="middle">白</text>
+  <text x="360" y="750" fill="#f8fafc" font-size="48" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-weight="700" text-anchor="middle">砂狼白子</text>
+  <text x="360" y="818" fill="#dbeafe" font-size="28" font-family="PingFang SC, Microsoft YaHei, sans-serif" text-anchor="middle">角色资料图待补充</text>
+</svg>

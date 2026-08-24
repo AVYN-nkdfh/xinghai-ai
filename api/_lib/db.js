@@ -66,8 +66,11 @@ export async function ensureSchema() {
   return schemaPromise;
 }
 
-export async function readDay(date, includeDetails = false) {
-  await ensureSchema();
+export function isMissingSchemaError(error) {
+  return ["42P01", "42703"].includes(error?.code);
+}
+
+async function queryDay(date, includeDetails) {
   const sql = db();
   const [slotRows, maintenanceRows, longMaintenanceRows, bookingRows] = await sql.transaction([
     sql`SELECT slot_id, is_open FROM booking_slots WHERE booking_date = ${date}`,
@@ -79,4 +82,14 @@ export async function readDay(date, includeDetails = false) {
       : sql`SELECT slot_id, machine_id FROM bookings WHERE booking_date = ${date} AND status = 'active'`,
   ], { isolationMode: "RepeatableRead", readOnly: true });
   return { slotRows, maintenanceRows, longMaintenanceRows, bookingRows };
+}
+
+export async function readDay(date, includeDetails = false) {
+  try {
+    return await queryDay(date, includeDetails);
+  } catch (error) {
+    if (!isMissingSchemaError(error)) throw error;
+    await ensureSchema();
+    return queryDay(date, includeDetails);
+  }
 }

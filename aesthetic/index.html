@@ -1,0 +1,2961 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#011D2E">
+  <meta name="description" content="图度AI未来学校美学教育：用真实网站、海报、产品与历史名作为孩子的创作参考。">
+  <title>美学教育｜图度AI未来学校</title>
+  <link rel="icon" href="/assets/todo-shield.png">
+  <style>
+    :root {
+      --ink: #161512;
+      --muted: #68645d;
+      --paper: #f1ede4;
+      --surface: #faf8f2;
+      --line: rgba(22, 21, 18, .14);
+      --blue: #2854ff;
+      --pink: #ff5c91;
+      --yellow: #f6c94c;
+      --radius: 22px;
+      --serif: Georgia, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 15% 8%, rgba(255,255,255,.72), transparent 25%),
+        radial-gradient(circle at 88% 17%, rgba(246,201,76,.16), transparent 23%),
+        var(--paper);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .15;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.13'/%3E%3C/svg%3E");
+      z-index: 20;
+      mix-blend-mode: multiply;
+    }
+
+    button { font: inherit; }
+
+    button:focus-visible,
+    .style-card:focus-visible {
+      outline: 3px solid var(--blue);
+      outline-offset: 4px;
+    }
+
+    .shell {
+      width: min(1380px, calc(100% - 64px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 760;
+      letter-spacing: -.03em;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      color: #fff;
+      background: var(--ink);
+      font-family: var(--serif);
+      font-style: italic;
+      font-size: 18px;
+    }
+
+    .brand small {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 9px;
+      font-weight: 650;
+      letter-spacing: .17em;
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      flex: 0 0 auto;
+    }
+
+    .official-link {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 720;
+      text-decoration: none;
+      text-underline-offset: 5px;
+    }
+
+    .official-link:hover,
+    .official-link:focus-visible { text-decoration: underline; }
+
+    .official-link-short { display: none; }
+
+    .pill-button {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 0 18px;
+      border: 1px solid var(--ink);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      transition: color .2s ease, background .2s ease, transform .2s ease;
+    }
+
+    .pill-button:hover {
+      color: #fff;
+      background: var(--ink);
+      transform: translateY(-2px);
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+      align-items: end;
+      min-height: 420px;
+      padding: 64px 0 52px;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 20px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+      transform: rotate(-12deg);
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0;
+      font-size: clamp(56px, 7.3vw, 112px);
+      line-height: .88;
+      font-weight: 780;
+      letter-spacing: -.075em;
+    }
+
+    h1 em {
+      font-family: var(--serif);
+      font-weight: 400;
+      letter-spacing: -.055em;
+    }
+
+    .hero-side {
+      position: relative;
+      z-index: 1;
+      max-width: 410px;
+      justify-self: end;
+      padding-bottom: 6px;
+    }
+
+    .hero-side p {
+      margin: 0 0 26px;
+      color: #403d37;
+      font-size: clamp(16px, 1.35vw, 20px);
+      line-height: 1.75;
+    }
+
+    .museum-number {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .museum-number strong {
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 400;
+    }
+
+    .scribble {
+      position: absolute;
+      border: 2px solid currentColor;
+      pointer-events: none;
+      opacity: .85;
+    }
+
+    .scribble.one {
+      width: 72px;
+      height: 72px;
+      right: 27%;
+      top: 32px;
+      color: var(--pink);
+      border-radius: 46% 54% 65% 35% / 36% 35% 65% 64%;
+      transform: rotate(18deg);
+    }
+
+    .scribble.two {
+      width: 46px;
+      height: 46px;
+      right: 19%;
+      top: 72px;
+      color: var(--blue);
+      border-radius: 50%;
+    }
+
+    .gallery-section { padding: 38px 0 90px; }
+
+    .gallery-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .gallery-title h2 {
+      margin: 0 0 8px;
+      font-size: clamp(26px, 3vw, 42px);
+      letter-spacing: -.045em;
+    }
+
+    .gallery-title p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      max-width: 100%;
+      overflow: visible;
+      scrollbar-width: none;
+      padding: 4px;
+    }
+
+    .filters::-webkit-scrollbar { display: none; }
+
+    .filter-button {
+      min-height: 38px;
+      flex: 0 0 auto;
+      padding: 0 15px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(250,248,242,.55);
+      cursor: pointer;
+    }
+
+    .filter-button:hover { border-color: var(--ink); color: var(--ink); }
+
+    .filter-button[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+
+    .style-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 34px 22px;
+    }
+
+    .gallery-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+      margin-top: 36px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .gallery-progress[hidden] { display: none; }
+
+    .gallery-progress span {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .gallery-progress.is-loading::before {
+      width: 13px;
+      height: 13px;
+      border: 1px solid rgba(19, 35, 59, .24);
+      border-top-color: var(--ink);
+      border-radius: 50%;
+      content: "";
+      animation: art-loading-spin .7s linear infinite;
+    }
+
+    @keyframes art-loading-spin { to { transform: rotate(360deg); } }
+
+    .participation-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      gap: 34px;
+      margin-top: 54px;
+      padding: 42px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      background: rgba(6, 39, 58, .92);
+    }
+
+    .participation-panel[hidden] { display: none; }
+
+    .participation-panel h3 {
+      margin: 0;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.06;
+      letter-spacing: -.045em;
+    }
+
+    .participation-panel p {
+      max-width: 620px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .participation-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .participation-actions button,
+    .recommend-actions button {
+      min-height: 44px;
+      padding: 0 18px;
+      border: 1px solid var(--ink);
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 720;
+    }
+
+    .participation-actions .primary-action,
+    .recommend-actions .primary-action {
+      color: var(--surface);
+      background: var(--ink);
+    }
+
+    .participation-actions button:disabled,
+    .recommend-actions button:disabled { opacity: .58; cursor: wait; }
+
+    .participation-status {
+      grid-column: 1 / -1;
+      min-height: 20px;
+      margin: -12px 0 0 !important;
+      color: var(--blue) !important;
+      font-size: 12px !important;
+    }
+
+    .style-card {
+      min-width: 0;
+      padding: 0;
+      border: 0;
+      color: inherit;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .dialog-art {
+      background-image: var(--art-image);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .dialog-art.image-failed {
+      display: grid;
+      place-items: center;
+      padding: 32px;
+      color: rgba(255,255,255,.7);
+      text-align: center;
+    }
+
+    .dialog-art.image-failed::after {
+      content: "图片暂时无法加载，可通过右侧来源查看原作";
+      max-width: 220px;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .card-art {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      display: block;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background-color: #e3ddd0;
+      object-fit: cover;
+      object-position: var(--art-focus, center);
+      box-shadow: 0 16px 40px rgba(47, 40, 28, .08);
+      transition: transform .34s cubic-bezier(.2,.8,.2,1), box-shadow .34s ease;
+    }
+
+    .card-art.image-error { opacity: 0; }
+
+    .card-art::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(255,255,255,.42);
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.04);
+    }
+
+    .style-card:hover .card-art,
+    .style-card:focus-visible .card-art {
+      transform: translateY(-5px) scale(1.008);
+      box-shadow: 0 24px 52px rgba(47, 40, 28, .15);
+    }
+
+    .card-meta {
+      display: grid;
+      grid-template-columns: 44px minmax(0, 1fr) auto;
+      align-items: start;
+      gap: 10px;
+      padding: 15px 4px 0;
+    }
+
+    .card-number {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .card-title {
+      margin: 0 0 3px;
+      font-size: 19px;
+      font-weight: 740;
+      letter-spacing: -.025em;
+    }
+
+    .card-en {
+      margin: 0 0 9px;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .card-work {
+      margin: -2px 0 9px;
+      color: #4f4a42;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .card-keywords {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .card-keywords span {
+      color: #5c5850;
+      font-size: 11px;
+    }
+
+    .card-keywords span:not(:last-child)::after {
+      content: " · ";
+      color: #a19b90;
+    }
+
+    .card-arrow {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      transition: transform .2s ease, background .2s ease, color .2s ease;
+    }
+
+    .style-card:hover .card-arrow { color: #fff; background: var(--ink); transform: rotate(12deg); }
+
+    .empty-message {
+      display: none;
+      grid-column: 1 / -1;
+      padding: 60px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .site-footer {
+      color: rgba(255,255,255,.72);
+      background: #171612;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 1.45fr) repeat(3, minmax(150px, 1fr));
+      gap: 44px;
+      padding: 64px 0 48px;
+    }
+
+    .footer-brand-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 760;
+    }
+
+    .footer-brand-row .brand-mark {
+      color: #171612;
+      background: #fff;
+    }
+
+    .footer-made-by {
+      display: block;
+      margin-bottom: 13px;
+      color: #f6c94c;
+      font-size: 10px;
+      font-weight: 760;
+      letter-spacing: .12em;
+    }
+
+    .footer-brand-block > p {
+      max-width: 380px;
+      margin: 0;
+      color: rgba(255,255,255,.56);
+      font-size: 13px;
+      line-height: 1.75;
+    }
+
+    .footer-official-link {
+      min-height: 42px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 22px;
+      padding: 0 17px;
+      border-radius: 999px;
+      color: #171612;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 760;
+      text-decoration: none;
+      transition: transform .2s ease, background .2s ease;
+    }
+
+    .footer-official-link:hover,
+    .footer-official-link:focus-visible { background: #f6c94c; transform: translateY(-2px); }
+
+    .footer-column h3 {
+      margin: 0 0 18px;
+      color: #fff;
+      font-size: 12px;
+      letter-spacing: .12em;
+    }
+
+    .footer-links {
+      display: grid;
+      gap: 4px;
+    }
+
+    .footer-links a {
+      min-height: 38px;
+      display: flex;
+      align-items: center;
+      width: fit-content;
+      color: rgba(255,255,255,.66);
+      font-size: 13px;
+      text-decoration: none;
+    }
+
+    .footer-links a:hover,
+    .footer-links a:focus-visible { color: #fff; text-decoration: underline; text-underline-offset: 5px; }
+
+    .footer-column p {
+      margin: 0;
+      color: rgba(255,255,255,.55);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    .safety-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 760;
+    }
+
+    .safety-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #87d7a1;
+      box-shadow: 0 0 0 5px rgba(135,215,161,.12);
+    }
+
+    .footer-bottom {
+      min-height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      border-top: 1px solid rgba(255,255,255,.13);
+      color: rgba(255,255,255,.42);
+      font-size: 11px;
+    }
+
+    .footer-bottom a {
+      color: rgba(255,255,255,.78);
+      font-weight: 650;
+      text-decoration: none;
+      text-underline-offset: 4px;
+    }
+
+    .footer-bottom a:hover,
+    .footer-bottom a:focus-visible { color: #fff; text-decoration: underline; }
+
+    dialog {
+      width: min(1160px, calc(100% - 48px));
+      max-height: min(830px, calc(100dvh - 48px));
+      padding: 0;
+      overflow: hidden;
+      color: var(--ink);
+      border: 0;
+      border-radius: 28px;
+      background: var(--surface);
+      box-shadow: 0 28px 90px rgba(21,19,14,.32);
+    }
+
+    dialog::backdrop {
+      background: rgba(19,18,15,.72);
+      backdrop-filter: blur(11px);
+    }
+
+    .contribution-dialog {
+      width: min(590px, calc(100% - 36px));
+      max-height: calc(100dvh - 36px);
+      overflow-y: auto;
+      border-radius: 10px;
+    }
+
+    .contribution-inner { position: relative; padding: 38px; }
+
+    .contribution-close {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .contribution-inner h2 {
+      max-width: calc(100% - 50px);
+      margin: 0;
+      font-size: clamp(30px, 5vw, 42px);
+      line-height: 1.08;
+      letter-spacing: -.04em;
+    }
+
+    .contribution-intro {
+      margin: 12px 0 28px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .recommend-form { display: grid; gap: 20px; }
+
+    .recommend-field { display: grid; gap: 8px; }
+    .recommend-field > span { font-size: 13px; font-weight: 720; }
+    .recommend-field small { color: var(--muted); font-size: 11px; line-height: 1.55; }
+
+    .recommend-field input[type="url"],
+    .recommend-field textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 0;
+      color: #011d2e;
+      background: #fff;
+      outline: 0;
+    }
+
+    .recommend-field input[type="url"] { min-height: 46px; padding: 0 13px; }
+    .recommend-field textarea { min-height: 112px; padding: 12px 13px; resize: vertical; line-height: 1.65; }
+    .recommend-field input:focus, .recommend-field textarea:focus { border-color: var(--blue); }
+
+    .image-choice {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 52px;
+      padding: 10px 13px;
+      border: 1px dashed var(--line);
+      color: var(--ink);
+      background: rgba(1,29,46,.55);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .image-choice input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .image-choice b { font-size: 12px; }
+    .image-choice em { overflow: hidden; color: #a9bbc0; font-style: normal; text-overflow: ellipsis; white-space: nowrap; }
+
+    .recommend-privacy {
+      margin: 0;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .recommend-error { min-height: 18px; margin: 0; color: #a43e35; font-size: 12px; line-height: 1.5; }
+    .recommend-actions { display: flex; justify-content: flex-end; gap: 10px; }
+
+    .recommend-success[hidden] { display: none; }
+    .recommend-success { padding: 44px 0 22px; }
+    .recommend-success strong { display: block; font-family: var(--serif); font-size: 30px; font-weight: 500; line-height: 1.2; }
+    .recommend-success p { margin: 12px 0 0; color: var(--muted); font-size: 13px; line-height: 1.7; }
+
+    .dialog-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(360px, .96fr);
+      min-height: 650px;
+      max-height: inherit;
+    }
+
+    .dialog-art {
+      min-height: 650px;
+      background-color: #ddd6c8;
+    }
+
+    .dialog-content {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      max-height: inherit;
+      padding: 42px 42px 28px;
+      overflow-y: auto;
+    }
+
+    .dialog-close {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      color: var(--ink);
+      background: var(--surface);
+      cursor: pointer;
+      font-size: 20px;
+    }
+
+    .dialog-kicker {
+      margin: 0 0 22px;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .16em;
+    }
+
+    .dialog-content h2 {
+      max-width: 85%;
+      margin: 0 0 6px;
+      font-size: clamp(34px, 4vw, 58px);
+      line-height: 1;
+      letter-spacing: -.06em;
+    }
+
+    .dialog-en {
+      margin: 0 0 24px;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 19px;
+      font-style: italic;
+    }
+
+    .dialog-description {
+      margin: 0 0 22px;
+      color: #3f3c36;
+      font-size: 16px;
+      line-height: 1.8;
+    }
+
+    .dialog-workline {
+      margin: -10px 0 18px;
+      color: #514d45;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    .dialog-source-link {
+      width: fit-content;
+      margin: -10px 0 22px;
+      color: var(--blue);
+      font-size: 12px;
+      font-weight: 760;
+      text-underline-offset: 4px;
+    }
+
+    .tag-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 26px;
+    }
+
+    .tag-list span {
+      padding: 8px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #4e4a43;
+      background: #fff;
+      font-size: 12px;
+    }
+
+    .use-line {
+      margin: 0 0 25px;
+      padding: 14px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .use-line strong { color: var(--ink); }
+
+    .prompt-box {
+      padding: 18px;
+      border-radius: 18px;
+      background: #ebe7dd;
+    }
+
+    .prompt-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .prompt-head strong { font-size: 13px; }
+
+    .copy-button {
+      min-height: 34px;
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--blue);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 720;
+    }
+
+    .prompt-text {
+      margin: 0;
+      color: #4b4740;
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .dialog-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: auto;
+      padding-top: 26px;
+    }
+
+    .dialog-nav button {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .dialog-nav button:hover { border-color: var(--ink); background: #fff; }
+
+    .section-block {
+      padding: 88px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-heading {
+      display: grid;
+      grid-template-columns: 72px minmax(0, 1fr) minmax(260px, .6fr);
+      align-items: end;
+      gap: 24px;
+      margin-bottom: 38px;
+    }
+
+    .section-index {
+      color: var(--blue);
+      font-family: var(--serif);
+      font-size: 18px;
+      font-style: italic;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(34px, 4.2vw, 64px);
+      line-height: .98;
+      letter-spacing: -.06em;
+    }
+
+    .section-heading h2 em {
+      font-family: var(--serif);
+      font-weight: 400;
+    }
+
+    .section-heading > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .museum-map {
+      padding: 30px 0 52px;
+    }
+
+    .museum-map-label {
+      margin: 0 0 15px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .museum-map-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      border-top: 1px solid var(--ink);
+      border-bottom: 1px solid var(--ink);
+    }
+
+    .museum-map-card {
+      min-height: 178px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 24px;
+      color: var(--ink);
+      text-decoration: none;
+      border-right: 1px solid var(--line);
+      transition: color .2s ease, background .2s ease;
+    }
+
+    .museum-map-card:last-child { border-right: 0; }
+    .museum-map-card:hover { color: #fff; background: var(--ink); }
+
+    .museum-map-card .map-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: inherit;
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .museum-map-card h2 {
+      margin: 0 0 7px;
+      font-size: 24px;
+      letter-spacing: -.035em;
+    }
+
+    .museum-map-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .museum-map-card:hover p { color: rgba(255,255,255,.7); }
+
+    .hall-status {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: -4px 0 30px;
+    }
+
+    .hall-status span {
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      font-size: 11px;
+      background: rgba(250,248,242,.54);
+    }
+
+    .hall-status span:first-child {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .reference-section {
+      padding: 28px 0 110px;
+      border-top: 1px solid var(--line);
+    }
+
+    .reference-head {
+      display: grid;
+      grid-template-columns: 64px minmax(0, .95fr) minmax(260px, .65fr);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 30px;
+    }
+
+    .reference-head h2 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(38px, 5vw, 72px);
+      line-height: .98;
+      letter-spacing: -.06em;
+    }
+
+    .reference-head h2 em {
+      font-family: var(--serif);
+      font-weight: 400;
+    }
+
+    .reference-head > p {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.72;
+    }
+
+    .project-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-bottom: 22px;
+    }
+
+    .project-choice {
+      min-height: 48px;
+      padding: 0 20px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(250,248,242,.54);
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .project-choice[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .reference-context {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      min-height: 72px;
+      padding: 14px 0 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .reference-context p {
+      max-width: 760px;
+      margin: 0;
+      color: #403d37;
+      font-size: 14px;
+      line-height: 1.68;
+    }
+
+    .reference-count {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .reference-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .reference-card {
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 23px;
+      background: rgba(250,248,242,.68);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .reference-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 18px 45px rgba(31,27,20,.1);
+    }
+
+    .reference-image {
+      position: relative;
+      aspect-ratio: 5 / 4;
+      overflow: hidden;
+      background: #ded9cd;
+    }
+
+    .reference-card.website-type .reference-image { aspect-ratio: 16 / 9; }
+
+    .reference-image::after {
+      content: attr(data-fallback);
+      position: absolute;
+      left: 18px;
+      bottom: 16px;
+      z-index: 0;
+      color: rgba(22,21,18,.42);
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .reference-image img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      background: #ded9cd;
+      transition: transform .35s ease;
+    }
+
+    .reference-card:hover img { transform: scale(1.025); }
+    .reference-image img.image-error { opacity: 0; }
+
+    .reference-body { padding: 18px; }
+
+    .reference-source {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .reference-source span:last-child {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-weight: 400;
+      font-style: italic;
+      letter-spacing: 0;
+      text-transform: none;
+    }
+
+    .reference-body h3 {
+      margin: 0 0 7px;
+      font-size: 24px;
+      line-height: 1.08;
+      letter-spacing: -.045em;
+    }
+
+    .reference-best {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .reference-observe {
+      min-height: 46px;
+      margin: 0 0 14px;
+      padding-top: 13px;
+      border-top: 1px solid var(--line);
+      color: #3e3b35;
+      font-size: 12px;
+      line-height: 1.62;
+    }
+
+    .reference-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+
+    .reference-tags span {
+      padding: 6px 9px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: #ebe7dd;
+      font-size: 10px;
+    }
+
+    .reference-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .reference-actions a {
+      min-height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--ink);
+      font-size: 11px;
+      text-decoration: none;
+    }
+
+    .reference-actions a:first-child {
+      color: #fff;
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+
+    .competitor-finder {
+      display: grid;
+      grid-template-columns: minmax(220px, .62fr) minmax(0, 1.38fr);
+      gap: 28px;
+      margin-top: 30px;
+      padding: 26px;
+      border-radius: 22px;
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .competitor-finder h3 {
+      margin: 0 0 8px;
+      font-size: 24px;
+      letter-spacing: -.04em;
+    }
+
+    .competitor-finder > div:first-child p {
+      margin: 0;
+      color: rgba(255,255,255,.6);
+      font-size: 11px;
+      line-height: 1.65;
+    }
+
+    .finder-content {
+      display: grid;
+      gap: 13px;
+    }
+
+    .source-links,
+    .query-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .source-link,
+    .query-chip {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 13px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255,255,255,.06);
+      font-size: 11px;
+      text-decoration: none;
+    }
+
+    .query-chip {
+      color: rgba(255,255,255,.72);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .query-chip:hover,
+    .source-link:hover { background: rgba(255,255,255,.13); }
+
+    .source-notice {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 28px;
+      padding: 30px 0 70px;
+      border-top: 1px solid var(--line);
+    }
+
+    .source-notice h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .source-notice p {
+      max-width: 760px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.7;
+    }
+
+    .principles-layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+    }
+
+    .domain-tabs {
+      display: grid;
+      gap: 8px;
+      position: sticky;
+      top: 16px;
+    }
+
+    .domain-tab {
+      min-height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 16px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      color: var(--muted);
+      background: rgba(250,248,242,.5);
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .domain-tab[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--ink);
+      background: var(--ink);
+    }
+
+    .domain-tab span:last-child {
+      font-family: var(--serif);
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .principle-workspace {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(250px, .78fr) minmax(0, 1.22fr);
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      background: rgba(250,248,242,.7);
+    }
+
+    .principle-list {
+      padding: 18px;
+      border-right: 1px solid var(--line);
+    }
+
+    .principle-intro {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .principle-button {
+      width: 100%;
+      min-height: 78px;
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 8px;
+      border: 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .principle-button:last-child { border-bottom: 0; }
+    .principle-button[aria-pressed="true"] { color: var(--blue); }
+
+    .principle-button .p-num {
+      color: var(--muted);
+      font-family: var(--serif);
+      font-size: 12px;
+      font-style: italic;
+    }
+
+    .principle-button strong { font-size: 15px; }
+    .principle-button .p-arrow { font-size: 18px; }
+
+    .principle-detail {
+      min-height: 470px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 36px;
+      background:
+        radial-gradient(circle at 90% 10%, rgba(40,84,255,.11), transparent 30%),
+        var(--surface);
+    }
+
+    .principle-detail .detail-label {
+      margin: 0 0 18px;
+      color: var(--blue);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .principle-detail h3 {
+      max-width: 620px;
+      margin: 0 0 16px;
+      font-size: clamp(30px, 3.5vw, 48px);
+      line-height: 1.03;
+      letter-spacing: -.055em;
+    }
+
+    .principle-detail .why {
+      max-width: 680px;
+      margin: 0 0 30px;
+      color: #454139;
+      font-size: 15px;
+      line-height: 1.8;
+    }
+
+    .detail-notes {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .detail-note {
+      padding: 16px;
+      border-radius: 16px;
+      background: #ebe7dd;
+    }
+
+    .detail-note strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .detail-note p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .project-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+
+    .project-tab {
+      min-height: 44px;
+      padding: 0 17px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .project-tab[aria-pressed="true"] {
+      color: #fff;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .project-kit {
+      display: grid;
+      grid-template-columns: minmax(0, .84fr) minmax(360px, 1.16fr);
+      overflow: hidden;
+      border-radius: 26px;
+      color: #fff;
+      background: var(--ink);
+    }
+
+    .kit-overview {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 540px;
+      padding: 38px;
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255,92,145,.4), transparent 30%),
+        radial-gradient(circle at 88% 88%, rgba(40,84,255,.34), transparent 34%);
+    }
+
+    .kit-eyebrow {
+      margin: 0 0 20px;
+      color: rgba(255,255,255,.64);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .17em;
+      text-transform: uppercase;
+    }
+
+    .kit-overview h3 {
+      margin: 0 0 18px;
+      font-size: clamp(38px, 4.5vw, 65px);
+      line-height: .96;
+      letter-spacing: -.06em;
+    }
+
+    .kit-overview > div > p {
+      max-width: 480px;
+      margin: 0;
+      color: rgba(255,255,255,.72);
+      font-size: 14px;
+      line-height: 1.75;
+    }
+
+    .kit-steps {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 34px;
+    }
+
+    .kit-step {
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.58);
+      font-size: 10px;
+      line-height: 1.55;
+    }
+
+    .kit-step strong { display: block; margin-bottom: 4px; color: #fff; font-size: 12px; }
+
+    .kit-details {
+      padding: 34px;
+      color: var(--ink);
+      background: var(--surface);
+    }
+
+    .kit-detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .kit-detail-card {
+      min-height: 155px;
+      padding: 17px;
+      border: 1px solid var(--line);
+      border-radius: 17px;
+    }
+
+    .kit-detail-card strong {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    .kit-detail-card ul {
+      margin: 0;
+      padding-left: 17px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .kit-brief {
+      padding: 19px;
+      border-radius: 18px;
+      background: #ebe7dd;
+    }
+
+    .kit-brief-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .kit-brief-head strong { font-size: 13px; }
+
+    .kit-brief p {
+      margin: 0;
+      color: #4c4841;
+      font-size: 12px;
+      line-height: 1.72;
+    }
+
+    .source-policy {
+      display: grid;
+      grid-template-columns: minmax(220px, .72fr) minmax(0, 1.28fr);
+      gap: 28px;
+      padding: 36px 0 10px;
+      border-top: 1px solid var(--line);
+    }
+
+    .source-policy h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: -.04em;
+    }
+
+    .source-policy > div > p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    .source-rules {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .source-rule {
+      display: grid;
+      grid-template-columns: 32px minmax(0, 1fr);
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      background: rgba(250,248,242,.5);
+    }
+
+    .source-rule span {
+      color: var(--blue);
+      font-family: var(--serif);
+      font-size: 13px;
+      font-style: italic;
+    }
+
+    .source-rule strong { display: block; margin-bottom: 4px; font-size: 12px; }
+    .source-rule p { margin: 0; color: var(--muted); font-size: 11px; line-height: 1.55; }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 28px;
+      z-index: 50;
+      padding: 12px 18px;
+      border-radius: 999px;
+      color: #fff;
+      background: var(--ink);
+      font-size: 13px;
+      box-shadow: 0 12px 36px rgba(0,0,0,.22);
+      transform: translate(-50%, 18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+    @media (max-width: 900px) {
+      .shell { width: min(100% - 36px, 760px); }
+      .hero { grid-template-columns: 1fr; min-height: auto; gap: 38px; padding: 54px 0 44px; }
+      .hero-side { justify-self: start; max-width: 560px; }
+      .scribble.one { right: 9%; }
+      .scribble.two { right: 2%; }
+      .gallery-head { align-items: flex-start; flex-direction: column; }
+      .filters { width: 100%; margin-left: -4px; flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; }
+      .style-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .reference-head { grid-template-columns: 52px minmax(0,1fr); }
+      .reference-head > p { grid-column: 2; }
+      .reference-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
+      .reference-grid .reference-card:nth-child(odd):last-child { grid-column: 1 / -1; }
+      .competitor-finder { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .footer-brand-block { grid-column: 1 / -1; }
+      .dialog-layout { grid-template-columns: .9fr 1.1fr; }
+      .dialog-art { min-height: 590px; }
+      .dialog-content { padding: 36px 28px 24px; }
+      .museum-map-grid { grid-template-columns: 1fr; }
+      .museum-map-card { min-height: 132px; border-right: 0; border-bottom: 1px solid var(--line); }
+      .museum-map-card:last-child { border-bottom: 0; }
+      .section-heading { grid-template-columns: 52px minmax(0,1fr); }
+      .section-heading > p { grid-column: 2; }
+      .principles-layout { grid-template-columns: 1fr; }
+      .domain-tabs { grid-template-columns: repeat(3, minmax(0,1fr)); position: static; }
+      .principle-workspace { grid-template-columns: minmax(220px,.8fr) minmax(0,1.2fr); }
+      .project-kit { grid-template-columns: 1fr; }
+      .kit-overview { min-height: 420px; }
+    }
+
+    @media (max-width: 620px) {
+      .shell { width: calc(100% - 28px); }
+      .topbar { min-height: 68px; }
+      .topbar { gap: 8px; }
+      .brand > span { font-size: 14px; }
+      .brand small { display: none; }
+      .brand-mark { width: 30px; height: 30px; }
+      .topbar-actions { gap: 8px; }
+      .official-link { min-height: 38px; font-size: 11px; }
+      .official-link-full { display: none; }
+      .official-link-short { display: inline; }
+      .pill-button { min-height: 38px; padding: 0 13px; font-size: 13px; }
+      .pill-button .spark { display: none; }
+      .hero { padding: 48px 0 38px; }
+      h1 { font-size: clamp(48px, 14.2vw, 56px); line-height: .92; }
+      .hero-side p { font-size: 15px; }
+      .scribble { display: none; }
+      .gallery-section { padding: 30px 0 64px; }
+      .gallery-head { gap: 18px; margin-bottom: 20px; }
+      .style-grid { grid-template-columns: 1fr; gap: 30px; }
+      .gallery-progress { align-items: flex-start; }
+      .participation-panel { grid-template-columns: 1fr; align-items: start; padding: 28px 22px; }
+      .participation-actions { justify-content: flex-start; }
+      .participation-status { margin-top: -4px !important; }
+      .reference-section { padding: 24px 0 72px; }
+      .reference-head { grid-template-columns: 1fr; gap: 10px; margin-bottom: 22px; }
+      .reference-head > p { grid-column: auto; }
+      .reference-head h2 { font-size: 42px; }
+      .project-selector { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .project-choice { flex: 0 0 auto; }
+      .reference-context { align-items: flex-start; flex-direction: column; gap: 8px; }
+      .reference-grid { grid-template-columns: 1fr; }
+      .reference-grid .reference-card:nth-child(odd):last-child { grid-column: auto; }
+      .reference-image { aspect-ratio: 4 / 3; }
+      .reference-card.website-type .reference-image { aspect-ratio: 16 / 9; }
+      .competitor-finder { padding: 22px 18px; }
+      .source-links, .query-chips { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .source-link, .query-chip { flex: 0 0 auto; }
+      .source-notice { flex-direction: column; padding-bottom: 54px; }
+      .card-meta { grid-template-columns: 36px minmax(0,1fr) auto; }
+      .footer-grid { grid-template-columns: 1fr; gap: 34px; padding: 48px 0 36px; }
+      .footer-brand-block { grid-column: auto; }
+      .footer-bottom { min-height: 94px; align-items: flex-start; flex-direction: column; justify-content: center; gap: 7px; }
+
+      dialog {
+        width: 100%;
+        max-width: none;
+        height: 100dvh;
+        max-height: 100dvh;
+        margin: 0;
+        border-radius: 0;
+      }
+
+      .contribution-dialog { width: 100%; height: 100dvh; max-height: 100dvh; }
+      .contribution-inner { min-height: 100%; padding: 30px 20px calc(28px + env(safe-area-inset-bottom)); }
+      .contribution-close { position: fixed; top: 14px; right: 14px; z-index: 4; }
+      .recommend-actions { display: grid; grid-template-columns: 1fr 1fr; }
+      .recommend-actions button { width: 100%; padding: 0 10px; }
+
+      .dialog-layout { display: block; min-height: 100%; overflow-y: auto; }
+      .dialog-art { min-height: 0; aspect-ratio: 1 / 1; }
+      .dialog-content { max-height: none; padding: 30px 20px 28px; overflow: visible; }
+      .dialog-close { position: fixed; top: 14px; right: 14px; z-index: 4; background: rgba(250,248,242,.94); }
+      .dialog-content h2 { max-width: calc(100% - 48px); font-size: 40px; }
+      .dialog-nav { margin-top: 6px; }
+      .section-block { padding: 62px 0; }
+      .section-heading { grid-template-columns: 1fr; gap: 10px; margin-bottom: 26px; }
+      .section-heading > p { grid-column: auto; }
+      .museum-map { padding: 18px 0 40px; }
+      .museum-map-card { padding: 19px 6px; }
+      .principles-layout { gap: 14px; }
+      .domain-tabs { display: flex; overflow-x: auto; padding: 3px; scrollbar-width: none; }
+      .domain-tab { min-width: max-content; min-height: 42px; }
+      .principle-workspace { display: block; }
+      .principle-list { border-right: 0; border-bottom: 1px solid var(--line); }
+      .principle-button { min-height: 62px; }
+      .principle-detail { min-height: 0; padding: 25px 19px; }
+      .detail-notes { grid-template-columns: 1fr; }
+      .project-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+      .project-tab { flex: 0 0 auto; }
+      .kit-overview { min-height: 380px; padding: 26px 20px; }
+      .kit-overview h3 { font-size: 43px; }
+      .kit-steps { grid-template-columns: 1fr; }
+      .kit-details { padding: 20px; }
+      .kit-detail-grid { grid-template-columns: 1fr; }
+      .kit-detail-card { min-height: 0; }
+      .kit-brief-head { align-items: flex-start; }
+      .source-policy { grid-template-columns: 1fr; }
+      .source-rules { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+    }
+  </style>
+  <link rel="stylesheet" href="/assets/site-shell-v2.css?v=20260810-v27">
+  <link rel="stylesheet" href="/aesthetic/aesthetic.css?v=20260814-paper-annual-v4-cut-assets-r2">
+  <script defer src="/assets/site-shell-v2.js?v=20260810-v27"></script>
+</head>
+<body data-preview-version="2026-08-14-aesthetic-paper-annual-v4-cut-assets-r2">
+  <nav class="site-nav" aria-label="全站导航">
+    <a class="brand" href="/" aria-label="图度AI未来学校首页">
+      <img src="/aesthetic/assets/paper-annual-v3/header-logo.png" alt="图度AI未来学校｜TODO AI FUTURE SCHOOL">
+    </a>
+    <div class="nav-links">
+      <a href="/">首页</a>
+      <a href="/works">学员作品</a>
+      <a href="/aesthetic" aria-current="page">美学教育</a>
+      <a href="/world">职业地图</a>
+      <a href="/courses">播客课程</a>
+      <a href="/about">关于我们</a>
+      <a class="nav-cta" href="/#contact">预约咨询</a>
+    </div>
+  </nav>
+
+  <main>
+    <section class="shell hero" aria-labelledby="pageTitle">
+      <div class="hero-copy">
+        <p class="hero-index">001 / 美学教育</p>
+        <h1 id="pageTitle">你想做<br>什么？</h1>
+        <p class="hero-intro">先看真正值得参考的作品，再带着清楚的方向开始创造。</p>
+        <button class="pill-button hero-random" id="randomButton" type="button"><span class="spark" aria-hidden="true">✦</span> 随机看看</button>
+      </div>
+      <figure class="hero-art">
+        <img src="/aesthetic/assets/paper-annual-v3/hero-composition.png" alt="选择稿中的河岸画作、美学参考库印章与原作来源标注">
+      </figure>
+    </section>
+
+    <section class="shell reference-section" id="references" aria-labelledby="referencesTitle">
+      <div class="reference-head">
+        <p class="section-index">002 / 真实参考</p>
+        <h2 id="referencesTitle">先看同类作品</h2>
+        <p>匹配你正在做的项目，先看同类型的真实作品怎样组织信息、颜色和重点。</p>
+      </div>
+      <div class="project-selector" id="projectSelector" aria-label="选择正在做的项目"></div>
+      <div class="reference-context">
+        <p id="referenceIntro"></p>
+        <span class="reference-count" id="referenceCount"></span>
+      </div>
+      <div class="reference-grid" id="referenceGrid"></div>
+      <aside class="competitor-finder" aria-labelledby="finderTitle">
+        <div>
+          <h3 id="finderTitle">继续找同类型？</h3>
+          <p>下面放的是国内可以直接打开的参考入口和中文搜索词。先找同类，再比较差别。</p>
+        </div>
+        <div class="finder-content">
+          <div class="source-links" id="sourceLinks" aria-label="竞品来源入口"></div>
+          <div class="query-chips" id="queryChips" aria-label="可复制搜索词"></div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="shell gallery-section" id="styles" aria-labelledby="galleryTitle">
+      <div class="gallery-head">
+        <div class="gallery-title">
+          <p class="section-index">003 / 历史艺术</p>
+          <h2 id="galleryTitle">从历史名画里选一种感觉</h2>
+          <p>这里不放临时生成的风格图。每张卡都有真实原作、作者、年代和可以追溯的来源。</p>
+        </div>
+        <div class="filters" aria-label="按感觉筛选" id="filters"></div>
+      </div>
+      <div class="hall-status" aria-label="风格馆分类">
+        <span id="historyCount">历史艺术实例 · 100</span>
+        <span>真实原作 · 可追溯来源</span>
+      </div>
+      <div class="style-grid" id="styleGrid" aria-busy="false"></div>
+      <div class="gallery-progress" id="artLoadSentinel" role="status" aria-live="polite" aria-atomic="true">
+        <span id="artProgress">已展示 24 / 100 · 继续向下浏览</span>
+      </div>
+      <section class="participation-panel" id="participationPanel" aria-labelledby="participationTitle" hidden>
+        <span class="participation-index" aria-hidden="true">004</span>
+        <div>
+          <h3 id="participationTitle">下一批想看什么？</h3>
+          <p>看到值得放进展馆的作品，可以推荐给老师；想继续看新的，也可以提醒老师上新。</p>
+        </div>
+        <div class="participation-actions">
+          <button class="primary-action" id="openRecommendation" type="button">推荐一个参考</button>
+          <button id="remindTeacher" type="button">催老师上新</button>
+        </div>
+        <p class="participation-status" id="participationStatus" role="status" aria-live="polite"></p>
+      </section>
+    </section>
+
+    <aside class="shell source-notice" aria-labelledby="sourceTitle">
+      <h3 id="sourceTitle">真实来源，也要儿童适龄</h3>
+      <p>所有案例先检查来源与授权状态，再做儿童适龄审核；含有暴力、危险模仿、成人暗示或其他家长可能合理担忧的内容不进入展馆。外部网站内容会变化，孩子打开原站时仍建议家长或老师陪同。</p>
+    </aside>
+  </main>
+
+  <footer class="site-footer" id="siteFooter">
+    <img class="f-brand" src="/aesthetic/assets/paper-annual-v3/header-logo.png" alt="图度AI未来学校｜TODO AI FUTURE SCHOOL" loading="lazy" decoding="async">
+    <p>让孩子学会自主学习，也学会把想法做出来</p>
+    <span>TODO AI FUTURE SCHOOL</span>
+  </footer>
+
+  <dialog id="styleDialog" aria-labelledby="dialogTitle">
+    <div class="dialog-layout">
+      <div class="dialog-art" id="dialogArt" role="img" aria-label="当前历史艺术类型的代表原作"></div>
+      <div class="dialog-content">
+        <button class="dialog-close" id="closeDialog" type="button" aria-label="关闭详情">×</button>
+        <p class="dialog-kicker" id="dialogKicker">ART 001 / 100</p>
+        <h2 id="dialogTitle"></h2>
+        <p class="dialog-en" id="dialogEnglish"></p>
+        <p class="dialog-workline"><strong id="dialogWork"></strong><br><span id="dialogArtist"></span></p>
+        <p class="dialog-description" id="dialogDescription"></p>
+        <div class="tag-list" id="dialogTags" aria-label="风格关键词"></div>
+        <a class="dialog-source-link" id="dialogSource" target="_blank" rel="noreferrer">查看原作与来源 ↗</a>
+        <p class="use-line"><strong>可以用在：</strong><span id="dialogUses"></span></p>
+        <div class="prompt-box">
+          <div class="prompt-head">
+            <strong>给 AI 的小纸条</strong>
+            <button class="copy-button" id="copyPrompt" type="button">复制提示词</button>
+          </div>
+          <p class="prompt-text" id="dialogPrompt"></p>
+        </div>
+        <div class="dialog-nav">
+          <button id="previousStyle" type="button">← 上一件</button>
+          <button id="nextStyle" type="button">下一件 →</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="contribution-dialog" id="contributionDialog" aria-labelledby="contributionTitle">
+    <div class="contribution-inner">
+      <button class="contribution-close" id="closeContribution" type="button" aria-label="关闭推荐表单">×</button>
+      <h2 id="contributionTitle">推荐一个你喜欢的参考</h2>
+      <p class="contribution-intro">可以放一张图片，也可以贴上公开网页链接。老师会先审核，再决定是否放进展馆。</p>
+      <form class="recommend-form" id="recommendForm">
+        <label class="recommend-field">
+          <span>参考图片（可选）</span>
+          <span class="image-choice"><b>选择图片</b><em id="recommendFileName">JPG、PNG 或 WebP，不超过 1.5MB</em><input id="recommendImage" name="image" type="file" accept="image/jpeg,image/png,image/webp"></span>
+        </label>
+        <label class="recommend-field">
+          <span>原网页链接（可选）</span>
+          <input name="sourceUrl" type="url" inputmode="url" maxlength="800" placeholder="https://...">
+          <small>图片和链接至少提供一个；如果知道原作者或博物馆页面，优先放原始来源。</small>
+        </label>
+        <label class="recommend-field">
+          <span>为什么想推荐它？</span>
+          <textarea name="note" maxlength="240" required placeholder="比如：颜色很安静，我做阅读网站时想参考这种感觉。"></textarea>
+        </label>
+        <p class="recommend-privacy">这里不需要填写姓名、电话、学校或其他个人信息。推荐内容只有老师审核后才可能进入展馆。</p>
+        <p class="recommend-error" id="recommendError" role="alert"></p>
+        <div class="recommend-actions">
+          <button id="cancelContribution" type="button">先不提交</button>
+          <button class="primary-action" id="submitRecommendation" type="submit">交给老师看看</button>
+        </div>
+      </form>
+      <div class="recommend-success" id="recommendSuccess" hidden>
+        <strong>老师会先看一看</strong>
+        <p>合适、来源清楚并且适合孩子看的内容，才会放进展馆。</p>
+      </div>
+    </div>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">提示词已经复制</div>
+
+  <script src="/aesthetic/history-art-data.js?v=20260814-paper-annual-v4-cut-assets"></script>
+  <script>
+    const legacyStyles = [
+      {
+        name: "小物件拼贴",
+        english: "Trinket Design",
+        categories: ["手作", "复古"],
+        keywords: ["零碎小物", "纸张肌理", "收藏盒"],
+        description: "像把口袋里的小宝贝都摊在桌上：纽扣、丝带、贴纸、旧票根和闪闪的小饰品。东西很多，却因为颜色和大小有节奏，看起来像一本会讲故事的收藏册。",
+        uses: "手账、文创贴纸、礼物包装、生活主题海报",
+        prompt: "为[主题]创作一张小物件拼贴画：暖色旧纸背景，加入纽扣、丝带、贴纸、票根和微型收藏品，松散分层摆放，保留纸张纤维与轻微阴影，手工剪贴感，细节丰富但画面有呼吸感，不要文字和水印。",
+        x: "0%", y: "0%"
+      },
+      {
+        name: "多彩新浪潮",
+        english: "Colorful New Wave",
+        categories: ["艺术", "复古"],
+        keywords: ["高饱和撞色", "几何色块", "电影颗粒"],
+        description: "奶油黄、樱桃红和晴空蓝大胆撞在一起，像一张从旧电影院门口带回来的海报。简单的圆、三角和斜线，让画面既复古又有速度。",
+        uses: "电影海报、旅行主题、校园活动主视觉",
+        prompt: "为[主题]创作一张多彩新浪潮海报：奶油黄、樱桃红、晴空蓝，高饱和几何色块，大圆形与斜线构图，轻微胶片颗粒，1960年代电影海报气质，俏皮、简洁、有节奏，不要品牌标志和水印。",
+        x: "50%", y: "0%"
+      },
+      {
+        name: "泡泡金属嬉皮",
+        english: "Bubble Groovy 3D",
+        categories: ["未来", "酷感", "梦幻"],
+        keywords: ["果冻形状", "金属反光", "泡泡体积"],
+        description: "形状像被吹起来的软糖，也像闪亮的铝膜气球。银色、粉色和蓝色的表面会反光，圆鼓鼓的轮廓让未来感变得可爱。",
+        uses: "音乐节、游戏封面、饮品与潮流主题",
+        prompt: "为[主题]制作复古未来3D视觉：圆润膨胀的果冻形状，银色金属与珠光软胶材质，粉蓝天空色调，镜面高光，漂浮泡泡和星形元素，Y2K梦幻甜酷气质，不要可读文字、标志和水印。",
+        x: "100%", y: "0%"
+      },
+      {
+        name: "复古少女 Riso",
+        english: "Soft Retro Girly Riso",
+        categories: ["复古", "手作"],
+        keywords: ["双色套印", "颗粒网点", "甜酷小物"],
+        description: "像用两盒彩色油墨印出来的小画册。粉色和蓝色故意有一点点错位，花朵、杯子、蝴蝶结因此显得活泼又亲切。",
+        uses: "小报、明信片、社团招新、包装贴纸",
+        prompt: "为[主题]创作一张双色Riso印刷插画：荧光粉与湖蓝套色，轻微错版，粗糙纸张颗粒，花朵、杯子、蝴蝶结等日常小物，留白自然，复古印刷感，童趣但不过度幼稚，不要水印。",
+        x: "0%", y: "50%"
+      },
+      {
+        name: "现代穆夏花园",
+        english: "Modern Art Nouveau",
+        categories: ["艺术", "复古"],
+        keywords: ["植物曲线", "拱形边框", "玻璃色彩"],
+        description: "花茎和叶子沿着弯弯的线生长，围成一扇漂亮的拱门。它像彩色玻璃，又像一本古老童话书的封面，安静、细腻、很有秩序。",
+        uses: "书籍封面、花园主题、展览邀请函",
+        prompt: "为[主题]创作现代新艺术风插画：流动的植物曲线，装饰性拱门，花朵与叶片形成对称节奏，祖母绿、珊瑚粉和奶油色，彩色玻璃质感，细致优雅，不模仿具体艺术家，不要文字和水印。",
+        x: "50%", y: "50%"
+      },
+      {
+        name: "波普叙事插画",
+        english: "Narrative Pop Illustration",
+        categories: ["艺术", "复古"],
+        keywords: ["大块颜色", "日常故事", "70年代"],
+        description: "鲜艳的大色块像舞台布景，人物或动物正在做一件小事。你一眼就能猜到故事发生在哪里，也会想知道下一秒会怎样。",
+        uses: "故事海报、绘本、咖啡店与宠物主题",
+        prompt: "为[主题]创作一张70年代波普叙事插画：暖黄、橙红、深蓝和草绿，大块平涂色彩，清楚的日常场景，一个友好的动物角色正在行动，构图像故事的一帧，快乐、有叙事感，不要文字和水印。",
+        x: "100%", y: "50%"
+      },
+      {
+        name: "星光梦核",
+        english: "Sparkle Dreamcore",
+        categories: ["梦幻", "未来"],
+        keywords: ["细碎星芒", "蓝紫薄雾", "玻璃光"],
+        description: "像夜里做的一个亮晶晶的梦。花朵、露珠和小星星藏在蓝紫色薄雾里，边缘柔软，光点却特别清楚。",
+        uses: "音乐封面、梦境故事、香氛与夜空主题",
+        prompt: "为[主题]创作星光梦核画面：深蓝与紫色薄雾，夜间花园碎片，透明露珠、玻璃泡泡与细小星芒，柔焦边缘，局部清亮闪光，安静神秘的梦境气质，不要人物文字和水印。",
+        x: "0%", y: "100%"
+      },
+      {
+        name: "俏皮花体线条",
+        english: "Whimsical Swash",
+        categories: ["艺术", "手作", "酷感"],
+        keywords: ["卷曲线条", "大小跳跃", "纸品拼搭"],
+        description: "线条像在纸上跳舞：一会儿转圈，一会儿拉长，再从彩色图形中穿过去。即使没有写出一个字，也能感到轻快的节奏。",
+        uses: "卡片、标题装饰、手账、创意海报",
+        prompt: "为[主题]创作俏皮花体线条视觉：黑色卷曲细线与夸张回旋，搭配粉、蓝、黄几何纸片和少量金色线材，大小错落，像手工文具拼贴，轻快有节奏，严格不要可读字母、文字和水印。",
+        x: "50%", y: "100%"
+      },
+      {
+        name: "复古蝴蝶结",
+        english: "Retro Coquette",
+        categories: ["复古", "梦幻"],
+        keywords: ["珍珠蝴蝶结", "奶油粉", "蕾丝细节"],
+        description: "珍珠、缎带和蕾丝把画面变成一只精致的首饰盒。柔软的粉色并不单调，亮面、织物和金属让每个小地方都有不同触感。",
+        uses: "饰品包装、房间灵感、甜品与邀请卡",
+        prompt: "为[主题]创作复古Coquette拼贴：奶油粉背景，珍珠、缎带蝴蝶结、蕾丝和复古镜子，柔软织物与细小金属高光，精致但留有呼吸感，像一只旧首饰盒，不要品牌、文字和水印。",
+        x: "100%", y: "100%"
+      }
+    ];
+
+
+
+    const styles = window.TODO_HISTORY_ARTWORKS || [
+      {
+        name: "文艺复兴",
+        english: "Renaissance",
+        categories: ["西方古典"],
+        work: "《蒙娜丽莎》",
+        artist: "列奥纳多·达·芬奇 · 约 1503–1506",
+        period: "欧洲文艺复兴",
+        image: "/aesthetic/assets/references/history-art/mona-lisa.jpg",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Mona_Lisa,_by_Leonardo_da_Vinci,_from_C2RMF_retouched.jpg",
+        credit: "原作藏于卢浮宫 · 公共领域数字图",
+        keywords: ["稳定三角构图", "柔和明暗", "远景空气感"],
+        description: "人物安静地坐在画面中心，手、肩膀和头部形成稳定的三角形。脸部边缘没有生硬轮廓，明暗像烟雾一样慢慢过渡，远处的山水让人物显得更真实。",
+        uses: "人物介绍页、沉静的品牌肖像、需要稳定感的封面",
+        prompt: "为[主题]创作一幅文艺复兴肖像构图：人物位于稳定三角构图中心，柔和的明暗渐变，克制的棕绿与土色，背景有淡远山水和空气透视，表情含蓄，画面安静而有重量；参考历史时期特征，不复制具体名画。",
+        focus: "50% 28%"
+      },
+      {
+        name: "印象派",
+        english: "Impressionism",
+        categories: ["现代艺术"],
+        work: "《睡莲》",
+        artist: "克劳德·莫奈 · 1906",
+        period: "19 世纪末法国",
+        image: "/aesthetic/assets/references/history-art/monet-water-lilies.jpg",
+        sourceUrl: "https://www.artic.edu/artworks/16568/water-lilies",
+        credit: "芝加哥艺术博物馆 · CC0",
+        keywords: ["光色变化", "短小笔触", "水面反射"],
+        description: "画面不急着把每一片叶子画清楚，而是先抓住阳光、水面和倒影在某一刻的颜色。近看是许多自由笔触，退远后才合成一池正在呼吸的水。",
+        uses: "自然主题网站、柔和海报、季节与情绪插画",
+        prompt: "为[主题]创作一幅印象派自然画面：短小可见笔触，蓝绿、淡紫与粉色并置，表现水面反射和瞬间光线，不勾硬轮廓，让颜色在远看时自然融合；保留空气与时间感，不复制原作构图。",
+        focus: "50% 50%"
+      },
+      {
+        name: "后印象派",
+        english: "Post-Impressionism",
+        categories: ["现代艺术"],
+        work: "《卧室》",
+        artist: "文森特·梵高 · 1889",
+        period: "19 世纪末欧洲",
+        image: "/aesthetic/assets/references/history-art/van-gogh-bedroom.jpg",
+        sourceUrl: "https://www.artic.edu/artworks/28560/the-bedroom",
+        credit: "芝加哥艺术博物馆 · CC0",
+        keywords: ["强烈色彩", "可见笔触", "主观空间"],
+        description: "房间里的线条并不完全符合真实透视，颜色也比生活更浓。正因为画家把自己的感受放进空间，普通的床、椅子和墙壁才有了紧张又亲切的情绪。",
+        uses: "个人空间、故事插画、带情绪的作品介绍页",
+        prompt: "为[主题]创作一幅后印象派室内画面：简化而略带倾斜的透视，清楚轮廓，可见的方向性笔触，蓝黄橙互补色，大胆但仍保留生活物件；用色彩表达情绪，不复制具体房间。",
+        focus: "50% 52%"
+      },
+      {
+        name: "浮世绘",
+        english: "Ukiyo-e",
+        categories: ["东方美学"],
+        work: "《神奈川冲浪里》",
+        artist: "葛饰北斋 · 约 1830–1832",
+        period: "日本江户时代",
+        image: "/aesthetic/assets/references/history-art/great-wave.jpg",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:The_Great_Wave_off_Kanagawa_LACMA_M.81.91.2_(1_of_2).jpg",
+        credit: "LACMA 数字图 · 公共领域",
+        keywords: ["平涂色块", "弧线节奏", "大小对比"],
+        description: "巨浪的弧线像爪子一样向前翻卷，小船和远处的富士山让浪显得更巨大。有限的蓝、米白和灰色形成强烈节奏，画面既平面又充满运动。",
+        uses: "运动主题海报、图案包装、需要强动作感的首页",
+        prompt: "为[主题]创作浮世绘木版画视觉：清楚弧线，平涂靛蓝、米白与浅灰，用巨大前景和微小远景形成尺度对比，保留纸张与套色印刷质感，动作有节奏；不复制原作中的浪和富士山组合。",
+        focus: "50% 45%"
+      },
+      {
+        name: "新艺术运动",
+        english: "Art Nouveau",
+        categories: ["现代艺术"],
+        work: "《舞蹈》",
+        artist: "阿尔丰斯·穆夏 · 1898",
+        period: "19 世纪末欧洲",
+        image: "/aesthetic/assets/references/history-art/mucha-dance.jpg",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Alfons_Mucha_-_1898_-_Dance.jpg",
+        credit: "公共领域石版画数字图",
+        keywords: ["植物曲线", "装饰边框", "人物与花纹"],
+        description: "头发、布料和花枝都沿着柔软曲线生长，人物像被植物和圆形边框包围。装饰很多，却因为曲线方向一致而不显得混乱。",
+        uses: "书籍封面、花园与节日海报、精致包装",
+        prompt: "为[主题]创作新艺术运动海报：流动植物曲线，圆拱装饰框，人物或主体与花叶纹样连成一体，奶油、橄榄绿与柔和暖色，石版印刷肌理，细节丰富但层级清楚；不要复制具体人物。",
+        focus: "50% 28%"
+      },
+      {
+        name: "北宋山水",
+        english: "Northern Song Landscape",
+        categories: ["东方美学"],
+        work: "《溪山行旅图》",
+        artist: "范宽 · 约 1000",
+        period: "中国北宋",
+        image: "/aesthetic/assets/references/history-art/fan-kuan.jpg",
+        sourceUrl: "https://commons.wikimedia.org/wiki/File:Fan_Kuan_-_Travelers_Among_Mountains_and_Streams_-_Google_Art_Project.jpg",
+        credit: "原作藏于台北故宫博物院 · 公共领域数字图",
+        keywords: ["高远构图", "墨色层次", "人小山大"],
+        description: "高大的山峰占据大部分画面，行旅和建筑很小，人因此显得只是自然中的一部分。墨色由近到远逐渐变化，石头、树林和水路一层层把视线带进山里。",
+        uses: "东方文化页面、自然主题长图、安静而有尺度的封面",
+        prompt: "为[主题]创作北宋山水式竖幅画面：高远构图，巨大主峰与微小人物形成尺度对比，浓淡墨色层层推进，岩石与树木有细密皴擦，远处留雾与空白，庄重安静；不复制具体山形。",
+        focus: "50% 34%"
+      }
+    ];
+
+    const legacyProjectReferences = [
+      {
+        id: "web",
+        label: "我要做网站",
+        intro: "先看三个差异很大的真实网站：产品型、服务型和创作工具型。不要照抄，先选你想参考的表达方式。",
+        cases: [
+          {
+            title: "iPhone",
+            organization: "Apple",
+            image: "/aesthetic/assets/references/web-apple.jpg",
+            sourceUrl: "https://www.apple.com/iphone/",
+            sourceType: "品牌官网",
+            bestFor: "适合参考：产品官网、发布页",
+            observe: "最值得看：一张产品大图和一句标题，怎样把注意力牢牢锁住。",
+            tags: ["产品大图", "留白节奏", "单一重点"],
+            similarQuery: "premium product landing page visual storytelling"
+          },
+          {
+            title: "Financial Infrastructure",
+            organization: "Stripe",
+            image: "/aesthetic/assets/references/web-stripe.png",
+            sourceUrl: "https://stripe.com/",
+            sourceType: "品牌官网",
+            bestFor: "适合参考：科技服务、SaaS 网站",
+            observe: "最值得看：抽象服务怎样用渐变、数据和界面画面变得可见。",
+            tags: ["渐变系统", "数据表达", "科技服务"],
+            similarQuery: "SaaS fintech landing page data visualization"
+          },
+          {
+            title: "Collaborative Canvas",
+            organization: "Figma",
+            image: "/aesthetic/assets/references/web-figma.png",
+            sourceUrl: "https://www.figma.com/",
+            sourceType: "品牌官网",
+            bestFor: "适合参考：创作工具、学习平台",
+            observe: "最值得看：复杂功能如何变成一组能马上看懂的真实使用画面。",
+            tags: ["工具界面", "功能演示", "社区内容"],
+            similarQuery: "creative tool website feature showcase"
+          }
+        ],
+        sources: [
+          { label: "Awwwards · 看视觉网站", url: "https://www.awwwards.com/" },
+          { label: "Figma Community · 看模板", url: "https://www.figma.com/community" },
+          { label: "Apple · 看产品页面", url: "https://www.apple.com/iphone/" }
+        ],
+        queries: [
+          "children AI education website",
+          "creative learning platform landing page",
+          "student project portfolio website"
+        ]
+      },
+      {
+        id: "poster",
+        label: "我要做海报 / 图片",
+        intro: "先看真实海报怎样用一个明确概念抓住眼睛。下面三张分别代表系列科学、单一主题和自然公益，并已通过儿童适龄检查。",
+        cases: [
+          {
+            title: "德加展览海报",
+            organization: "选择稿切图",
+            image: "/aesthetic/assets/paper-annual-v3/reference-poster.png",
+            sourceUrl: "/aesthetic/assets/paper-annual-v3/selected-design.png",
+            sourceLabel: "查看设计原图",
+            sourceType: "展览海报",
+            bestFor: "适合参考：艺术展览、人物主题海报",
+            observe: "最值得看：大字号标题与单一人物怎样建立清楚的视觉中心。",
+            tags: ["展览标题", "人物中心", "复古印刷"],
+            similarQuery: "德加 展览 海报 设计",
+            safetyStatus: "approved",
+            safetyNote: "科学旅行主题，无危险模仿与成人内容",
+            reviewedAt: "2026-08-09"
+          },
+          {
+            title: "Mars Travel Poster",
+            organization: "NASA / JPL-Caltech",
+            image: "/aesthetic/assets/references/poster-mars.jpg",
+            sourceUrl: "https://www.jpl.nasa.gov/images/mars-jpl-travel-poster/",
+            sourceType: "开放海报",
+            bestFor: "适合参考：活动主视觉、主题海报",
+            observe: "最值得看：只选一个最有代表性的场景，就能让主题立刻成立。",
+            tags: ["单一概念", "大色块", "画面中心"],
+            similarQuery: "single concept event poster bold color",
+            safetyStatus: "approved",
+            safetyNote: "太空科学主题，无危险模仿与成人内容",
+            reviewedAt: "2026-08-09"
+          },
+          {
+            title: "The National Parks Preserve Wild Life",
+            organization: "J. Hirt · Library of Congress / WPA",
+            image: "/aesthetic/assets/references/poster-national-parks.jpg",
+            sourceUrl: "https://www.loc.gov/pictures/item/98518597/",
+            sourceType: "开放馆藏",
+            bestFor: "适合参考：自然、动物、公益主题",
+            observe: "最值得看：两只动物、大片天空和有限色彩，怎样把自然保护讲得直接又有力量。",
+            tags: ["动物剪影", "有限色彩", "自然公益"],
+            similarQuery: "children safe nature conservation poster graphic design",
+            safetyStatus: "approved",
+            safetyNote: "自然保护与动物主题，无危险模仿与成人内容",
+            reviewedAt: "2026-08-09"
+          }
+        ],
+        sources: [
+          { label: "NASA/JPL · 看开放海报", url: "https://www.jpl.nasa.gov/galleries/visions-of-the-future/" },
+          { label: "Library of Congress · 看 WPA 海报", url: "https://www.loc.gov/free-to-use/wpa-posters/" },
+          { label: "Cooper Hewitt · 看设计馆藏", url: "https://collection.cooperhewitt.org/" }
+        ],
+        queries: [
+          "儿童自然保护主题海报",
+          "校园科学活动海报",
+          "博物馆儿童展览海报"
+        ]
+      },
+      {
+        id: "product",
+        label: "我要想一个产品",
+        intro: "产品参考不能只看外形，还要看真实按键、材料、尺寸和使用方式。下面三个案例从电子产品、手机与积木结构切入。",
+        cases: [
+          {
+            title: "艺术家系列马克杯",
+            organization: "选择稿切图",
+            image: "/aesthetic/assets/paper-annual-v3/reference-product.png",
+            sourceUrl: "/aesthetic/assets/paper-annual-v3/selected-design.png",
+            sourceLabel: "查看设计原图",
+            sourceType: "文创产品",
+            bestFor: "适合参考：艺术衍生品、日常文创",
+            observe: "最值得看：原作图像怎样沿着杯身展开，并和产品轮廓融为一体。",
+            tags: ["艺术衍生", "图像环绕", "日常器物"],
+            similarQuery: "艺术博物馆 文创 马克杯 设计"
+          },
+          {
+            title: "iPhone Materials",
+            organization: "Apple",
+            image: "/aesthetic/assets/references/product-iphone.jpg",
+            sourceUrl: "https://www.apple.com/iphone/",
+            sourceType: "品牌官网",
+            bestFor: "适合参考：消费电子、产品摄影",
+            observe: "最值得看：轮廓、材料与局部特写怎样一起说明产品的精度。",
+            tags: ["材料特写", "精密轮廓", "产品摄影"],
+            similarQuery: "consumer electronics material detail product design"
+          },
+          {
+            title: "Orange Cat 21376",
+            organization: "LEGO Ideas",
+            image: "/aesthetic/assets/references/product-lego.png",
+            sourceUrl: "https://www.lego.com/en-us/product/orange-cat-21376",
+            sourceType: "品牌官网",
+            bestFor: "适合参考：模块玩具、情感化产品",
+            observe: "最值得看：标准积木怎样通过组合、关节和颜色变成一只可辨认的猫。",
+            tags: ["模块结构", "情感造型", "可动关节"],
+            similarQuery: "modular toy product design animal form"
+          }
+        ],
+        sources: [
+          { label: "iF Design · 看获奖产品", url: "https://ifdesign.com/en/winner-ranking/winner-overview" },
+          { label: "Red Dot · 看产品分类", url: "https://www.red-dot.org/" },
+          { label: "LEGO Ideas · 看模块创意", url: "https://www.lego.com/en-us/themes/ideas" }
+        ],
+        queries: [
+          "children creative tool industrial design",
+          "educational hardware product design",
+          "modular toy product concept"
+        ]
+      }
+    ];
+
+    const projectReferences = [
+      {
+        id: "web",
+        label: "我要做网站",
+        intro: "先按网站要完成的事情来找竞品。下面六张分别是搜索、电商、视频、知识、在线工具和品牌产品官网，都是国内可直接打开的真实站点。",
+        cases: [
+          {
+            title: "梵高美术馆官网",
+            organization: "选择稿切图",
+            image: "/aesthetic/assets/paper-annual-v3/reference-website.png",
+            sourceUrl: "/aesthetic/assets/paper-annual-v3/selected-design.png",
+            sourceLabel: "查看设计原图",
+            sourceType: "美术馆官网",
+            bestFor: "适合参考：艺术教育、作品展览网站",
+            observe: "最值得看：名作、人物与深色信息区怎样共同形成展览叙事。",
+            tags: ["名作叙事", "深色信息区", "展览入口"],
+            similarQuery: "美术馆 官网 艺术教育 页面设计"
+          },
+          {
+            title: "淘宝",
+            organization: "Taobao",
+            image: "/aesthetic/assets/references/domestic-web/taobao.png",
+            sourceUrl: "https://www.taobao.com/",
+            sourceType: "电商 / 商品平台",
+            bestFor: "适合参考：商品商城、积分商店",
+            observe: "最值得看：分类、搜索、活动和商品卡怎样在高密度页面里分层。",
+            tags: ["分类导航", "商品卡片", "促销层级"],
+            similarQuery: "国内 电商网站 首页 信息架构"
+          },
+          {
+            title: "哔哩哔哩",
+            organization: "bilibili",
+            image: "/aesthetic/assets/references/domestic-web/bilibili.png",
+            sourceUrl: "https://www.bilibili.com/",
+            sourceType: "视频 / 内容社区",
+            bestFor: "适合参考：视频站、作品社区",
+            observe: "最值得看：封面、分区、标题和播放数据怎样帮助人快速挑内容。",
+            tags: ["内容封面", "频道分区", "推荐密度"],
+            similarQuery: "国内 视频社区 网站 首页 设计"
+          },
+          {
+            title: "百度百科",
+            organization: "Baidu Baike",
+            image: "/aesthetic/assets/references/domestic-web/baike.png",
+            sourceUrl: "https://baike.baidu.com/",
+            sourceType: "知识 / 百科",
+            bestFor: "适合参考：知识库、课程资料站",
+            observe: "最值得看：搜索、词条分类和知识内容怎样从入口逐步展开。",
+            tags: ["知识入口", "词条结构", "内容层级"],
+            similarQuery: "中文 知识库 网站 页面 设计"
+          },
+          {
+            title: "腾讯文档",
+            organization: "Tencent Docs",
+            image: "/aesthetic/assets/references/domestic-web/tencent-docs.png",
+            sourceUrl: "https://docs.qq.com/",
+            sourceType: "在线工具 / 协作",
+            bestFor: "适合参考：AI 工具、学习工具",
+            observe: "最值得看：一句价值说明、一个产品画面和一个开始按钮怎样讲清工具。",
+            tags: ["工具价值", "立即开始", "产品演示"],
+            similarQuery: "国内 在线工具 官网 产品介绍页"
+          },
+          {
+            title: "华为消费者业务",
+            organization: "HUAWEI",
+            image: "/aesthetic/assets/references/domestic-web/huawei.png",
+            sourceUrl: "https://consumer.huawei.com/cn/",
+            sourceType: "品牌 / 产品官网",
+            bestFor: "适合参考：产品发布、品牌首页",
+            observe: "最值得看：导航、全宽主视觉和一条核心信息怎样组成产品舞台。",
+            tags: ["产品主视觉", "系列导航", "品牌秩序"],
+            similarQuery: "国内 科技品牌 产品官网 首页"
+          }
+        ],
+        sources: [
+          { label: "站酷 · 看国内设计案例", url: "https://www.zcool.com.cn/" },
+          { label: "花瓣 · 找中文视觉参考", url: "https://huaban.com/" },
+          { label: "UI中国 · 看界面作品", url: "https://www.ui.cn/" }
+        ],
+        queries: [
+          "儿童教育网站首页设计",
+          "学生作品展示网站",
+          "AI 学习工具产品官网"
+        ]
+      },
+      legacyProjectReferences[1],
+      legacyProjectReferences[2]
+    ];
+
+    const filterNames = ["全部", "古典与浪漫", "印象派", "后印象与现代", "东方艺术", "版画与装饰", "风景与日常"];
+    const ART_BATCH_SIZE = 24;
+    const grid = document.querySelector("#styleGrid");
+    const filters = document.querySelector("#filters");
+    const historyCount = document.querySelector("#historyCount");
+    const artProgress = document.querySelector("#artProgress");
+    const artLoadSentinel = document.querySelector("#artLoadSentinel");
+    const participationPanel = document.querySelector("#participationPanel");
+    const participationStatus = document.querySelector("#participationStatus");
+    const openRecommendationButton = document.querySelector("#openRecommendation");
+    const remindTeacherButton = document.querySelector("#remindTeacher");
+    const contributionDialog = document.querySelector("#contributionDialog");
+    const closeContributionButton = document.querySelector("#closeContribution");
+    const cancelContributionButton = document.querySelector("#cancelContribution");
+    const recommendForm = document.querySelector("#recommendForm");
+    const recommendImage = document.querySelector("#recommendImage");
+    const recommendFileName = document.querySelector("#recommendFileName");
+    const recommendError = document.querySelector("#recommendError");
+    const recommendSuccess = document.querySelector("#recommendSuccess");
+    const submitRecommendationButton = document.querySelector("#submitRecommendation");
+    const dialog = document.querySelector("#styleDialog");
+    const closeDialogButton = document.querySelector("#closeDialog");
+    const copyButton = document.querySelector("#copyPrompt");
+    const toast = document.querySelector("#toast");
+    const projectSelector = document.querySelector("#projectSelector");
+    const referenceIntro = document.querySelector("#referenceIntro");
+    const referenceCount = document.querySelector("#referenceCount");
+    const referenceGrid = document.querySelector("#referenceGrid");
+    const sourceLinks = document.querySelector("#sourceLinks");
+    const queryChips = document.querySelector("#queryChips");
+    let activeFilter = "全部";
+    let visibleArtLimit = ART_BATCH_SIZE;
+    let activeIndex = 0;
+    let activeProjectType = 0;
+    let toastTimer;
+    let dialogScrollY = 0;
+    let dialogTrigger = null;
+    let isLoadingArtBatch = false;
+    let artObserver = null;
+    let fallbackArtScrollAttached = false;
+    let artRenderGeneration = 0;
+    let contributionScrollY = 0;
+    let participationBusy = false;
+
+    function getAnonymousClientToken() {
+      const storageKey = "tudu-aesthetic-anonymous-client";
+      try {
+        const existing = localStorage.getItem(storageKey);
+        if (existing) return existing;
+        const token = crypto.randomUUID();
+        localStorage.setItem(storageKey, token);
+        return token;
+      } catch {
+        if (!window.__tuduAestheticClientToken) window.__tuduAestheticClientToken = crypto.randomUUID();
+        return window.__tuduAestheticClientToken;
+      }
+    }
+
+    async function submitAestheticParticipation(payload) {
+      const response = await fetch("/api/aesthetic", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...payload, clientToken: getAnonymousClientToken() }),
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(result.error || "现在还没送到老师那里，请稍后再试");
+      return result;
+    }
+
+    function fileAsDataUrl(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => resolve(String(reader.result || "")), { once: true });
+        reader.addEventListener("error", () => reject(new Error("图片读取失败，请重新选择")), { once: true });
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function renderFilters() {
+      filters.innerHTML = filterNames.map(name => {
+        const count = name === "全部" ? styles.length : styles.filter(style => style.categories.includes(name)).length;
+        return `<button class="filter-button" type="button" data-filter="${name}" aria-pressed="${name === activeFilter}">${name} · ${count}</button>`;
+      }).join("");
+    }
+
+    function renderReferences() {
+      const project = projectReferences[activeProjectType];
+      projectSelector.innerHTML = projectReferences.map((item, index) => `
+        <button class="project-choice" type="button" data-project-type="${index}" aria-pressed="${index === activeProjectType}">${item.label}</button>
+      `).join("");
+      referenceIntro.textContent = project.intro;
+      referenceCount.textContent = `${String(project.cases.length).padStart(2, "0")} REAL CASES / ${project.id.toUpperCase()}`;
+      referenceGrid.innerHTML = project.cases.map((item, index) => `
+        <article class="reference-card ${project.id === "web" ? "website-type" : ""}">
+          <div class="reference-image" data-fallback="${item.organization}">
+            <img src="${item.image}" alt="${item.title}，来自${item.organization}的真实案例" loading="${index === 0 ? "eager" : "lazy"}">
+          </div>
+          <div class="reference-body">
+            <div class="reference-source"><span>${item.sourceType}</span><span>${item.organization}</span></div>
+            <h3>${item.title}</h3>
+            <p class="reference-best">${item.bestFor}</p>
+            <p class="reference-observe">${item.observe}</p>
+            <div class="reference-tags">${item.tags.map(tag => `<span>${tag}</span>`).join("")}</div>
+            <div class="reference-actions">
+              <a href="${item.sourceUrl}" target="_blank" rel="noreferrer">${item.sourceLabel || (project.id === "web" ? "打开官网" : "官方原页")} ↗</a>
+              <a href="https://www.bing.com/images/search?q=${encodeURIComponent(item.similarQuery)}" target="_blank" rel="noreferrer">${project.id === "web" ? "找同类型" : "找相似案例"} ↗</a>
+            </div>
+          </div>
+        </article>
+      `).join("");
+      sourceLinks.innerHTML = project.sources.map(item => `
+        <a class="source-link" href="${item.url}" target="_blank" rel="noreferrer">${item.label} ↗</a>
+      `).join("");
+      queryChips.innerHTML = project.queries.map(query => `
+        <button class="query-chip" type="button" data-query="${query}" aria-label="复制搜索词：${query}">${query} · 复制</button>
+      `).join("");
+      referenceGrid.querySelectorAll("img").forEach(image => {
+        image.addEventListener("error", () => image.classList.add("image-error"), { once: true });
+      });
+    }
+
+    function getFilteredStyles() {
+      return styles.map((style, index) => ({ style, index }))
+        .filter(({ style }) => activeFilter === "全部" || style.categories.includes(activeFilter));
+    }
+
+    function artCardMarkup({ style, index }) {
+      return `
+        <button class="style-card" type="button" data-index="${index}" aria-label="查看${style.work}详情">
+          <img class="card-art" src="${style.image}" alt="${style.work}，${style.artist}" loading="lazy" decoding="async" style="--art-focus:${style.focus}">
+          <div class="card-meta">
+            <span class="card-number">${String(style.number || index + 1).padStart(3, "0")}</span>
+            <div>
+              <h3 class="card-title">${style.work}</h3>
+              <p class="card-en">${style.name} · ${style.english}</p>
+              <p class="card-work">${style.artist}</p>
+              <div class="card-keywords">${style.keywords.map(word => `<span>${word}</span>`).join("")}</div>
+            </div>
+            <span class="card-arrow" aria-hidden="true">↗</span>
+          </div>
+        </button>
+      `;
+    }
+
+    function updateArtProgress(visibleCount, totalCount) {
+      const isComplete = visibleCount >= totalCount;
+      artLoadSentinel.classList.toggle("is-loading", isLoadingArtBatch);
+      artLoadSentinel.hidden = isComplete && !isLoadingArtBatch;
+      participationPanel.hidden = !(isComplete && !isLoadingArtBatch && activeFilter === "全部");
+      if (isLoadingArtBatch) {
+        artProgress.textContent = `正在展开下一组作品 · ${visibleCount} / ${totalCount}`;
+      } else if (isComplete) {
+        artProgress.textContent = "";
+      } else {
+        artProgress.textContent = `已展示 ${visibleCount} / ${totalCount} · 继续向下浏览`;
+      }
+    }
+
+    function handleFallbackArtScroll() {
+      if (artLoadSentinel.getBoundingClientRect().top <= window.innerHeight + 720) {
+        void loadNextArtBatch();
+      }
+    }
+
+    function syncArtAutoLoader(hasMore) {
+      if ("IntersectionObserver" in window) {
+        if (!artObserver) {
+          artObserver = new IntersectionObserver(entries => {
+            if (entries.some(entry => entry.isIntersecting)) void loadNextArtBatch();
+          }, { root: null, rootMargin: "0px 0px 720px 0px", threshold: 0 });
+        }
+        if (hasMore) artObserver.observe(artLoadSentinel);
+        else artObserver.unobserve(artLoadSentinel);
+        return;
+      }
+
+      if (hasMore && !fallbackArtScrollAttached) {
+        window.addEventListener("scroll", handleFallbackArtScroll, { passive: true });
+        fallbackArtScrollAttached = true;
+        handleFallbackArtScroll();
+      } else if (!hasMore && fallbackArtScrollAttached) {
+        window.removeEventListener("scroll", handleFallbackArtScroll);
+        fallbackArtScrollAttached = false;
+      }
+    }
+
+    function bindArtImageFallbacks() {
+      grid.querySelectorAll("img:not([data-error-bound])").forEach(image => {
+        image.dataset.errorBound = "true";
+        image.addEventListener("error", () => image.classList.add("image-error"), { once: true });
+      });
+    }
+
+    function renderGrid({ reset = true } = {}) {
+      const filtered = getFilteredStyles();
+      const visible = filtered.slice(0, visibleArtLimit);
+      const renderedCount = reset ? 0 : grid.querySelectorAll(".style-card").length;
+      if (reset) grid.innerHTML = "";
+      grid.insertAdjacentHTML("beforeend", visible.slice(renderedCount).map(artCardMarkup).join(""));
+      bindArtImageFallbacks();
+      historyCount.textContent = `历史艺术实例 · ${String(styles.length).padStart(3, "0")}`;
+      updateArtProgress(visible.length, filtered.length);
+      syncArtAutoLoader(visible.length < filtered.length);
+    }
+
+    async function loadNextArtBatch() {
+      const filtered = getFilteredStyles();
+      const visibleCount = Math.min(visibleArtLimit, filtered.length);
+      if (isLoadingArtBatch || visibleCount >= filtered.length) return;
+
+      const generation = artRenderGeneration;
+      isLoadingArtBatch = true;
+      grid.setAttribute("aria-busy", "true");
+      updateArtProgress(visibleCount, filtered.length);
+      await new Promise(resolve => requestAnimationFrame(resolve));
+
+      if (generation !== artRenderGeneration) {
+        isLoadingArtBatch = false;
+        grid.setAttribute("aria-busy", "false");
+        return;
+      }
+
+      visibleArtLimit = Math.min(visibleArtLimit + ART_BATCH_SIZE, filtered.length);
+      renderGrid({ reset: false });
+      isLoadingArtBatch = false;
+      grid.setAttribute("aria-busy", "false");
+      const currentFiltered = getFilteredStyles();
+      const currentVisibleCount = Math.min(visibleArtLimit, currentFiltered.length);
+      updateArtProgress(currentVisibleCount, currentFiltered.length);
+      syncArtAutoLoader(currentVisibleCount < currentFiltered.length);
+    }
+
+    function openStyle(index) {
+      const isOpening = !dialog.open;
+      if (isOpening) {
+        dialogScrollY = window.scrollY;
+        dialogTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+      }
+      activeIndex = (index + styles.length) % styles.length;
+      const style = styles[activeIndex];
+      dialog.querySelector(".dialog-layout").scrollTop = 0;
+      document.querySelector("#dialogKicker").textContent = `ART ${String(activeIndex + 1).padStart(3, "0")} / ${String(styles.length).padStart(3, "0")} · ${style.period}`;
+      document.querySelector("#dialogTitle").textContent = style.work;
+      document.querySelector("#dialogEnglish").textContent = `${style.name} · ${style.english}`;
+      document.querySelector("#dialogWork").textContent = style.sourceTitle || style.period;
+      document.querySelector("#dialogArtist").textContent = `${style.artist} · ${style.credit}`;
+      document.querySelector("#dialogDescription").textContent = style.description;
+      document.querySelector("#dialogUses").textContent = style.uses;
+      document.querySelector("#dialogPrompt").textContent = style.prompt;
+      document.querySelector("#dialogTags").innerHTML = style.keywords.map(word => `<span>${word}</span>`).join("");
+      document.querySelector("#dialogSource").href = style.sourceUrl;
+      const dialogArt = document.querySelector("#dialogArt");
+      dialogArt.classList.remove("image-failed");
+      dialogArt.style.setProperty("--art-image", `url("${style.image}")`);
+      dialogArt.setAttribute("aria-label", `${style.work}，${style.artist}`);
+      const artProbe = new Image();
+      artProbe.addEventListener("error", () => dialogArt.classList.add("image-failed"), { once: true });
+      artProbe.src = style.image;
+      copyButton.textContent = "复制提示词";
+
+      if (isOpening) dialog.showModal();
+      closeDialogButton.focus({ preventScroll: true });
+      if (isOpening) requestAnimationFrame(restoreDialogScroll);
+    }
+
+    function closeStyle() {
+      if (dialog.open) dialog.close();
+    }
+
+    function restoreDialogScroll() {
+      const previousBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, dialogScrollY);
+      requestAnimationFrame(() => {
+        document.documentElement.style.scrollBehavior = previousBehavior;
+      });
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2000);
+    }
+
+    async function copyText(text) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch (error) {
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.position = "fixed";
+        textarea.style.opacity = "0";
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        textarea.remove();
+      }
+    }
+
+    async function copyPrompt() {
+      await copyText(styles[activeIndex].prompt);
+      copyButton.textContent = "已经复制 ✓";
+      showToast("提示词已经复制");
+      setTimeout(() => { copyButton.textContent = "复制提示词"; }, 2000);
+    }
+
+    function openContribution() {
+      contributionScrollY = window.scrollY;
+      recommendError.textContent = "";
+      recommendSuccess.hidden = true;
+      recommendForm.hidden = false;
+      contributionDialog.showModal();
+      contributionDialog.querySelector("input, textarea")?.focus({ preventScroll: true });
+    }
+
+    function closeContribution() {
+      if (contributionDialog.open) contributionDialog.close();
+    }
+
+    async function remindTeacher() {
+      if (participationBusy) return;
+      participationBusy = true;
+      participationStatus.textContent = "";
+      remindTeacherButton.disabled = true;
+      remindTeacherButton.textContent = "正在告诉老师…";
+      try {
+        await submitAestheticParticipation({ kind: "remind" });
+        remindTeacherButton.textContent = "已经提醒老师啦";
+        participationStatus.textContent = "老师能在后台看到这次催更。";
+      } catch (error) {
+        remindTeacherButton.disabled = false;
+        remindTeacherButton.textContent = "催老师上新";
+        participationStatus.textContent = error.message;
+      } finally {
+        participationBusy = false;
+      }
+    }
+
+    async function submitRecommendation(event) {
+      event.preventDefault();
+      if (participationBusy) return;
+      const values = new FormData(recommendForm);
+      const sourceUrl = String(values.get("sourceUrl") || "").trim();
+      const note = String(values.get("note") || "").trim();
+      const file = recommendImage.files?.[0] || null;
+      recommendError.textContent = "";
+      if (!file && !sourceUrl) {
+        recommendError.textContent = "请上传一张图片，或填写一个公开网页链接。";
+        return;
+      }
+      if (file && !["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
+        recommendError.textContent = "图片只支持 JPG、PNG 或 WebP。";
+        return;
+      }
+      if (file && file.size > 1572864) {
+        recommendError.textContent = "图片不能超过 1.5MB。";
+        return;
+      }
+      participationBusy = true;
+      submitRecommendationButton.disabled = true;
+      cancelContributionButton.disabled = true;
+      submitRecommendationButton.textContent = "正在交给老师…";
+      try {
+        const image = file ? { type: file.type, name: file.name, dataUrl: await fileAsDataUrl(file) } : null;
+        await submitAestheticParticipation({ kind: "reference", note, sourceUrl, image });
+        recommendForm.hidden = true;
+        recommendSuccess.hidden = false;
+        participationStatus.textContent = "推荐已经进入老师的待审核列表。";
+      } catch (error) {
+        recommendError.textContent = error.message;
+      } finally {
+        participationBusy = false;
+        submitRecommendationButton.disabled = false;
+        cancelContributionButton.disabled = false;
+        submitRecommendationButton.textContent = "交给老师看看";
+      }
+    }
+
+    filters.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      artRenderGeneration += 1;
+      isLoadingArtBatch = false;
+      activeFilter = button.dataset.filter;
+      visibleArtLimit = ART_BATCH_SIZE;
+      grid.setAttribute("aria-busy", "false");
+      renderFilters();
+      renderGrid();
+    });
+
+    projectSelector.addEventListener("click", (event) => {
+      const button = event.target.closest("[data-project-type]");
+      if (!button) return;
+      activeProjectType = Number(button.dataset.projectType);
+      renderReferences();
+    });
+
+    queryChips.addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-query]");
+      if (!button) return;
+      const originalText = button.textContent;
+      await copyText(button.dataset.query);
+      button.textContent = "搜索词已经复制 ✓";
+      showToast("搜索词已经复制");
+      setTimeout(() => { button.textContent = originalText; }, 2000);
+    });
+
+    document.querySelector("#siteFooter").addEventListener("click", (event) => {
+      const link = event.target.closest("[data-footer-project]");
+      if (!link) return;
+      activeProjectType = Number(link.dataset.footerProject);
+      renderReferences();
+    });
+
+    grid.addEventListener("click", (event) => {
+      const card = event.target.closest("[data-index]");
+      if (card) openStyle(Number(card.dataset.index));
+    });
+
+    document.querySelector("#randomButton").addEventListener("click", () => {
+      let next = activeIndex;
+      while (next === activeIndex) next = Math.floor(Math.random() * styles.length);
+      openStyle(next);
+    });
+
+    closeDialogButton.addEventListener("click", closeStyle);
+    document.querySelector("#previousStyle").addEventListener("click", () => openStyle(activeIndex - 1));
+    document.querySelector("#nextStyle").addEventListener("click", () => openStyle(activeIndex + 1));
+    copyButton.addEventListener("click", copyPrompt);
+    openRecommendationButton.addEventListener("click", openContribution);
+    remindTeacherButton.addEventListener("click", remindTeacher);
+    closeContributionButton.addEventListener("click", closeContribution);
+    cancelContributionButton.addEventListener("click", closeContribution);
+    recommendForm.addEventListener("submit", submitRecommendation);
+    recommendImage.addEventListener("change", () => {
+      const file = recommendImage.files?.[0];
+      recommendFileName.textContent = file ? file.name : "JPG、PNG 或 WebP，不超过 1.5MB";
+      recommendError.textContent = "";
+    });
+
+    dialog.addEventListener("click", (event) => {
+      const bounds = dialog.getBoundingClientRect();
+      const outside = event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+      if (outside) closeStyle();
+    });
+
+    dialog.addEventListener("close", () => {
+      restoreDialogScroll();
+      if (dialogTrigger?.isConnected) dialogTrigger.focus({ preventScroll: true });
+    });
+
+    contributionDialog.addEventListener("click", (event) => {
+      const bounds = contributionDialog.getBoundingClientRect();
+      const outside = event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom;
+      if (outside) closeContribution();
+    });
+
+    contributionDialog.addEventListener("close", () => {
+      const previousBehavior = document.documentElement.style.scrollBehavior;
+      document.documentElement.style.scrollBehavior = "auto";
+      window.scrollTo(0, contributionScrollY);
+      requestAnimationFrame(() => { document.documentElement.style.scrollBehavior = previousBehavior; });
+      openRecommendationButton.focus({ preventScroll: true });
+    });
+
+    renderFilters();
+    renderGrid();
+    renderReferences();
+  </script>
+</body>
+</html>

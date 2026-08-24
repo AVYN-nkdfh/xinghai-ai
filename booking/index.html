@@ -3,9 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="星海计划工作室机位预约" />
-  <title>预约机位｜星海计划</title>
-  <link rel="icon" href="../assets/brand-mark-xinghai-v21.jpg" type="image/jpeg" />
+  <meta name="description" content="图度AI未来学校工作室机位预约" />
+  <meta name="theme-color" content="#011D2E" />
+  <title>预约机位｜图度AI未来学校</title>
+  <link rel="icon" href="../assets/todo-shield.png" type="image/png" />
+  <link rel="apple-touch-icon" href="../assets/todo-shield.png" />
   <style>
     :root {
       --bg: #fbf8f2;
@@ -54,7 +56,9 @@
     }
     .header-inner { height: 100%; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
     .brand { min-height: 38px; display: inline-flex; align-items: center; gap: 10px; font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
-    .brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; }
+    .brand img { width: 30px; height: 40px; object-fit: contain; }
+    .brand span { display: grid; line-height: 1.12; }
+    .brand small { margin-top: 4px; color: var(--muted); font-family: Georgia, serif; font-size: 8px; font-weight: 600; letter-spacing: .16em; }
 
     .button {
       min-height: 42px;
@@ -206,7 +210,7 @@
     .machine-slot-value { color: currentColor; }
     .machine-slot-value.is-available { color: var(--green); }
     .machine.is-selected .machine-slot-label { color: rgba(26, 20, 8, .62); }
-    .machine.is-selected .machine-slot-value { color: #1a1408; }
+    .machine.is-selected .machine-slot-value { color: #011D2E; }
 
     .facing-axis { position: relative; height: 52px; display: flex; align-items: center; justify-content: center; }
     .facing-axis::before { position: absolute; left: 0; right: 0; height: 14px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #f7f3ed; content: ""; }
@@ -347,51 +351,51 @@
       *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
     }
 
-    /* Production theme: mirrors the current xinghai-ai.com brand shell. */
+    /* 图度AI未来学校正式品牌主题 */
     :root {
-      --bg: #0f0e0c;
-      --paper: #161410;
-      --ink: #ece6d8;
-      --muted: #9b937f;
-      --line: rgba(211, 169, 85, .20);
-      --line-strong: rgba(211, 169, 85, .42);
-      --orange: #d3a955;
-      --orange-soft: rgba(211, 169, 85, .12);
-      --green: #d3a955;
-      --green-soft: rgba(211, 169, 85, .12);
-      --disabled: #24211b;
+      --bg: #011D2E;
+      --paper: #062638;
+      --ink: #F2E8E1;
+      --muted: #B4ABA1;
+      --line: rgba(201, 154, 78, .20);
+      --line-strong: rgba(201, 154, 78, .42);
+      --orange: #C99A4E;
+      --orange-soft: rgba(201, 154, 78, .12);
+      --green: #C99A4E;
+      --green-soft: rgba(201, 154, 78, .12);
+      --disabled: #0B3042;
       --shadow: 0 1px 3px rgba(0, 0, 0, .24);
     }
-    body { background: radial-gradient(circle at 50% -10%, rgba(211, 169, 85, .08), transparent 34%), var(--bg); }
-    .site-header { background: rgba(15, 14, 12, .92); }
+    body { background: radial-gradient(circle at 50% -10%, rgba(201, 154, 78, .09), transparent 34%), var(--bg); }
+    .site-header { background: rgba(1, 29, 46, .94); }
     .brand { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; letter-spacing: .08em; }
     .brand svg { flex: none; }
-    .button-primary { background: linear-gradient(135deg, #e8c877, #d3a955); color: #1a1408; }
-    .button-primary:hover { background: #e8c877; }
+    .button-primary { background: linear-gradient(135deg, #E2BE7D, #C99A4E); color: #011D2E; }
+    .button-primary:hover { background: #E2BE7D; }
     .button-secondary { border-color: var(--line-strong); background: transparent; }
     .button-secondary:hover { border-color: var(--orange); color: var(--orange); }
     .button-danger { border-color: rgba(205, 105, 91, .38); color: #e5a299; background: rgba(205, 105, 91, .07); }
     .page-heading h1, .map-head h2, .roster h2, .success-card h2 { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; letter-spacing: .05em; }
     .workspace, .date-button, .time-button, .machine, .field input, .field select, .success-card { background: var(--paper); }
-    .date-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange); color: #1a1408; }
-    .date-button[aria-pressed="true"] .date-week { color: rgba(26, 20, 8, .66); }
+    .date-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange); color: #011D2E; }
+    .date-button[aria-pressed="true"] .date-week { color: rgba(1, 29, 46, .66); }
     .time-button[aria-pressed="true"] { border-color: var(--orange); background: var(--orange-soft); }
-    .time-button.is-closed, .closed-note { background: #1c1914; }
+    .time-button.is-closed, .closed-note { background: #041F30; }
     .machine:hover:not(:disabled) { border-color: var(--orange); }
-    .machine.is-selected { border-color: var(--orange); background: var(--orange); color: #1a1408; }
-    .machine.is-selected .machine-state { color: rgba(26, 20, 8, .68); }
-    .machine.is-booked { background: #25221c; color: #756f62; }
-    .machine.is-maintenance { color: #827b6d; background: repeating-linear-gradient(135deg, #201d18 0 8px, #2b271f 8px 16px); }
-    .machine.is-long-maintenance { border-color: rgba(211, 169, 85, .25); color: #9b8d70; background: repeating-linear-gradient(45deg, #1b1813 0 5px, #30281a 5px 10px); }
-    .machine.is-closed { background: #1c1914; color: #625d53; }
-    .facing-axis::before { background: #12110e; }
-    .facing-axis span, .side-panel, .status-bar { background: #12110e; }
+    .machine.is-selected { border-color: var(--orange); background: var(--orange); color: #011D2E; }
+    .machine.is-selected .machine-state { color: rgba(1, 29, 46, .68); }
+    .machine.is-booked { background: #0B3042; color: #7E8790; }
+    .machine.is-maintenance { color: #8D96A0; background: repeating-linear-gradient(135deg, #052233 0 8px, #0B3042 8px 16px); }
+    .machine.is-long-maintenance { border-color: rgba(201, 154, 78, .25); color: #B0A284; background: repeating-linear-gradient(45deg, #041F30 0 5px, #193849 5px 10px); }
+    .machine.is-closed { background: #041F30; color: #73808A; }
+    .facing-axis::before { background: #001725; }
+    .facing-axis span, .side-panel, .status-bar { background: #001725; }
     .field input, .field select { color: var(--ink); color-scheme: dark; }
     .switch { background: #4b453a; }
     .switch[aria-pressed="true"] { background: var(--orange); }
     .success-layer { background: rgba(0, 0, 0, .72); }
     .success-mark { background: var(--green-soft); color: var(--orange); }
-    .toast { background: var(--orange); color: #1a1408; }
+    .toast { background: var(--orange); color: #011D2E; }
     .loading-note { min-height: 420px; display: grid; place-items: center; color: var(--muted); text-align: center; }
     .login-card { width: min(420px, 100%); margin: 72px auto; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; background: var(--paper); }
     .login-card h1 { font-family: "Songti SC", "STSong", "Noto Serif SC", serif; font-size: 30px; letter-spacing: .06em; }
@@ -406,7 +410,7 @@
 <body>
   <header class="site-header">
     <div class="container header-inner">
-      <a class="brand" href="/" aria-label="返回星海少年AI计划官网"><svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M11 0 L13.2 8.8 L22 11 L13.2 13.2 L11 22 L8.8 13.2 L0 11 L8.8 8.8 Z" fill="#d3a955"/></svg><span>星海少年AI计划</span></a>
+      <a class="brand" href="/" aria-label="返回图度AI未来学校官网"><img src="../assets/todo-shield.webp" alt=""><span>图度AI未来学校<small>TODO AI FUTURE SCHOOL</small></span></a>
       <button class="button button-secondary" id="viewSwitch" type="button" data-testid="view-switch">管理后台</button>
     </div>
   </header>

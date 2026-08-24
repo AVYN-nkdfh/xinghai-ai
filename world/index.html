@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#082d49">
+  <title>职业地图｜图度AI未来学校</title>
+  <meta name="description" content="先选一种工作方式，再走进真实行业，看看每天在做什么。探索 144 个职业与 72 门生意。">
+  <meta property="og:title" content="职业地图｜图度AI未来学校">
+  <meta property="og:description" content="先选一种工作方式，再走进真实行业。">
+  <meta property="og:type" content="website">
+  <link rel="icon" href="/assets/todo-shield.png" type="image/png">
+  <link rel="preload" href="/world/assets/atlas-v1/hero-neighborhood.webp" as="image" type="image/webp">
+  <link rel="stylesheet" href="/world/world.css?v=20260814-atlas2">
+  <script defer src="/world/world-data.js?v=20260810-v26"></script>
+  <script defer src="/world/world.js?v=20260814-atlas2"></script>
+</head>
+<body>
+  <a class="skip-link" href="#mainContent">跳到主要内容</a>
+
+  <nav class="site-nav" aria-label="全站导航">
+    <a class="brand" href="/" aria-label="图度AI未来学校首页">
+      <picture>
+        <source media="(max-width: 760px)" srcset="/assets/todo-logo-dark.png">
+        <img src="/assets/todo-logo-light.png" alt="图度AI未来学校｜TODO AI FUTURE SCHOOL">
+      </picture>
+    </a>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="siteNavLinks">菜单</button>
+    <div class="nav-links" id="siteNavLinks">
+      <a href="/">首页</a>
+      <a href="/works">学员作品</a>
+      <a href="/aesthetic">美学教育</a>
+      <a href="/world" aria-current="page">职业与生意</a>
+      <a href="/courses">探索课程</a>
+      <a href="/about">关于我们</a>
+      <a class="nav-cta" href="/#contact">预约咨询</a>
+    </div>
+  </nav>
+
+  <main id="mainContent">
+    <div id="directoryView">
+      <header class="world-hero">
+        <div class="hero-copy page-width">
+          <p class="eyebrow">给正在长大的你，一张可以亲自走进去的地图</p>
+          <h1>职业地图</h1>
+          <p class="hero-lead">先选一种工作方式，再走进真实行业，看看每天在做什么。</p>
+        </div>
+
+        <div class="work-mode-grid page-width" role="group" aria-label="选择一种工作方式">
+          <button class="work-mode-card is-active" type="button" data-mode="employee" aria-pressed="true">
+            <img src="/world/assets/atlas-v1/work-mode-employee.webp" alt="水彩手提箱">
+            <span class="mode-copy">
+              <strong>去工作</strong>
+              <small>加入一家公司或团队，用你的能力创造价值。</small>
+              <span class="mode-action">去看看有哪些工作</span>
+            </span>
+          </button>
+          <button class="work-mode-card" type="button" data-mode="owner" aria-pressed="false">
+            <img src="/world/assets/atlas-v1/work-mode-owner.webp" alt="水彩小店">
+            <span class="mode-copy">
+              <strong>当老板</strong>
+              <small>从一个想法开始，做自己的产品或生意。</small>
+              <span class="mode-action">去看看有哪些生意</span>
+            </span>
+          </button>
+          <button class="work-mode-card" type="button" data-mode="independent" aria-pressed="false">
+            <img src="/world/assets/atlas-v1/work-mode-independent.webp" alt="水彩独立工作者">
+            <span class="mode-copy">
+              <strong>给自己工作</strong>
+              <small>成为独立的专业人士，把专长变成收入。</small>
+              <span class="mode-action">去看看有哪些路径</span>
+            </span>
+          </button>
+        </div>
+
+        <p class="catalog-totals page-width"><strong id="careerTotal">144</strong> 个职业 <span>·</span> <strong id="businessTotal">72</strong> 门生意</p>
+      </header>
+
+      <section class="industry-street page-width" aria-labelledby="industryTitle">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">从一扇门开始</p>
+            <h2 id="industryTitle">走进真实行业</h2>
+            <p>每个行业都有不同的工作现场、问题和创造方式。</p>
+          </div>
+          <button class="text-button" id="showAllIndustries" type="button">查看全部行业</button>
+        </div>
+
+        <div class="industry-windows">
+          <button class="industry-window" type="button" data-industry="internet-software">
+            <span class="industry-sign">互联网与软件</span>
+            <img src="/world/assets/atlas-v1/industry-software.webp" alt="开发者在软件工作室里协作" loading="lazy">
+            <span class="industry-note">用代码与产品连接用户与世界。</span>
+            <span class="industry-action">探索该行业</span>
+          </button>
+          <button class="industry-window" type="button" data-industry="ai-data">
+            <span class="industry-sign">人工智能与数据</span>
+            <img src="/world/assets/atlas-v1/industry-ai-data.webp" alt="数据分析师查看图表" loading="lazy">
+            <span class="industry-note">让数据产生洞察，让智能解决问题。</span>
+            <span class="industry-action">探索该行业</span>
+          </button>
+          <button class="industry-window" type="button" data-industry="design-creative">
+            <span class="industry-sign">设计与创意</span>
+            <img src="/world/assets/atlas-v1/industry-design.webp" alt="设计师在工作室制作模型" loading="lazy">
+            <span class="industry-note">用审美与表达解决问题，创造价值。</span>
+            <span class="industry-action">探索该行业</span>
+          </button>
+          <button class="industry-window" type="button" data-industry="education">
+            <span class="industry-sign">教育与培训</span>
+            <img src="/world/assets/atlas-v1/industry-education.webp" alt="老师与学习者一起实验" loading="lazy">
+            <span class="industry-note">用知识与方法帮助他人成长。</span>
+            <span class="industry-action">探索该行业</span>
+          </button>
+          <button class="industry-window" type="button" data-industry="healthcare">
+            <span class="industry-sign">医疗与健康</span>
+            <img src="/world/assets/atlas-v1/industry-healthcare.webp" alt="医生与患者交流" loading="lazy">
+            <span class="industry-note">守护与提升健康，改变生命质量。</span>
+            <span class="industry-action">探索该行业</span>
+          </button>
+        </div>
+      </section>
+
+      <section class="catalog-section" id="catalog" aria-labelledby="catalogTitle">
+        <div class="page-width">
+          <div class="catalog-heading">
+            <div>
+              <p class="section-kicker" id="modeSummary">现在查看：加入团队的职业</p>
+              <h2 id="catalogTitle">职业与生意目录</h2>
+            </div>
+            <div class="search-box">
+              <label for="catalogSearch">搜索</label>
+              <input id="catalogSearch" type="search" autocomplete="off" placeholder="试试：医生、游戏策划、咖啡店">
+              <button id="clearSearch" type="button" hidden>清空</button>
+            </div>
+          </div>
+
+          <div class="catalog-tabs" role="tablist" aria-label="目录类型">
+            <button id="careerTab" role="tab" type="button" aria-selected="true" aria-controls="catalogPanel" data-type="career">职业</button>
+            <button id="businessTab" role="tab" type="button" aria-selected="false" aria-controls="catalogPanel" data-type="business" tabindex="-1">生意</button>
+          </div>
+
+          <div class="filters">
+            <div class="industry-filters" id="industryFilters" aria-label="按行业筛选"></div>
+            <div class="result-tools">
+              <p id="resultCount" aria-live="polite"></p>
+              <label for="sortSelect">排序</label>
+              <select id="sortSelect">
+                <option value="default">推荐顺序</option>
+                <option value="money-desc">收入或规模从高到低</option>
+                <option value="money-asc">收入或规模从低到高</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="catalogPanel" role="tabpanel" aria-labelledby="careerTab">
+            <div class="catalog-list" id="catalogGrid"></div>
+            <button class="load-more" id="loadMore" type="button" hidden>继续探索</button>
+            <div class="empty-state" id="emptyState" hidden>
+              <h3>这次没有找到</h3>
+              <p>换个关键词，或者回到全部行业再看看。</p>
+              <button id="resetFilters" type="button">清空筛选</button>
+            </div>
+          </div>
+
+          <div class="methodology" aria-label="数据说明">
+            <details>
+              <summary>这些数字从哪里来？</summary>
+              <div>
+                <p>职业分类参考国家职业分类。收入是帮助孩子比较职业的常见参考区间，不代表某个人或某家公司的实际薪资；生意投入也会因城市、场地和规模不同而变化。</p>
+                <p id="sourceLinks"></p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <section class="explore-cta" aria-labelledby="exploreGuideTitle">
+        <div class="page-width explore-guide">
+          <div class="cta-copy">
+            <p class="section-kicker">第一次来职业地图？</p>
+            <h2 id="exploreGuideTitle">按这三步开始</h2>
+            <p>不用一次看完，从一个让你好奇的方向开始。</p>
+            <button id="restartExploration" type="button">回到三种工作方式</button>
+          </div>
+          <ol class="explore-steps" aria-label="职业地图使用步骤">
+            <li>
+              <span>01</span>
+              <div><strong>选工作方式</strong><p>去工作、当老板，或者给自己工作。</p></div>
+            </li>
+            <li>
+              <span>02</span>
+              <div><strong>打开一个行业</strong><p>先看每天在做什么，再看收入和成长路径。</p></div>
+            </li>
+            <li>
+              <span>03</span>
+              <div><strong>试做 60 分钟</strong><p>完成一个小任务，判断自己是不是真的喜欢。</p></div>
+            </li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <article class="world-detail" id="detailView" hidden></article>
+  </main>
+
+  <footer>
+    <img src="/assets/todo-logo-light.png" alt="图度AI未来学校｜TODO AI FUTURE SCHOOL" loading="lazy" decoding="async">
+    <p>让每个孩子看见更多可能。</p>
+  </footer>
+</body>
+</html>

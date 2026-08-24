@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#091017">
+  <title>无畏战队中心｜学员作品</title>
+  <meta name="description" content="孩子制作的无畏契约非官方战队资料项目，展示48支战队的数据快照、搜索、筛选和阵容信息。">
+  <link rel="stylesheet" href="/projects/valorant-teams/style.css">
+  <script defer src="/projects/valorant-teams/teams-data.js"></script>
+  <script defer src="/projects/valorant-teams/personnel-data.js"></script>
+  <script defer src="/projects/valorant-teams/app.js"></script>
+</head>
+<body>
+  <div class="public-note"><a href="/works">← 返回学员作品</a><span>孩子制作的 VALORANT 非官方粉丝项目 · 数据快照 2026-08-06 · 排名、积分和赛果不是实时数据。</span></div>
+
+  <header class="hero">
+    <nav class="nav" aria-label="项目导航">
+      <a class="brand" href="#top"><span class="brand-mark" aria-hidden="true"></span><span>无畏战队中心<small>VCT TEAMS & MATCH DATA</small></span></a>
+      <a class="works-link" href="/works">学员作品</a>
+    </nav>
+    <div id="top" class="hero-inner">
+      <div>
+        <p class="eyebrow">48 TEAMS · 4 REGIONS</p>
+        <h1>一页看懂<br>全球无畏战队</h1>
+        <p class="hero-copy">查看战队排名、公开阵容与比赛快照，也可以按赛区筛选或搜索自己喜欢的队伍。</p>
+      </div>
+      <div class="hero-stats" aria-label="数据概览">
+        <div><b id="teamCount">48</b><span>支战队</span></div>
+        <div><b>4</b><span>个赛区</span></div>
+        <div><b>08.06</b><span>快照日期</span></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="top-section" aria-labelledby="top-title">
+      <div class="section-head"><div><span>TOP TEAMS</span><h2 id="top-title">当前排名前三</h2></div><p>依据作品内的数据快照展示。</p></div>
+      <div id="topTeams" class="top-grid"></div>
+    </section>
+
+    <section class="browser-section" aria-labelledby="browser-title">
+      <div class="section-head"><div><span>TEAM BROWSER</span><h2 id="browser-title">全球战队榜</h2></div><p id="resultCount">正在读取战队数据</p></div>
+      <div class="toolbar">
+        <label class="search"><span class="sr-only">搜索战队</span><input id="teamSearch" type="search" placeholder="搜索战队，例如 EDG" autocomplete="off"></label>
+        <label class="region"><span class="sr-only">筛选赛区</span><select id="regionFilter"><option value="all">全部赛区</option><option value="VCT CN">VCT CN</option><option value="VCT Pacific">太平洋赛区</option><option value="VCT Americas">美洲赛区</option><option value="VCT EMEA">EMEA 赛区</option></select></label>
+        <div class="view-tabs" role="tablist" aria-label="内容视图"><button class="active" type="button" data-view="teams" role="tab" aria-selected="true">战队</button><button type="button" data-view="matches" role="tab" aria-selected="false">比赛快照</button></div>
+      </div>
+      <div id="teamView" role="tabpanel"><div id="teamGrid" class="team-grid"></div><div id="emptyState" class="empty" hidden>没有找到符合条件的战队。</div></div>
+      <div id="matchView" role="tabpanel" hidden><div id="matchGrid" class="match-grid"></div></div>
+    </section>
+  </main>
+
+  <footer><a href="/works">返回学员作品</a><p>非官方粉丝学习项目。队名、赛事名称和队标归各自权利方所有。</p></footer>
+
+  <div id="teamDialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialogTitle" aria-hidden="true">
+    <div class="dialog-card">
+      <button id="closeDialog" class="dialog-close" type="button" aria-label="关闭详情">×</button>
+      <div class="dialog-head"><img id="dialogLogo" alt=""><div><span id="dialogRegion"></span><h2 id="dialogTitle"></h2><p id="dialogStats"></p></div></div>
+      <div class="dialog-section"><h3>公开阵容快照</h3><div id="playerList" class="person-list"></div></div>
+      <div class="dialog-section"><h3>教练与工作人员</h3><div id="staffList" class="person-list"></div></div>
+    </div>
+  </div>
+</body>
+</html>

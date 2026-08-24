@@ -6,6 +6,11 @@ export function json(res, status, payload) {
   res.end(JSON.stringify(payload));
 }
 
+export function setPublicCache(res, { browserSeconds = 60, edgeSeconds = 300, staleSeconds = 3600 } = {}) {
+  res.setHeader("Cache-Control", `public, max-age=${browserSeconds}, stale-while-revalidate=${staleSeconds}`);
+  res.setHeader("Vercel-CDN-Cache-Control", `public, s-maxage=${edgeSeconds}, stale-while-revalidate=${staleSeconds}`);
+}
+
 export function allowMethods(req, res, methods) {
   if (methods.includes(req.method)) return true;
   res.setHeader("Allow", methods.join(", "));

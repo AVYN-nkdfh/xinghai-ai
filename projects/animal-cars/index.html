@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <base href="/projects/animal-cars/">
+  <title>动物汽车收藏馆｜学员作品</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <a class="brand" href="#top">
+      <div class="logo">兽</div>
+      <div>BEAST MOTORS<small>22款动物灵感汽车</small></div>
+    </a>
+    <nav>
+      <a href="/works">返回学员作品</a>
+      <a href="#classic">经典12款</a>
+      <a href="#new">新增10款</a>
+      <a href="#classic">全部车型</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-content">
+        <p class="kicker">CLASSIC 12 + NEW 10</p>
+        <h1>动物汽车<br>完整大展厅</h1>
+        <p>原来的 12 张图片一张都没有删，再把新做的 10 张全部加进去，现在这个网页一共有 22 款动物灵感概念汽车。</p>
+        <p class="project-disclosure">孩子的概念设计作品 · 速度、动力与加速数据均为创意设定，不代表真实量产车辆。</p>
+        <div class="actions">
+          <a class="btn primary" href="#classic">先看经典系列</a>
+          <a class="btn secondary" href="#new">跳到新增系列</a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div><strong>22</strong><span>总图片数</span></div>
+        <div><strong>12</strong><span>原有车型</span></div>
+        <div><strong>10</strong><span>新增车型</span></div>
+      </div>
+    </section>
+
+    <section id="classic">
+      <div class="section-head">
+        <div>
+          <p class="kicker">CLASSIC COLLECTION</p>
+          <h2>原来的 12 款</h2>
+        </div>
+        <p>这部分完整保留原网页里的 12 张图片、车型名字、性能参数和动物元素讲解，没有删除。</p>
+      </div>
+
+      <div class="filters">
+        <button class="filter active" data-target="all">全部</button>
+        <button class="filter" data-target="超跑">超跑</button>
+        <button class="filter" data-target="越野">越野</button>
+        <button class="filter" data-target="战车">战车</button>
+        <button class="filter" data-target="GT">GT</button>
+        <button class="filter" data-target="概念车">概念车</button>
+      </div>
+
+      <div id="classicGrid" class="grid">
+        <div class="loading">正在加载车型……</div>
+      </div>
+    </section>
+
+    <section id="new">
+      <div class="section-head">
+        <div>
+          <p class="kicker">NEW COLLECTION</p>
+          <h2>新加的 10 款</h2>
+        </div>
+        <p>这 10 张新图片已经接在原来的网页后面，点击任何车型都能打开大图。</p>
+      </div>
+
+      <div id="newGrid" class="grid">
+        <div class="loading">正在加载车型……</div>
+      </div>
+
+      <div class="series-note">
+        网站结构：上面是原来的 12 款，下面是新增的 10 款。以后可以继续往 data/cars.json 里增加车型。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div>© 2026 BEAST MOTORS 动物汽车完整展厅</div>
+    <div>12 张原图 + 10 张新图 = 22 张</div>
+  </footer>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" aria-hidden="true">
+    <div class="modal-card">
+      <button class="close" id="close" aria-label="关闭">×</button>
+      <img id="mImg" alt="">
+      <div class="modal-info">
+        <p class="animal" id="mAnimal"></p>
+        <h2 id="mTitle"></h2>
+        <p id="mDesc"></p>
+        <div class="specs">
+          <div><span>最高时速</span><strong id="mSpeed"></strong></div>
+          <div><span>0-100</span><strong id="mAccel"></strong></div>
+          <div><span>动力</span><strong id="mPower"></strong></div>
+        </div>
+        <p class="feature" id="mFeature"></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

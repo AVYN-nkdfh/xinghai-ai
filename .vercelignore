@@ -1,10 +1,32 @@
-booking-prototype-docs/screenshots/
+booking-prototype-docs/
 audits/
 b-prototype/
 c-prototype/
 d-prototype/
+.agents/
+node_modules/
 src/
+!content-admin/src/
+!content-admin/src/**
 public/
 xinghai_ai_founder_v21.html
 xinghai_ai_founder_v22.html
 ASSET_TODO.md
+prototype/
+projects/**/prototype/
+dist/
+dist 2/
+dist 3/
+dist 4/
+
+# The v2 admin API remains a local candidate and is not part of the target production surface.
+api/admin-v2/**
+
+# The new public homepage and works center are static. Keep these legacy read handlers
+# in source for rollback, but do not spend two Hobby function slots deploying them.
+api/content/hero.js
+api/content/works.js
+
+# Never upload local service credentials or nested Vercel bindings.
+services/**/.env*
+services/**/.vercel/**

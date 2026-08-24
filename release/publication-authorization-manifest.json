@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "effectiveDate": "2026-08-24",
+  "scope": "Current public website candidate",
+  "attestation": {
+    "source": "Company operator confirmation in the Codex task on 2026-08-24",
+    "studentAssentConfirmed": true,
+    "guardianAuthorizationConfirmed": true,
+    "statement": "The company operator confirmed that every listed student work and student media asset has authorization from both the student and the guardian for public display.",
+    "evidenceBoundary": "Underlying personal authorization artifacts were not copied into or independently inspected in this repository. They must remain retrievable in the company's restricted records."
+  },
+  "works": [
+    {
+      "title": "动物汽车收藏馆",
+      "publicUrl": "https://tudu.school/projects/animal-cars",
+      "coverPath": "assets/works/animal-cars-v1.webp"
+    },
+    {
+      "title": "HSV 球迷之家",
+      "publicUrl": "https://tudu.school/projects/hsv-fan",
+      "coverPath": "assets/works/hsv-fan-v2.webp"
+    },
+    {
+      "title": "无畏战队中心",
+      "publicUrl": "https://tudu.school/projects/valorant-teams",
+      "coverPath": "assets/works/valorant-teams-v2.webp"
+    },
+    {
+      "title": "二游设定档案馆",
+      "publicUrl": "https://tudu.school/projects/game-archive",
+      "coverPath": "assets/works/game-archive-v2.webp"
+    },
+    {
+      "title": "海洋会记住",
+      "publicUrl": "https://tudu.school/projects/ocean-environment",
+      "coverPath": "assets/works/ocean-story-v1.webp"
+    },
+    {
+      "title": "文案便利店",
+      "publicUrl": "https://tudu.school/works/moments-copy",
+      "coverPath": "assets/works/copy-shop-v1.webp"
+    },
+    {
+      "title": "亲子关系测试",
+      "publicUrl": "https://tudu.school/works/parent-child-relationship-test",
+      "coverPath": "assets/works/parent-child-test-v1.webp"
+    }
+  ],
+  "media": [
+    {
+      "sourcePath": "assets/media/creation-roadshow-v1.mp4",
+      "posterPath": "assets/media/creation-roadshow-v1.jpg",
+      "slots": ["index.html", "create.html"]
+    },
+    {
+      "sourcePath": "assets/media/learning-expression-v1.mp4",
+      "posterPath": "assets/media/learning-expression-v1.jpg",
+      "slots": ["learning.html"]
+    },
+    {
+      "sourcePath": "assets/media/learning-review-v1.mp4",
+      "posterPath": "assets/media/learning-review-v1.jpg",
+      "slots": ["learning.html"]
+    }
+  ]
+}

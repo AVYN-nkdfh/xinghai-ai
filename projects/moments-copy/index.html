@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#f7f7fa" />
+    <meta name="description" content="学员作品：文案便利店小程序网页预览，可搜索、分类、收藏并复制展示样例。" />
+    <title>文案便利店｜小程序网页预览</title>
+    <link rel="icon" href="/assets/todo-shield.png" type="image/png" />
+    <link rel="stylesheet" href="/projects/moments-copy/styles.css" />
+  </head>
+  <body>
+    <div class="showcase">
+      <aside class="showcase-note" aria-label="作品说明">
+        <a class="showcase-back" href="/works">← 返回学员作品</a>
+        <span class="showcase-note__eyebrow">学员作品 · 产品设计</span>
+        <h1>文案便利店</h1>
+        <p>她注意到，很多年轻人发朋友圈时不是没有情绪，而是不知道怎样把它说得刚刚好。于是，她把找文案这件事设计成一个轻巧的小程序。</p>
+        <div class="showcase-note__divider"></div>
+        <h2>她怎么设计</h2>
+        <ol>
+          <li>按心情和场景分类，减少挑选成本</li>
+          <li>用搜索与“换一批”，更快找到合适表达</li>
+          <li>用收藏和一键复制，完成完整使用闭环</li>
+        </ol>
+        <h2 class="showcase-note__plan-title">下一步商业规划</h2>
+        <p>先通过真实使用反馈验证高频场景，再扩充主题内容；成熟后探索主题内容包、创作者供稿和轻量会员。</p>
+        <p class="showcase-note__footnote">当前为功能预览，使用 16 条展示样例；收藏只保存在本机。</p>
+      </aside>
+
+      <section class="phone-frame" aria-label="文案便利店小程序预览">
+        <div class="mini-program">
+          <header class="mini-header">
+            <div class="status-bar" aria-hidden="true">
+              <span id="status-time">09:41</span>
+              <span class="status-icons"><i class="signal"></i><i class="wifi"></i><i class="battery"></i></span>
+            </div>
+            <div class="nav-bar">
+              <a class="project-back" href="/works" aria-label="返回学员作品">‹</a>
+              <strong>文案便利店</strong>
+              <span class="wx-capsule" aria-hidden="true"><i></i><b></b></span>
+            </div>
+          </header>
+
+          <main class="mini-content" id="mini-content">
+            <section class="intro" id="home-anchor">
+              <span class="demo-badge">展示样例</span>
+              <h2>今天想说点什么？</h2>
+              <p>选个心情，找到一句刚刚好的话。</p>
+            </section>
+
+            <label class="search-box" for="copy-search">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m16.2 16.2 4 4"></path></svg>
+              <input id="copy-search" type="search" placeholder="搜场景、心情或关键词" autocomplete="off" />
+              <button class="search-clear" id="search-clear" type="button" aria-label="清除搜索" hidden>×</button>
+            </label>
+
+            <section class="category-section" id="category-anchor" aria-labelledby="category-heading">
+              <div class="section-heading compact-heading">
+                <div>
+                  <span>按心情挑</span>
+                  <h3 id="category-heading">文案分类</h3>
+                </div>
+              </div>
+              <div class="category-chips" id="category-chips" role="list" aria-label="文案分类"></div>
+            </section>
+
+            <section class="copy-section" aria-labelledby="list-title">
+              <div class="section-heading">
+                <div>
+                  <span id="list-kicker">为你推荐</span>
+                  <h3 id="list-title">今天可以发这些</h3>
+                </div>
+                <button class="shuffle-button" id="shuffle-button" type="button">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h3.5c4.5 0 4.5 10 9 10H20"></path><path d="m17 14 3 3-3 3"></path><path d="M4 17h3.5c1.4 0 2.4-1 3.2-2.3"></path><path d="M13.3 9.3C14.2 8 15.2 7 16.5 7H20"></path><path d="m17 4 3 3-3 3"></path></svg>
+                  换一批
+                </button>
+              </div>
+
+              <div class="copy-list" id="copy-list" aria-live="polite"></div>
+
+              <div class="empty-state" id="empty-state" hidden>
+                <span aria-hidden="true">☁️</span>
+                <h3 id="empty-title">暂时没有找到</h3>
+                <p id="empty-copy">换个关键词，或者看看全部文案吧。</p>
+                <button id="empty-reset" type="button">回到全部</button>
+              </div>
+            </section>
+          </main>
+
+          <nav class="bottom-tabs" aria-label="小程序底部导航">
+            <button type="button" class="bottom-tab is-active" data-tab="home" aria-current="page">
+              <span aria-hidden="true">⌂</span><b>首页</b>
+            </button>
+            <button type="button" class="bottom-tab" data-tab="categories">
+              <span aria-hidden="true">▦</span><b>分类</b>
+            </button>
+            <button type="button" class="bottom-tab" data-tab="favorites">
+              <span aria-hidden="true">♡</span><b>收藏</b>
+            </button>
+          </nav>
+
+          <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+        </div>
+      </section>
+    </div>
+
+    <script src="/projects/moments-copy/data.js"></script>
+    <script src="/projects/moments-copy/app.js"></script>
+  </body>
+</html>

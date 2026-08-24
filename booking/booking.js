@@ -8,6 +8,8 @@ const WEEK = ["周日", "周一", "周二", "周三", "周四", "周五", "周�
 const el = (id) => document.getElementById(id);
 const LOCAL_PREVIEW = ["127.0.0.1", "localhost"].includes(location.hostname) && location.port === "8877";
 const PREVIEW_MIXED_STATE = LOCAL_PREVIEW && new URLSearchParams(location.search).get("scenario") === "mixed";
+const GET_TIMEOUT_MS = 7000;
+const GET_RETRY_DELAY_MS = 350;
 const previewState = {
   authenticated: false,
   bookings: PREVIEW_MIXED_STATE ? [{
@@ -129,23 +131,51 @@ async function previewApi(path, options) {
   throw new Error("本地预览接口不存在");
 }
 
+function wait(ms) {
+  return new Promise((resolve) => window.setTimeout(resolve, ms));
+}
+
+async function request(path, options, retryCount = 0) {
+  const method = String(options.method || "GET").toUpperCase();
+  const canRetry = method === "GET";
+  const controller = new AbortController();
+  const timeout = window.setTimeout(() => controller.abort(), GET_TIMEOUT_MS);
+  try {
+    const response = await fetch(path, {
+      credentials: "same-origin",
+      ...options,
+      signal: controller.signal,
+      headers: {
+        ...(options.body ? { "Content-Type": "application/json" } : {}),
+        ...(options.headers || {}),
+      },
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const error = new Error(payload.error || "请求失败，请稍后再试");
+      error.status = response.status;
+      throw error;
+    }
+    return payload;
+  } catch (error) {
+    const normalized = error.name === "AbortError"
+      ? Object.assign(new Error("网络较慢，请重新加载"), { code: "REQUEST_TIMEOUT" })
+      : error;
+    const retryable = canRetry && retryCount === 0
+      && (!normalized.status || normalized.status === 429 || normalized.status >= 500);
+    if (retryable) {
+      await wait(GET_RETRY_DELAY_MS);
+      return request(path, options, retryCount + 1);
+    }
+    throw normalized;
+  } finally {
+    window.clearTimeout(timeout);
+  }
+}
+
 async function api(path, options = {}) {
   if (LOCAL_PREVIEW) return previewApi(path, options);
-  const response = await fetch(path, {
-    credentials: "same-origin",
-    ...options,
-    headers: {
-      ...(options.body ? { "Content-Type": "application/json" } : {}),
-      ...(options.headers || {}),
-    },
-  });
-  const payload = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    const error = new Error(payload.error || "请求失败，请稍后再试");
-    error.status = response.status;
-    throw error;
-  }
-  return payload;
+  return request(path, options);
 }
 
 function normalizeDay(day, payload) {

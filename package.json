@@ -1,21 +1,33 @@
 {
-  "name": "xinghai-ai-site",
+  "name": "todo-ai-future-school-site",
   "version": "1.0.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vercel dev",
-    "build": "node scripts/build-site.mjs",
-    "preview": "vite preview --outDir dist"
+    "build": "node scripts/build-public.cjs && XINGHAI_DIST_DIR=dist/site-public node content-admin/build.mjs && node scripts/finalize-protected-build.mjs",
+    "preview": "vite preview --outDir dist/site-public",
+    "check:leads": "npm --prefix services/leads-api test",
+    "test:admin-rbac": "node scripts/test-admin-rbac-unit.mjs",
+    "test:admin-contract": "node scripts/test-unified-admin-contract.mjs",
+    "test:admin": "npm run test:admin-rbac && npm run test:admin-contract",
+    "test:launch-gate": "node scripts/test-production-launch-gate.cjs",
+    "test:hero-motion": "node scripts/test-hero-motion-follow.mjs",
+    "check:function-budget": "node scripts/check-function-budget.mjs",
+    "check:publication-authorization": "node scripts/check-publication-authorization.mjs",
+    "check:integration": "npm run check:leads && npm run test:admin && npm run test:launch-gate && npm run test:hero-motion && npm run check:function-budget && npm run check:publication-authorization && npm run build",
+    "admin:bootstrap": "node --env-file=.env.local scripts/bootstrap-unified-admin.mjs"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
+    "@vercel/blob": "^2.0.0",
     "lucide-react": "^0.468.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.25.0",
     "vite": "^6.0.1"
   }
 }

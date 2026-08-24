@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#fff7ef">
+  <meta name="format-detection" content="telephone=no">
+  <base href="/projects/parent-child-relationship-test/">
+  <title>亲子关系测试</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/projects/parent-child-relationship-test/styles.css?v=20260811-281">
+  <script src="/projects/parent-child-relationship-test/data.js?v=20260811-281" defer></script>
+  <script src="/projects/parent-child-relationship-test/app.js?v=20260811-281" defer></script>
+</head>
+<body>
+  <svg class="icon-sprite" width="0" height="0" aria-hidden="true">
+    <defs>
+      <symbol id="icon-arrow" viewBox="0 0 24 24"><path d="M5 12h14M14 7l5 5-5 5"/></symbol>
+      <symbol id="icon-back" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+      <symbol id="icon-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol>
+      <symbol id="icon-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></symbol>
+      <symbol id="icon-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5h.01"/></symbol>
+      <symbol id="icon-eye" viewBox="0 0 24 24"><path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"/><circle cx="12" cy="12" r="2.5"/></symbol>
+      <symbol id="icon-home" viewBox="0 0 24 24"><path d="m3 11 9-8 9 8v9H3zM9 20v-6h6v6"/></symbol>
+      <symbol id="icon-refresh" viewBox="0 0 24 24"><path d="M20 7v5h-5M4 17v-5h5M6.1 8.2A7 7 0 0 1 18.8 9M5.2 15A7 7 0 0 0 17.9 15.8"/></symbol>
+      <symbol id="icon-share" viewBox="0 0 24 24"><path d="M12 16V3M7 8l5-5 5 5M5 13v7h14v-7"/></symbol>
+      <symbol id="icon-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 20h16"/></symbol>
+      <symbol id="icon-mother" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M7 21v-5.5a5 5 0 0 1 10 0V21M8.7 4.5C9.8 2.8 14 2.8 15.3 4.7"/></symbol>
+      <symbol id="icon-father" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M7 21v-5.5a5 5 0 0 1 10 0V21M8 4.2h8"/></symbol>
+      <symbol id="icon-guardian" viewBox="0 0 24 24"><circle cx="12" cy="7" r="3.5"/><path d="M7 21v-5.5a5 5 0 0 1 10 0V21M5 8.5 3 11M19 8.5l2 2.5"/></symbol>
+    </defs>
+  </svg>
+  <main class="app-shell" id="app">
+    <section class="screen active" id="home" aria-labelledby="home-title">
+      <div class="v3-page v3-home-page">
+        <header class="v3-brandbar">
+          <a class="v3-brand" href="#home" data-action="home">亲子关系测试</a>
+          <button class="v3-text-link" type="button" data-action="show-intro">测试说明</button>
+        </header>
+        <div class="v3-home-copy">
+          <p class="v3-eyebrow">两个人，一份共同答案</p>
+          <h1 id="home-title">测出你们之间<br>独一份的相处模式</h1>
+          <p>家长与孩子分别完成12题，最后解锁一张只属于你们的关系名片。</p>
+        </div>
+        <figure class="v3-home-visual">
+          <img src="assets/hero-v2.webp" alt="家长和孩子一起看手机">
+          <figcaption>双方独立作答 · 答案只保存在本机</figcaption>
+        </figure>
+        <div class="v3-fact-row" aria-label="测试信息"><span>24道情景题</span><span>约6分钟</span><span>48种关系结果</span></div>
+        <button class="v3-resume hidden" id="resumeCard" type="button" data-action="resume">
+          <span><b>继续上次进度</b><small id="resumeText">已完成 0 / 24 题</small></span>
+          <svg><use href="#icon-arrow"/></svg>
+        </button>
+        <div class="v3-bottom-action">
+          <button class="v3-primary" id="startTestButton" type="button" data-action="go-identity">开始双人测试<svg><use href="#icon-arrow"/></svg></button>
+          <p>这不是心理诊断，而是一份亲子沟通邀请</p>
+          <p class="v3-boot-error" id="bootError" role="alert" hidden>测试资源没有载入，请点上方按钮重新加载。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="identity" aria-labelledby="identity-title">
+      <div class="v3-page v3-flow-page">
+        <header class="v3-nav">
+          <button class="v3-icon-button" type="button" data-action="back-home" aria-label="返回首页"><svg><use href="#icon-back"/></svg></button>
+          <strong>开始测试</strong><span class="v3-nav-spacer"></span>
+        </header>
+        <div class="v3-stepper" aria-label="第1步，共2步"><i class="done"></i><i class="current"></i><i></i><span>1 / 2</span></div>
+        <div class="v3-flow-heading">
+          <p class="v3-eyebrow">先认识一下</p>
+          <h1 id="identity-title">这次，是谁陪孩子<br>一起完成测试？</h1>
+          <p>身份只用于调整称呼，不会影响题目和结果。</p>
+        </div>
+        <div class="v3-identity-list" id="relationChoices" role="radiogroup" aria-label="选择家长身份">
+          <button class="v3-identity-card active" type="button" role="radio" aria-checked="true" data-relation="妈妈">
+            <span class="v3-role-icon"><svg><use href="#icon-mother"/></svg></span><span><b>我是妈妈</b><small>结果卡会使用“妈妈”作为默认称呼</small></span><i class="v3-radio"></i>
+          </button>
+          <button class="v3-identity-card" type="button" role="radio" aria-checked="false" data-relation="爸爸">
+            <span class="v3-role-icon purple"><svg><use href="#icon-father"/></svg></span><span><b>我是爸爸</b><small>结果卡会使用“爸爸”作为默认称呼</small></span><i class="v3-radio"></i>
+          </button>
+          <button class="v3-identity-card" type="button" role="radio" aria-checked="false" data-relation="家长">
+            <span class="v3-role-icon soft"><svg><use href="#icon-guardian"/></svg></span><span><b>我是其他家长</b><small>结果卡会使用“家长”作为默认称呼</small></span><i class="v3-radio"></i>
+          </button>
+        </div>
+        <div class="v3-bottom-action"><button class="v3-primary" type="button" data-action="go-setup">下一步<svg><use href="#icon-arrow"/></svg></button></div>
+      </div>
+    </section>
+
+    <section class="screen" id="setup" aria-labelledby="setup-title">
+      <div class="v3-page v3-flow-page">
+        <header class="v3-nav"><button class="v3-icon-button" type="button" data-action="back-identity" aria-label="返回身份选择"><svg><use href="#icon-back"/></svg></button><strong>填写资料</strong><span class="v3-nav-spacer"></span></header>
+        <div class="v3-stepper" aria-label="第2步，共2步"><i class="done"></i><i class="done"></i><i class="current"></i><span>2 / 2</span></div>
+        <div class="v3-flow-heading v3-profile-heading"><p class="v3-eyebrow">让结果卡更专属</p><h1 id="setup-title">想在结果卡上<br>怎么称呼你们？</h1></div>
+        <form class="v3-form-card" id="setupForm">
+          <label class="v3-field" for="parentName"><span id="parentLabel">妈妈的昵称</span><span class="v3-input-wrap"><input id="parentName" name="parentName" maxlength="12" autocomplete="off" placeholder="例如：星星妈妈"><small id="parentCount">0 / 12</small></span></label>
+          <label class="v3-field" for="childName"><span>孩子昵称</span><span class="v3-input-wrap"><input id="childName" name="childName" maxlength="12" autocomplete="off" placeholder="例如：小宇"><small id="childCount">0 / 12</small></span></label>
+          <fieldset class="v3-age-field"><legend>孩子年龄</legend><div class="v3-age-grid" id="ageChoices">
+            <button class="v3-age active" type="button" data-age="6-9岁" aria-pressed="true">6–9岁</button>
+            <button class="v3-age" type="button" data-age="10-12岁" aria-pressed="false">10–12岁</button>
+            <button class="v3-age" type="button" data-age="13-15岁" aria-pressed="false">13–15岁</button>
+            <button class="v3-age" type="button" data-age="16岁以上" aria-pressed="false">16岁以上</button>
+          </div></fieldset>
+          <p class="v3-privacy"><svg><use href="#icon-lock"/></svg><span>昵称和答案只保存在当前设备</span></p>
+          <button class="v3-primary" type="submit">家长先开始答题<svg><use href="#icon-arrow"/></svg></button>
+        </form>
+      </div>
+    </section>
+
+    <section class="screen" id="quiz" aria-labelledby="questionText">
+      <div class="v3-page v3-quiz-page">
+        <header class="v3-nav"><button class="v3-icon-button" type="button" data-action="previous-question" aria-label="返回上一题"><svg><use href="#icon-back"/></svg></button><strong id="phaseText">家长作答</strong><button class="v3-icon-button" type="button" data-action="home" aria-label="退出答题"><svg><use href="#icon-close"/></svg></button></header>
+        <div class="v3-quiz-progress">
+          <div><b id="quizLead">先按你的真实做法选择</b><span id="quizSub">没有标准答案，也不用替孩子猜</span></div>
+          <div class="v3-progress-ring" id="progressRing"><span id="counter">01 / 12</span></div>
+        </div>
+        <article class="v3-question-card">
+          <div class="v3-question-meta"><span id="questionKicker">家长题</span><small id="questionTopic">生活情景</small></div>
+          <h1 id="questionText">题目加载中…</h1>
+          <p>选择最接近日常的一项</p>
+        </article>
+        <div class="v3-options" id="options" role="radiogroup" aria-label="选择一个答案"></div>
+        <p class="v3-autosave"><svg><use href="#icon-lock"/></svg><span>每次选择都会自动保存，可以返回修改</span></p>
+      </div>
+    </section>
+
+    <section class="screen center-screen" id="handoff" aria-labelledby="handoff-title">
+      <div class="v3-page v3-handoff-page">
+        <header class="v3-nav"><button class="v3-icon-button" type="button" data-action="back-to-parent" aria-label="返回家长最后一题"><svg><use href="#icon-back"/></svg></button><strong>换人作答</strong><span class="v3-nav-spacer"></span></header>
+        <div class="v3-handoff-visual" aria-hidden="true">
+          <svg viewBox="0 0 300 230">
+            <rect x="112" y="27" width="78" height="150" rx="18" fill="#fff9f4" stroke="#3b2048" stroke-width="5" transform="rotate(8 151 102)"/>
+            <rect x="124" y="47" width="54" height="100" rx="11" fill="#f9b27b" stroke="none" transform="rotate(8 151 102)"/>
+            <path d="M20 72c32-10 51-2 72 18l30 28" stroke="#e06a4d" stroke-width="12"/>
+            <path d="M280 173c-31 6-51-2-73-24l-22-25" stroke="#8b6aa0" stroke-width="12"/>
+            <path d="M57 60 43 44M67 48l-3-22M239 193l15 15M248 181l22 2" stroke="#b6a2d5" stroke-width="5"/>
+            <path d="m141 97 11 11 19-25" stroke="#fff" stroke-width="6"/>
+          </svg>
+        </div>
+        <div class="v3-handoff-copy"><p class="v3-eyebrow">家长部分完成</p><h1 id="handoff-title">现在把手机交给孩子</h1><p id="handoffText">接下来的12题，请孩子按照自己的真实感受作答，家长先不要提示答案。</p></div>
+        <div class="v3-handoff-tip"><svg><use href="#icon-eye"/></svg><p>两个人分开回答，最后的“感受同频”才更有参考价值。</p></div>
+        <div class="v3-bottom-action"><button class="v3-primary" type="button" data-action="continue-child">我拿到手机了<svg><use href="#icon-arrow"/></svg></button></div>
+      </div>
+    </section>
+
+    <section class="screen center-screen" id="analysis" aria-labelledby="analysis-title" aria-live="polite">
+      <div class="v3-page v3-analysis-page">
+        <header class="v3-nav"><span class="v3-nav-spacer"></span><strong>正在生成结果</strong><span class="v3-nav-spacer"></span></header>
+        <div class="v3-analysis-visual" aria-hidden="true">
+          <svg viewBox="0 0 260 260">
+            <circle cx="74" cy="130" r="47" fill="#765282" stroke="none"/>
+            <circle cx="186" cy="130" r="47" fill="#f3a36d" stroke="none"/>
+            <path d="M90 91c33 16 47 62 82 78M90 169c33-16 47-62 82-78" stroke="#b49bd0" stroke-width="7"/>
+            <path d="m130 107 22 23-22 23-22-23z" fill="#fff8ed" stroke="#ed7255" stroke-width="4"/>
+          </svg>
+        </div>
+        <p class="v3-eyebrow">两份答案正在相遇</p>
+        <h1 id="analysis-title">分析你们的关系默契</h1>
+        <p class="v3-analysis-copy">正在比较双方在共同决定、情感表达、冲突修复、成长支持与亲密边界上的真实感受。</p>
+        <div class="v3-analysis-progress"><i id="analysisProgress"></i></div>
+        <ul class="v3-analysis-steps" id="analysisSteps">
+          <li class="active"><i>1</i><span>双方答案已完成标准化</span></li>
+          <li><i>2</i><span>八项关系维度正在计算</span></li>
+          <li><i>3</i><span>匹配最接近的关系画像</span></li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="screen" id="result" aria-labelledby="resultName">
+      <header class="v3-result-nav"><button class="v3-icon-button" type="button" data-action="home" aria-label="返回首页"><svg><use href="#icon-home"/></svg></button><strong>你们的关系结果</strong><button class="v3-icon-button" type="button" data-action="restart" aria-label="重新测试"><svg><use href="#icon-refresh"/></svg></button></header>
+      <div id="resultBody"></div>
+    </section>
+  </main>
+
+  <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="intro-title" hidden>
+    <div class="modal-backdrop" data-action="close-modal"></div>
+    <div class="v3-modal-sheet v3-intro-sheet">
+      <div class="v3-sheet-handle"></div>
+      <button class="v3-modal-close" type="button" data-action="close-modal" aria-label="关闭"><svg><use href="#icon-close"/></svg></button>
+      <span class="v3-sheet-icon"><svg><use href="#icon-info"/></svg></span>
+      <h2 id="intro-title">开始前，先知道这三件事</h2>
+      <p>这是一份让家长和孩子更容易聊到真实感受的双人测试。</p>
+      <div class="v3-intro-points"><p><i>1</i><span>双方各自回答12道生活情景题</span></p><p><i>2</i><span>答案仅在本机计算，不会上传</span></p><p><i>3</i><span>结果用于沟通参考，不是心理诊断</span></p></div>
+      <button class="v3-primary" type="button" data-action="close-modal">我知道了</button>
+    </div>
+  </div>
+
+  <div class="modal share-modal" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="share-title" hidden>
+    <div class="modal-backdrop" data-action="close-share"></div>
+    <div class="v3-modal-sheet v3-share-sheet">
+      <div class="v3-sheet-handle"></div>
+      <button class="v3-modal-close" type="button" data-action="close-share" aria-label="关闭"><svg><use href="#icon-close"/></svg></button>
+      <p class="v3-eyebrow">高清PNG已生成</p>
+      <h2 id="share-title">长按图片保存到相册</h2>
+      <div class="v3-share-stage"><img id="sharePreview" alt="亲子关系测试分享卡预览"></div>
+      <div class="v3-share-actions">
+        <a class="v3-secondary" id="downloadLink" download="亲子关系测试结果.png"><svg><use href="#icon-download"/></svg>保存图片</a>
+        <button class="v3-primary" type="button" data-action="native-share"><svg><use href="#icon-share"/></svg>系统分享</button>
+      </div>
+      <p class="v3-share-hint">微信内置浏览器可长按上方图片保存</p>
+    </div>
+  </div>
+
+  <canvas id="shareCanvas" width="1080" height="1920" hidden></canvas>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <noscript><div class="fatal-error">请开启 JavaScript 后再进行亲子关系测试。</div></noscript>
+  <script>
+    (function () {
+      var releaseUrl = "/projects/parent-child-relationship-test?v=20260811-281";
+      window.addEventListener("DOMContentLoaded", function () {
+        window.setTimeout(function () {
+          if (document.documentElement.dataset.parentChildAppReady === "true") return;
+          var button = document.getElementById("startTestButton");
+          var error = document.getElementById("bootError");
+          if (error) error.hidden = false;
+          if (!button) return;
+          button.textContent = "重新加载测试";
+          button.addEventListener("click", function (event) {
+            if (document.documentElement.dataset.parentChildAppReady === "true") return;
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            window.location.replace(releaseUrl + "&retry=" + Date.now());
+          }, true);
+        }, 1200);
+      }, { once: true });
+    })();
+  </script>
+</body>
+</html>
