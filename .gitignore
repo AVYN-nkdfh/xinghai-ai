@@ -3,3 +3,6 @@ dist/
 .DS_Store
 .vercel
 .env*
+
+# Local-only Admin v2 backend. It is intentionally outside the 12-Function release.
+api/admin-v2/
