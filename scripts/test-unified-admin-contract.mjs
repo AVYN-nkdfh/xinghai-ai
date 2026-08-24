@@ -24,6 +24,9 @@ assert.doesNotMatch(app, /prototype-password|demoRole|preview@todo/i);
 assert.match(html, /\/admin\/app\.js/);
 assert.match(html, /\/admin\/styles\.css/);
 assert.match(vercelIgnore, /^api\/admin-v2\/\*\*$/m);
+for (const endpoint of ["audit", "bootstrap", "roles", "session", "users"]) {
+  assert.match(vercelIgnore, new RegExp(`^api/admin-v2/${endpoint}\\.js$`, "m"));
+}
 assert.match(finalize, /rmSync\(join\(publicRoot, "admin"\)/);
 assert.doesNotMatch(finalize, /copyTree\(join\(root, "admin"\)/);
 assert.ok(!vercel.headers.some((entry) => entry.source === "/admin/:path*"));

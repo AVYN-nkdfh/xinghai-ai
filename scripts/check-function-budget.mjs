@@ -22,6 +22,11 @@ export const EXPECTED_ACTIVE_FUNCTIONS = Object.freeze([
 
 const REQUIRED_IGNORE_RULES = Object.freeze([
   "api/admin-v2/**",
+  "api/admin-v2/audit.js",
+  "api/admin-v2/bootstrap.js",
+  "api/admin-v2/roles.js",
+  "api/admin-v2/session.js",
+  "api/admin-v2/users.js",
   "api/content/hero.js",
   "api/content/works.js",
 ]);

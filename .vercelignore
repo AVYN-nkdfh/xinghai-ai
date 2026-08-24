@@ -21,6 +21,11 @@ dist 4/
 
 # The v2 admin API remains a local candidate and is not part of the target production surface.
 api/admin-v2/**
+api/admin-v2/audit.js
+api/admin-v2/bootstrap.js
+api/admin-v2/roles.js
+api/admin-v2/session.js
+api/admin-v2/users.js
 
 # The new public homepage and works center are static. Keep these legacy read handlers
 # in source for rollback, but do not spend two Hobby function slots deploying them.
