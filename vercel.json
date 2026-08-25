@@ -13,6 +13,18 @@
   ],
   "redirects": [
     {
+      "source": "/",
+      "has": [{ "type": "host", "value": "xinghai-ai.com" }],
+      "destination": "https://tudu.school/",
+      "permanent": true
+    },
+    {
+      "source": "/",
+      "has": [{ "type": "host", "value": "www.xinghai-ai.com" }],
+      "destination": "https://tudu.school/",
+      "permanent": true
+    },
+    {
       "source": "/:path*",
       "has": [{ "type": "host", "value": "xinghai-ai.com" }],
       "destination": "https://tudu.school/:path*",
