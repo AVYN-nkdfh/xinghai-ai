@@ -112,10 +112,20 @@
       background: #020305;
       color: #fff;
       touch-action: pan-y;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
     }
     .hero-stage {
       position: absolute; inset: 0; z-index: 0;
       display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+      pointer-events: none;
+    }
+    .duel-hero img {
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      -webkit-touch-callout: none;
     }
     .hero-side { position: relative; min-width: 0; overflow: hidden; background: #05070b; }
     .hero-side-orange { background: #100905; }
@@ -863,7 +873,7 @@
       .statement-sub { opacity: 1 !important; transform: none !important; }
     }
   </style>
-  <link rel="stylesheet" href="hero-motion-v4.css?v=20260825-mobile-dual-input-r16" />
+  <link rel="stylesheet" href="hero-motion-v4.css?v=20260825-native-drag-r17" />
 </head>
 <body>
   <script>document.documentElement.classList.add('js');</script>
@@ -890,27 +900,27 @@
     <section class="duel-hero" id="duelHero" aria-labelledby="heroTitle">
       <div class="hero-stage" aria-hidden="true">
         <div class="hero-side hero-side-blue" id="heroBlue" data-side="blue">
-          <img class="hero-stage-bg" src="assets/hero-stage-blue.jpg?v=20260825-r13" alt="" />
+          <img class="hero-stage-bg" src="assets/hero-stage-blue.jpg?v=20260825-r13" alt="" draggable="false" />
           <picture>
             <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00-s.webp?v=20260825-s320-r16" />
-            <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00.webp" alt="" width="768" height="1080" />
+            <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-00.webp" alt="" width="768" height="1080" draggable="false" />
           </picture>
           <picture>
             <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29-s.webp?v=20260825-s320-r16" />
-            <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="blue" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29.webp" alt="" width="768" height="1080" />
+            <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="blue" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-boy-reach-29.webp" alt="" width="768" height="1080" draggable="false" />
           </picture>
           <canvas class="hero-character sequence-canvas" data-sequence="blue" width="768" height="1080"></canvas>
           <div class="hero-stage-shade"></div>
         </div>
         <div class="hero-side hero-side-orange" id="heroOrange" data-side="orange">
-          <img class="hero-stage-bg" src="assets/hero-stage-orange.jpg?v=20260825-r13" alt="" />
+          <img class="hero-stage-bg" src="assets/hero-stage-orange.jpg?v=20260825-r13" alt="" draggable="false" />
           <picture>
             <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00-s.webp?v=20260825-s320-r16" />
-            <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00.webp" alt="" width="768" height="1080" />
+            <img class="hero-character hero-character-neutral neutral-frame sequence-fallback" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-00.webp" alt="" width="768" height="1080" draggable="false" />
           </picture>
           <picture>
             <source media="(max-width: 768px), (max-width: 900px) and (max-height: 500px)" srcset="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29-s.webp?v=20260825-s320-r16" />
-            <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="orange" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29.webp" alt="" width="768" height="1080" />
+            <img class="hero-character hero-character-reach reach-frame sequence-fallback" data-final-frame="orange" src="assets/character-sequences/hero-reach-30f-20260823-r3/hero-girl-reach-29.webp" alt="" width="768" height="1080" draggable="false" />
           </picture>
           <canvas class="hero-character sequence-canvas" data-sequence="orange" width="768" height="1080"></canvas>
           <div class="hero-stage-shade"></div>
@@ -929,7 +939,7 @@
         <img src="assets/hero-light.webp?v=20260825-r13" alt="" draggable="false" />
         <span class="handle-caption" aria-hidden="true">按住</span>
       </button>
-      <div class="catch-bloom" id="heroBloom" aria-hidden="true"><img src="assets/hero-light.webp?v=20260825-r13" alt="" /></div>
+      <div class="catch-bloom" id="heroBloom" aria-hidden="true"><img src="assets/hero-light.webp?v=20260825-r13" alt="" draggable="false" /></div>
       <div class="catch-exposure" aria-hidden="true"></div>
 
       <div class="hero-tablist" role="group" aria-label="选择成长方向">
@@ -1167,7 +1177,7 @@
     </div>
   </footer>
 
-  <script src="hero-motion-v4.js?v=20260825-responsive-input-r16"></script>
+  <script src="hero-motion-v4.js?v=20260825-native-drag-r17"></script>
   <script>
     (function () {
       var hero = document.getElementById('duelHero');

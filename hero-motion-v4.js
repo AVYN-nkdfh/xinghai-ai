@@ -1648,7 +1648,13 @@ function syncGeometry() {
   }
 }
 
+function preventNativeHeroGesture(event) {
+  event.preventDefault();
+}
+
+hero.addEventListener('dragstart', preventNativeHeroGesture);
 handle.addEventListener('pointerdown', handlePointerDown);
+handle.addEventListener('contextmenu', preventNativeHeroGesture);
 handle.addEventListener('pointerenter', () => warmSequencePair('hint'), { once: true });
 handle.addEventListener('focus', () => warmSequencePair('hint'), { once: true });
 window.addEventListener('pointermove', handlePointerMove);
@@ -1773,7 +1779,7 @@ window.__heroMotion = {
 syncGeometry();
 updateUi();
 scheduleInitialSequenceWarmup();
-hero.dataset.motionVersion = 'v4-single-take30-responsive-input-r16';
+hero.dataset.motionVersion = 'v4-single-take30-native-drag-r17';
 window.__HERO_MOTION_V4_ACTIVE__ = true;
 
 } catch (error) {

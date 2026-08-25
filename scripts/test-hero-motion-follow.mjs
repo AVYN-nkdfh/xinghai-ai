@@ -111,10 +111,22 @@ assert.match(source, /scheduleInitialSequenceWarmup\(\);/);
 assert.match(source, /handle\.addEventListener\('pointerenter', \(\) => warmSequencePair\('hint'\)/);
 
 assert.doesNotMatch(source, /LOADED_GESTURE_DURATION|waitForGestureSequence|queueAutoDelivery|INTERACTION_LOAD_FALLBACK_MS/);
-assert.match(indexSource, /hero-motion-v4\.js\?v=20260825-responsive-input-r16/);
-assert.match(indexSource, /hero-motion-v4\.css\?v=20260825-mobile-dual-input-r16/);
+assert.match(indexSource, /hero-motion-v4\.js\?v=20260825-native-drag-r17/);
+assert.match(indexSource, /hero-motion-v4\.css\?v=20260825-native-drag-r17/);
 assert.match(indexSource, /长按光点左右滑，或点下面一个方向/);
 assert.match(cssSource, /@media[\s\S]*\.light-handle\s*\{[\s\S]*pointer-events:\s*auto;[\s\S]*touch-action:\s*pan-y;/);
+assert.match(indexSource, /\.hero-stage\s*\{[^}]*pointer-events:\s*none;/);
+assert.match(indexSource, /\.duel-hero img\s*\{[^}]*-webkit-user-drag:\s*none;/);
+const heroMarkupStart = indexSource.indexOf('<section class="duel-hero"');
+const heroMarkupEnd = indexSource.indexOf('</section>', heroMarkupStart);
+assert.ok(heroMarkupStart >= 0 && heroMarkupEnd > heroMarkupStart, 'homepage hero markup must exist');
+const heroImageTags = indexSource.slice(heroMarkupStart, heroMarkupEnd).match(/<img\b[^>]*>/g) || [];
+assert.ok(heroImageTags.length >= 7, 'homepage hero should expose every visual image to the drag guard test');
+for (const imageTag of heroImageTags) {
+  assert.match(imageTag, /\bdraggable="false"/, `hero image can still start native dragging: ${imageTag}`);
+}
+assert.match(source, /hero\.addEventListener\('dragstart', preventNativeHeroGesture\)/);
+assert.match(source, /handle\.addEventListener\('contextmenu', preventNativeHeroGesture\)/);
 assert.match(indexSource, /\.contact-qr \{ max-width: 360px; grid-template-columns: 1fr; justify-items: center;/);
 assert.match(indexSource, /hideBoundary = Math\.max\(showBoundary, window\.innerHeight \* 0\.72\)/);
 assert.match(indexSource, /dockShown \? heroBottom < hideBoundary : heroBottom <= showBoundary/);
@@ -380,7 +392,12 @@ function createRuntimeHarness({
 
 const warmHarness = createRuntimeHarness({ resolvedFetch: true });
 assert.equal(warmHarness.runtimeWindow.__HERO_MOTION_V4_ACTIVE__, true, 'hero motion must initialize');
-assert.equal(warmHarness.hero.dataset.motionVersion, 'v4-single-take30-responsive-input-r16');
+assert.equal(warmHarness.hero.dataset.motionVersion, 'v4-single-take30-native-drag-r17');
+let nativeGestureBlocks = 0;
+const nativeGestureEvent = { preventDefault() { nativeGestureBlocks += 1; } };
+warmHarness.hero.dispatch('dragstart', nativeGestureEvent);
+warmHarness.handle.dispatch('contextmenu', nativeGestureEvent);
+assert.equal(nativeGestureBlocks, 2, 'hero must block native image drag and long-press context menus');
 assert.equal(warmHarness.idleCallbacks.length, 1, 'desktop hero should schedule one idle warmup');
 warmHarness.idleCallbacks[0]();
 await warmHarness.waitForReady();
@@ -589,14 +606,17 @@ await switchHarness.advanceAsync(820);
 assert.equal(switchHarness.state().caughtSide, 'orange', 'cold opposite Tab completes on the selected side');
 
 const touchHarness = createRuntimeHarness({ resolvedFetch: false, coarse: true });
+let touchPointerDefaultsBlocked = 0;
 const touchDown = {
   button: 0,
   pointerType: 'touch',
   pointerId: 17,
   clientX: 640,
   clientY: 300,
+  preventDefault() { touchPointerDefaultsBlocked += 1; },
 };
 touchHarness.handle.dispatch('pointerdown', touchDown);
+assert.equal(touchPointerDefaultsBlocked, 0, 'touch pointerdown must preserve vertical page scrolling');
 assert.equal(touchHarness.state().phase, 'pressing', 'mobile light accepts a real long press');
 assert.equal(touchHarness.state().pointerActive, true, 'mobile long press keeps the pointer active');
 touchHarness.advance(numberConstant('HOLD_DELAY') + 10);
